@@ -53,7 +53,7 @@
         <div class="row" style="margin-top: 40px">
           <div class="col-12">
             <div style="float: right">
-              <q-btn style="margin-right: 10px;" label="Voltar" no-caps class="btn-voltar" />
+              <q-btn @click="voltar" style="margin-right: 10px;" label="Voltar" no-caps class="btn-voltar" />
             </div>
           </div>
         </div>
@@ -105,6 +105,9 @@ export default {
     },
     formatarEstadoCivil (valor) {
       return valor === 'CASADO' ? 'Casado' : valor === 'SOLTEIRO' ? 'Solteiro' : 'Divorciado'
+    },
+    voltar () {
+      this.$router.push('/pessoas')
     }
   }
 }
