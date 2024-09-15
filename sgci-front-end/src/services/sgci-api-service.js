@@ -26,6 +26,10 @@ export class PessoaService {
   delete (id) {
     return apiSgci.delete(this.path + '/' + id)
   }
+
+  exportar () {
+    return apiSgci.get(this.path + '/exportar-csv')
+  }
 }
 
 export const pessoaService = new PessoaService()
