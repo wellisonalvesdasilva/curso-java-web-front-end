@@ -1,0 +1,752 @@
+@import "./buttons";
+@import "./grid";
+@import "./form";
+@import "./input";
+@import "./colors";
+@import "./sidebar";
+@import "./fonts";
+@import "./reset";
+@import "./modal";
+
+/* Todos elementos com scroll fino */
+* {
+  scrollbar-width: thin;
+}
+
+/* classe Scroll */
+.scroll {
+  overflow: hidden !important;
+}
+.scroll:hover {
+  overflow: auto !important;
+}
+
+
+
+/* Define a largura dos scrolls para 'thin' no Webkit (Chrome, Safari, Opera) */
+*::-webkit-scrollbar {
+  width: 5px; /* width do scroll vertical */
+  height: 5px; /* width do scroll horizontal */
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #cdcdcd;
+}
+*::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+/* botões Desabilitados com opacidade menor*/
+.q-btn.disabled
+{
+  opacity: 50% !important;
+}
+
+.q-btn {
+  font-family: "Titillium Web", sans-serif;
+}
+
+body {
+  font-family: "Titillium Web", sans-serif;
+  background-color: map-get($map: $grey-colors, $key: 4);
+}
+
+a {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
+}
+
+.bg {
+  width: 100%;
+  height: 100%;
+  padding: 0 3em 3em 3em;
+  background-color: map-get($map: $grey-colors, $key: 4);
+
+  @media (max-width: 768px) {
+    padding-left: 15px;
+  }
+}
+
+.bg-dashboard {
+  padding: 0 3em 1.5em 3em;
+}
+
+.cor1{
+  background-color: #278428;
+}
+
+.cor2{
+  background-color: #3d78bb;
+}
+
+.action_column_basic {
+  text-align: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #dbead5 !important;
+}
+
+.campoVazio {
+  color: #959595;
+  font-style: italic;
+}
+.campoAntigo {
+  color: #959595;
+}
+.campoNovo {
+  font-weight: bold;
+}
+.campoExcluido {
+  color: #ff0000;
+}
+.linhaImportante {
+  font-weight: bold;
+}
+
+.section-container {
+  padding: 20px 0;
+  background-color: map-get($map: $grey-colors, $key: 1);
+  display: flex;
+  flex-direction: column;
+  line-height: 20px;
+}
+
+.fields-container {
+  padding: 20px 0;
+  background-color: map-get($map: $grey-colors, $key: 1);
+  display: flex;
+  flex-direction: column;
+  line-height: 20px;
+}
+
+.main-container {
+  padding: 32px 32px 40px 32px;
+  background-color: map-get($map: $grey-colors, $key: 1);
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    padding: 20px 15px;
+  }
+}
+
+.margin-top-30 {
+  margin-top: 30px;
+}
+
+.q-table__card {
+  box-shadow: none;
+}
+
+.header {
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  background-color: map-get($map: $secondary-colors, $key: 2);
+  border-bottom: 0.375em solid map-get($map: $secondary-colors, $key: 1);
+  padding: 0 1.3em;
+}
+
+.header-logo-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin-left: 20px;
+}
+
+.header-logo-text {
+  font-family: "Titillium Web", sans-serif;
+  font-size: 18px;
+  font-weight: semibold;
+  vertical-align: middle;
+  margin-top: 4px;
+}
+
+.text-primary {
+  color: #3C1A66 !important;
+}
+
+.text-busca-atual {
+  color: #3C1A66;
+  font-weight: bold;
+}
+
+.tamanho-minimo-data {
+  min-width: 80px;
+}
+
+/** Alertas */
+.q-notifications__list {
+  margin-top: 20px;
+}
+
+.q-notification--standard {
+  box-shadow: 0px 0px 10px 0px rgb(148, 148, 148);
+}
+
+/* Display tree unidade */
+.item-header-unidade .q-item__section {
+  display: block ruby;
+  margin-top: 5px;
+}
+
+.item-header-unidade .q-item__label {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #343a40;
+}
+
+.item-header-unidade .text-caption {
+  color: #495057;
+  font-weight: initial;
+}
+
+/* .q-table-control {
+  width: 100%;
+}
+ */
+.extra-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-text,
+.section-title {
+  display: flex;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.q-file{
+.q-field__inner {
+  border: 2px #D6E0F6 dashed;
+  background-color: #FBFBFF;
+  border-radius: 8px;
+  padding: 0 18px;
+  .q-field__label {
+    color: #2977ff;
+    font-weight: bold;
+  }
+}
+}
+
+.field-font {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.field-line {
+  line-height: 22px;
+}
+
+/* border-radius: 5px;
+border: 2px dashed rgb(173, 173, 173); */
+
+.subtitle-text {
+  display: flex;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.upload-file {
+  border: dashed 1px blue;
+}
+
+.divisor-line {
+  border-bottom: solid #b9b9b9;
+  border-width: thin;
+  opacity: 0.2;
+  margin: 0;
+  padding: 0;
+}
+
+.table-double-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.table-second-container {
+  width: 30%;
+  text-align: right;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.subtitle-container {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+.title-text-md {
+  font-family: "Titillium Web", sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.title-sm {
+  font-size: 20px;
+  font-weight: bold;
+  color: map-get($map: $menu-colors, $key: 2);
+}
+
+.subtitle-text-sm {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.input-row {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  padding-bottom: 32px;
+}
+
+.q-field--with-bottom {
+  padding-bottom: 2px;
+}
+
+.q-field--standard .q-field__bottom {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 3px;
+}
+
+.q-gutter-x-sm > * {
+  margin-left: 5px;
+}
+
+.warning-text {
+  font-weight: bold;
+  color: #da1a00;
+}
+
+.toolbar-teste {
+  padding: 20px !important;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.table-row-title {
+  font-size: 14px;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.table-text {
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.input-contents {
+  font-size: 18px;
+}
+
+.required {
+  color: map-get($map: $secondary-colors, $key: 4) !important;
+}
+
+.q-date {
+  width: min-content;
+}
+
+.q-date .q-btn--dense {
+  padding: 0px 10px;
+  width: 36px;
+}
+
+.table-btn-container-right {
+  padding: 15px 0 30px 0;
+}
+
+.titulo-abas {
+  padding-bottom: 10px;
+}
+
+.q-tab__indicator {
+  height: 4px;
+  margin-top: 10px;
+}
+
+.titulo-abas .q-tab__label {
+  font-size: 18px;
+  font-family: "Titillium Web", sans-serif;
+  font-style: normal;
+  text-transform: none;
+  padding-bottom: 10px;
+  color: #1b1b1b;
+}
+
+.titulo-abas .q-tab--active .q-tab__label {
+  font-weight: bold;
+  color: #3C1A66 !important;
+}
+
+.btn-actions .q-btn {
+  padding: 10px;
+}
+
+.mais-colunas {
+  height: 35px;
+  font-weight: bold;
+}
+
+.botao-a-direita {
+  text-align: right;
+  margin-top: 30px;
+}
+
+.textAreaFull textarea {
+  padding: 10px !important;
+}
+
+.textAreaFull {
+  width: 100%;
+}
+
+.textAreaFull textarea {
+  min-height: 150px !important;
+  background-color: white;
+  border-radius: 15px;
+}
+
+.textAreaFull > div > div.q-field__control {
+  padding: 1px !important;
+  border-radius: 15px !important;
+}
+
+.q-expansion-item--collapsed .column .q-icon img,
+.sidebar-itemlvl1 .column > .q-icon > img {
+  filter: opacity(0.5);
+}
+
+.q-expansion-item--expanded .column .q-icon img {
+  filter: opacity(1);
+}
+
+/* De acordo com o protótipo*/
+.expansion-custom {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+.expansion-custom .q-item {
+  padding-left: 0px !important;
+  font-weight: bold !important;
+  font-size: 22px !important;
+  border-bottom: 1px solid #343A403D !important;
+  margin-bottom: 10px !important;
+}
+/**/
+
+.menu-btn {
+  position: absolute;
+  top: 15px;
+  right: -17px;
+}
+
+.center-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.botao-menu {
+  top: 15px;
+  right: -17px;
+}
+
+.botao-menu button {
+  background-color: map-get($map: $secondary-colors, $key: 2);
+}
+
+.q-item__section--avatar {
+  min-width: 40px;
+}
+
+.badge-status {
+  height: 27px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.col-modal {
+  padding: 0 10px;
+}
+
+
+.aprovadores-container {
+  margin: auto;
+  padding: 0;
+  display: flex;
+  gap: 30px;
+    .q-card {
+  margin: 0;
+  margin-top: 20px;
+  padding: 0;
+  width: 350px;
+  height: 190px;
+  border: 1px solid #d6d6d6;
+  background-color: #f8f9fa;
+}
+}
+
+/* Card de Documentos - GLOBAL */
+.card-container-doc{
+  background-color: #fdfdfd;
+  border: 1px #D6D6D6 solid;
+  border-radius: 3px;
+  padding: 10px;
+}
+
+.content-card-ok {
+  background-color: rgba(237, 243, 230, 1);
+  border-color: rgba(184, 214, 150, 1);
+  max-height: 80px;
+  padding: 15px;
+}
+
+.content-card-error {
+  background-color: #ffebeb;
+  border-color: #ef57577d;
+  max-height: 80px;
+  padding: 15px;
+}
+
+.content-card-vencido {
+  background-color: #f9f7ec;
+  border-color: #f9e08c;
+  max-height: 100px;
+  padding: 15px;
+}
+
+.content-card-invalid {
+  background-color: #f3f3f3;
+  border-color: #d7d7d7;
+  max-height: 80px;
+  padding: 15px;
+}
+
+.icon-documentos {
+  width: 20px;
+}
+
+/* Remoção das arrows laterais do input="number" */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.vue-treeselect {
+  outline: none !important;
+
+  &:hover &:focus &:focus-visible {
+    outline: none !important;
+  }
+
+  .vue-treeselect__control {
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.24);
+    height: 40px;
+    border-radius: 0;
+    outline: none !important;
+
+    &:hover &:focus &:focus-visible {
+      outline: none !important;
+    }
+
+    .vue-treeselect__value-container {
+      .vue-treeselect__multi-value {
+        margin-bottom: 0;
+
+        .vue-treeselect__placeholder {
+          line-height: 22px;
+          font-size: 11px;
+          color: blue;
+        }
+
+        .vue-treeselect__multi-value-item-container {
+          .vue-treeselect__multi-value-item {
+            color: #278428;
+            background: #dff1c9;
+
+            .vue-treeselect__icon {
+              &.vue-treeselect__value-remove {
+                color: #278428;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .vue-treeselect__control-arrow-container {
+      .vue-treeselect__control-arrow {
+        color: rgba(0, 0, 0, 0.54);
+      }
+    }
+  }
+
+  .vue-treeselect__label-container {
+    .vue-treeselect__checkbox-container {
+      .vue-treeselect__checkbox {
+        &.vue-treeselect__checkbox--checked {
+          border-color: #278428;
+          background: #278428;
+        }
+
+        &.vue-treeselect__checkbox--unchecked {
+          &:hover {
+            border-color: #278428;
+          }
+        }
+      }
+    }
+  }
+}
+
+.tag-classificacao {
+  font-size: 14px;
+  font-weight: 700;
+  color: #3C1A66;
+}
+
+.alerta-texto {
+  color: red;
+}
+
+.bg-primary {
+  background: rgb(86, 159, 0) !important;
+}
+
+.grid-valor-mensal-cronograma-pagamento {
+  .q-list {
+    .q-item {
+      min-height: 10px !important;
+    }
+  }
+}
+
+.q-chip--dense {
+  font-size: 12px;
+}
+.opcional {
+  color: #9B99A2
+}
+
+@media screen and (max-width: 600px) {
+  .breadcrumb-voltar-container {
+    justify-content: flex-end !important;
+    background-color: #278428 !important;
+  }
+}
+
+.valorPositivo {
+  color: #3C1A66;
+  font-weight: bold;
+}
+
+.valorNegativo {
+  color: red;
+}
+
+.link {
+  color: #2f80ed;
+  padding: 0px;
+  text-decoration: underline;
+  font-size: 16px;
+  min-height: auto;
+}
+
+.mensagem-automatica {
+  font-style: italic;
+  font-weight: lighter;
+  display: block;
+}
+
+.q-tab .q-badge {
+  top: 0px;
+  right: -20px;
+}
+
+.red-tooltip {
+  background-color: red;
+  color: white;
+}
+
+.q-ml-lg-xl {
+  margin-left: 32px; /* Um valor intermediário entre o que `lg` e `xl` fornecem */
+}
+
+
+/* steper */
+.q-stepper__header--border {
+  border: 0px;
+}
+.q-stepper {
+  box-shadow: none;
+}
+.q-stepper--horizontal .q-stepper__step-inner {
+  padding: 0px;
+}
+.q-stepper__header {
+  font-weight: bold;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.titulo-abas {
+  padding-bottom: 10px;
+}
+
+.q-tab__indicator {
+  height: 4px;
+  margin-top: 10px;
+}
+
+.titulo-abas .q-tab__label {
+  font-size: 18px;
+  font-family: "Titillium Web", sans-serif;
+  font-style: normal;
+  text-transform: none;
+  padding-bottom: 10px;
+  color: #1b1b1b;
+}
+
+

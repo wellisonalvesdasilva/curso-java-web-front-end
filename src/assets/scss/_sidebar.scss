@@ -1,0 +1,55 @@
+@import "./colors";
+
+.sidebar-drawer {
+  background-color: map-get($map: $menu-colors, $key: 1);
+  color: map-get($map: $grey-colors, $key: 1);
+  padding-top: 50px;
+  & {
+  font-size: 14px;
+  line-height: 26px;
+  font-weight: 600;
+  }
+}
+
+.sidebar-itemlvl2 {
+  padding-left: 70px !important;
+}
+
+.sidebar-expansionlvl2{
+  .q-expansion-item__container {
+    .q-item {
+      &:hover{
+        background-color: map-get($map: $menu-colors, $key: 2);
+      }
+    }
+  }
+}
+
+.sidebar-expansionlvl2 {
+  .q-expansion-item__container {
+    .q-expansion-item__content {
+      .q-item {
+        padding-left: 90px !important;
+        &:hover{
+          background-color: #47514F;
+        }
+      }
+    }
+  }
+}
+
+.sidebar-expansionlvl1{
+  .q-expansion-item__container {
+    .q-item {
+      &:hover{
+        background-color: map-get($map: $menu-colors, $key: 2);
+        border-left: 5px solid map-get($map: $menu-colors, $key: 4);
+      }
+    }
+  }
+}
+
+ .sidebar-itemlvl1:hover, .sidebar-itemlvl2:hover {
+  background-color: map-get($map: $menu-colors, $key: 2);
+  border-left: 5px solid #EF8027;
+ }

@@ -1,0 +1,227 @@
+@import "./colors";
+
+.width-20{
+  width:20%;
+  }
+
+.width-30{
+  width:30%;
+  }
+
+.width-40{
+  width:40%;
+  }
+
+.width-50{
+  width:50%;
+  }
+
+.width-60{
+  width:60%;
+  }
+
+.width-70{
+    width:70%;
+  }
+
+.width-80{
+  width:80%;
+  }
+
+.width-100{
+    width:100%;
+  }
+
+#FormContrato > div.main-container.cor1 > div.container > div > div > div.row > div.col-3.col-md-3.col-xs-12.q-mt-md.\31 -mb-lg > form > div > div:nth-child(2) > div > div > label > div > div.q-field__control.relative-position.row.no-wrap::before,
+#FormContrato > div.main-container.cor1 > div.container > div > div > div.row > div.col-3.col-md-3.col-xs-12.q-mt-md.\31 -mb-lg > form > div > div:nth-child(2) > div > div > label > div > div.q-field__control.relative-position.row.no-wrap::after {
+  border: none !important;
+}
+
+.radio-label {
+  font-size: 14px;
+}
+
+/* .my-content {
+  background-color: #9cc7f3;
+}
+
+.inputs-container{
+  border: 1px solid rgba(#999,.2);
+} */
+
+.centralizar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-option-group {
+  font-size: 14px;
+}
+
+.custom-descricao-os {
+  .q-field__inner {
+    .q-field__control {
+      .q-field__control-container {
+        .q-field__native {
+          padding: 10px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+  }
+
+.custom-descricao {
+  .q-field__inner {
+    .q-field__control {
+      .q-field__control-container {
+        .q-field__native {
+          padding: 10px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+
+//ISS - Nota Fiscal
+.custom-select-textarea {
+  .q-field__inner {
+    .q-field__control {
+          margin-top: 6px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          padding-left: 8px;
+          padding-top: 3px;
+          min-height: 80px !important;
+      .q-field__control-container {
+        height: 90px !important;
+        align-items: flex-start !important;
+        custom-select.q-field__native {
+          align-items: flex-start !important;
+        }
+      }
+    }
+  }
+  }
+
+  .custom-textarea {
+    .q-field__inner {
+      .q-field__control {
+        .q-field__control-container {
+          textarea.q-field__native {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 7px;
+            min-height: 90px !important;
+          }
+          padding-bottom: 0px !important;
+        }
+      }
+    }
+  }
+
+.text-label {
+  color: #2f80ed;
+  font-size: 12px;
+}
+
+.text-label {
+  color: #2f80ed;
+  font-size: 12px;
+}
+
+.teste-amarelo {
+  border: solid 2px rgb(235, 231, 20);
+}
+
+.label-radio > span {
+  color: #058bf8;
+  font-size: 13.7px;
+}
+
+.label-radio > p {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 10.7px;
+  display: inline
+}
+
+.campos-obrigatorios-container {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+}
+
+.input-label {
+	font-size: 16px;
+	font-weight: normal;
+	color: #2f80ed; }
+
+  .text-radio {
+    .input-label {
+      q-option-group {
+        font-size: 12px !important;
+        font-weight: normal !important;
+        color: #1aad70 !important;
+      }
+    }
+  }
+
+
+.q-field {
+	&.input-placeholder {
+		font-size: 16px;
+	}
+
+	.q-field__inner {
+		.q-field__control {
+			.q-field__control-container {
+        .q-field__native{
+        .q-field__label {
+					.input-label,
+					span {
+						font-size: 14px;
+						font-weight: normal;
+						color: #2f80ed;
+					}
+				}
+      }
+			}
+		}
+	}
+}
+
+.q-table {
+	.q-field {
+		height: 30px !important;
+		min-height: 30px !important;
+
+		.q-field__inner {
+			.q-field__control {
+				padding: 0 5px 0 10px;
+				height: 100% !important;
+				min-height: 100% !important;
+
+				.q-field__control-container {
+					height: 100% !important;
+					min-height: 100% !important;
+
+					.q-field__native {
+						height: 100% !important;
+						min-height: 100% !important;
+
+						.q-field__input {
+							height: 20px !important;
+							min-height: 20px !important;
+							font-size: 14px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+}

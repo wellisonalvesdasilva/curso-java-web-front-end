@@ -1,0 +1,36 @@
+@import "./colors";
+
+//CNPJ CPF radio fixo com select que estica
+.div-estica-cnpj-cpf {
+  flex-grow: 1;
+  width: calc(100% - 145px);
+  .q-field{
+    .q-field__native{
+      flex-wrap: nowrap;
+      span{
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
+.titulo-catalogo {
+  font-size: 22px;
+  color: purple;
+}
+
+//Radio tamanho xs
+.q-radio__bg {
+  top: 24%;
+  left: 24%;
+  width: 50%;
+  height: 50%;
+}
+
+//Responsivo a partir de 1200px
+@media screen and (max-width: 1200px) {
+  .col-sm-12 {
+    height: auto !important;
+    width: 100% !important;
+  }
+}

@@ -1,0 +1,328 @@
+@import "./colors";
+
+.modal-xs-com-icone {
+    width: 500px;
+    min-height: 200px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: hidden;
+    overflow-x: auto;
+    border-radius: 10px !important;
+    .modal-xs-com-icone-content {
+      flex-grow: 1;
+      align-items: flex-start;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      overflow-y: hidden;
+      overflow-x: auto;
+      margin: 10px 0 25px 0;
+    }
+    .modal-title-container-center {
+      margin-bottom: 2px;
+    }
+    .btn-container-center {
+      margin-top: 5px;
+    }
+    .q-card__section--vert {
+      padding: 0px !important;
+    }
+    .q-card__actions {
+      padding: 0px !important;
+    }
+}
+
+.modal-xs-inputs-container {
+  padding: 10px 21px;
+}
+
+.modal-xs-mensagem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.modal-xs {
+    width: 480px;
+    min-height: 215px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    overflow-x: auto;
+    border-radius: 10px !important;
+    .modal-title-container-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .modal-xs-content {
+      padding: 15px 0 10px 0;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-grow: 1;
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
+      overflow-x: hidden;
+    }
+    .q-card__section--vert {
+      padding: 0px !important;
+      width: 100%;
+    }
+    .q-card__actions {
+      padding: 0px !important;
+    }
+}
+
+.modal-sm {
+    width: 550px;
+    min-height: 220px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px !important;
+
+    .modal-sm-content {
+      padding: 15px 0 10px 0;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-grow: 1;
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
+      overflow-x: hidden;
+    }
+    .q-card__section--vert {
+      padding: 0px !important;
+    }
+    .q-card__actions {
+      padding: 0px !important;
+    }
+  }
+
+.width-100 {
+    width:100%;
+}
+
+.height-100 {
+    height: 100%;
+}
+
+.modal-md {
+    width: 900px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px !important;
+    .modal-md-content {
+      flex-grow: 1;
+      align-items: flex-start;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      overflow: hidden;
+      }
+    .modal-title-container-left {
+      margin-bottom: 20px;
+    }
+    .btn-container-right {
+      margin-top: 35px;
+    }
+    .q-card__section--vert {
+      padding: 0px !important;
+    }
+    .q-card__actions {
+      padding: 0px !important;
+    }
+}
+
+.modal-lg {
+    width: 1200px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px !important;
+    .modal-lg-content {
+      flex-grow: 1;
+      align-items: flex-start;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      overflow: hidden;
+      }
+    .modal-title-container-left {
+      margin-top: 10px;
+      margin-bottom: 30px;
+      font-size: 26px;
+    }
+  .modal-title-container-left-boleto {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 26px;
+  }
+    .btn-container-right {
+      margin-top: 20px;
+    }
+    .q-card__section--vert {
+      padding: 0px !important;
+    }
+    .q-card__actions {
+      padding: 0px !important;
+    }
+}
+
+.modal-xl {
+    width: 95%;
+    min-height: 85%;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 10px !important;
+    .modal-xl-content {
+      flex-grow: 1;
+      align-items: flex-start;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      overflow: hidden;
+      }
+    .modal-title-container-left {
+      margin-bottom: 20px;
+    }
+    .btn-container-right {
+      margin-top: 35px;
+    }
+    .q-card__section--vert {
+      padding: 0px !important;
+    }
+    .q-card__actions {
+      padding: 0px !important;
+    }
+}
+
+
+.input-descricao {
+  width: 100%;
+.q-field__control {
+  height: 80px;
+  .q-field__label {
+    font-size: 14px;
+    font-weight: normal;
+    color: #2f80ed; }
+  }
+}
+
+@media (min-width: 600px) {
+  .q-dialog__inner--minimized > div {
+    max-width: 100%;
+  }
+}
+
+.modal-content {
+  width: 100%;
+  align-items: center;
+  margin-bottom: 10px !important;
+}
+
+.icon-excluir {
+  font-size: 48px !important;
+  color: map-get($map: $secondary-colors, $key: 4) !important;
+}
+
+.icon-desativar {
+  font-size: 48px !important;
+  color:  #FFCC00 !important;
+}
+
+.icon-ativar {
+  font-size: 48px !important;
+  color:  rgb(16,129,16) !important;
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 10px !important;
+  .q-card__section--vert {
+    padding: 0;
+  }
+  .q-card__actions {
+    padding: 0;
+  }
+}
+
+.btn-gap {
+  gap: 10px;
+}
+
+.modal-title-center,
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 2rem;
+  text-align: center;
+  color: map-get($map: $grey-colors, $key: 10);
+  padding-bottom: 5px;
+}
+
+.modal-title-container-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 2rem;
+  text-align: left;
+  color: map-get($map: $grey-colors, $key: 10);
+  gap: 10px;
+}
+
+.modal-title-container-center {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 2rem;
+  text-align:center;
+  color: map-get($map: $grey-colors, $key: 10);
+}
+
+.modal-text {
+  font-size: 18px;
+  text-align:center;
+}
+
+//quando modal pequena btn centralizados
+.modal-sm .q-card__actions--horiz {
+  justify-content: center;
+}
