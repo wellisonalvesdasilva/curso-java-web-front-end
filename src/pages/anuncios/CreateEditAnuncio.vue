@@ -38,7 +38,7 @@
             narrow-indicator
           >
             <q-tab name="dados-contrato" label="Dados Básicos" />
-            <q-tab name="imagens" label="Imagens" />
+            <q-tab :disable="!anuncio?.id" name="imagens" label="Imagens" />
           </q-tabs>
           <div
             class="q-pa-md"
@@ -194,6 +194,18 @@
               </div>
             </div>
           </div>
+<div class="q-pa-md" v-show="tab === 'imagens'">
+  <div class="row q-col-gutter-md">
+    <div
+      class="col-12 col-md-6"
+      v-for="(item, index) in listImagens"
+      :key="index"
+    >
+        <UploaderComImagem :item="item" :getUrl="getUrl" />
+    </div>
+  </div>
+</div>
+
           <div class="row">
             <div class="col-12">
               <div style="float: right">
@@ -223,9 +235,13 @@
 import { ref } from 'vue'
 import { anuncioService, enumService, ibgeService } from 'src/services/api-service.js'
 import { useQuasar } from 'quasar'
+import UploaderComImagem from './UploaderComImagem.vue'
 
 export default {
   name: 'CreateEditPessoa',
+  components: {
+    UploaderComImagem
+  },
   setup () {
     const anuncio = ref({
       id: null,
@@ -244,7 +260,30 @@ export default {
       prefix: 'R$ ',
       masked: false /* doesn't work with directive */
     })
+    const listImagens = ref([
+      {
+        descricao: 'Destaque',
+        imagem: 'https://images.tcdn.com.br/img/img_prod/885742/tuba_sinfonica_4_4_ideal_4_pistos_sib_modelo_j981_niquelada_nova_1181_1_47fce504ab835df8e14344fc6a0d80de.jpg'
+      },
+      {
+        descricao: '1'
+      },
+      {
+        descricao: '2'
+      },
+      {
+        descricao: '3'
+      },
+      {
+        descricao: '4'
+      },
+      {
+        descricao: '5'
+      }
+    ])
+    const uploaderRefs = []
     return {
+      uploaderRefs,
       $q,
       anuncio,
       title: 'Cadastrar Anúncio',
@@ -256,7 +295,8 @@ export default {
       estados: ref([]),
       municipios: ref([]),
       moneyFormatForDirective,
-      desabilitarMunicipio: ref(false)
+      desabilitarMunicipio: ref(false),
+      listImagens
     }
   },
   mounted () {
@@ -266,6 +306,10 @@ export default {
     this.buscarMarcas()
   },
   methods: {
+    getUrl (files) {
+      console.log(files)
+      return 'v1/api/teste'
+    },
     buscarPessoaParaEdicao () {
       if (!this.$route.params.id) return
       anuncioService.getById(this.$route.params.id).then((retorno) => {
