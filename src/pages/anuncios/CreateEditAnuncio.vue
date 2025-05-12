@@ -415,7 +415,7 @@ export default {
       })
     },
     voltar () {
-      this.$router.push('/pessoas')
+      this.$router.push('/admin/anuncios')
     }
   }
 }

@@ -15,7 +15,7 @@
   Bem vindo, <b>{{ getMe?.nome?.toUpperCase() }}</b>!
 </span>
 <span>&nbsp;</span>
-<q-btn stretch flat to="/login" v-if="!isAuthenticated">Entrar</q-btn>
+<q-btn stretch flat to="/account/login" v-if="!isAuthenticated">Entrar</q-btn>
 
 <q-btn
   padding="10px"
@@ -160,14 +160,14 @@ export default {
   methods: {
     logout () {
       this.$store.dispatch('auth/signOut')
-      this.$router.push('/login')
+      this.$router.push('/account/login')
     },
     obterFuncionarioBanco: function () {
       console.log('teste')
     },
     irParaHome: function () {
       this.fechartudo()
-      this.$router.push('/')
+      this.$router.push('/admin')
       this.handleShow(null)
     },
     // Recolher o menu esquerdo se clicado fora dele.

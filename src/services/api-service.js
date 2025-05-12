@@ -63,6 +63,27 @@ export class IbgeService {
   }
 }
 
+export class UsuarioService {
+  path = '/usuarios'
+
+  activate (palavraChave) {
+    return apiMercadoInstrumental.post(this.path + '/activate/' + palavraChave)
+  }
+
+  requestPasswordRecovery (email) {
+    return apiMercadoInstrumental.post(this.path + '/recuperacao-de-senha/pedido/' + email)
+  }
+
+  create (usuario) {
+    return apiMercadoInstrumental.post(this.path, usuario)
+  }
+
+  confirmacaoRecuperacaoSenha (senha, palavraPasse) {
+    return apiMercadoInstrumental.post(this.path + '/confirmacao-recuperacao-senha?senha=' + senha + '&palavraPasse=' + palavraPasse)
+  }
+}
+
 export const anuncioService = new AnuncioService()
 export const enumService = new EnumService()
 export const ibgeService = new IbgeService()
+export const usuarioService = new UsuarioService()
