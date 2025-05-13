@@ -524,36 +524,36 @@ border: 2px dashed rgb(173, 173, 173); */
 .card-container-doc{
   background-color: #fdfdfd;
   border: 1px #D6D6D6 solid;
-  border-radius: 3px;
-  padding: 10px;
+  max-height: 55px;
+  padding: 1px;
 }
 
 .content-card-ok {
   background-color: rgba(237, 243, 230, 1);
   border-color: rgba(184, 214, 150, 1);
-  max-height: 80px;
-  padding: 15px;
+  max-height: 55px;
+  padding: 1px;
 }
 
 .content-card-error {
   background-color: #ffebeb;
   border-color: #ef57577d;
-  max-height: 80px;
-  padding: 15px;
+  max-height: 55px;
+  padding: 1px;
 }
 
 .content-card-vencido {
   background-color: #f9f7ec;
   border-color: #f9e08c;
-  max-height: 100px;
-  padding: 15px;
+  max-height: 55px;
+  padding: 1px;
 }
 
 .content-card-invalid {
   background-color: #f3f3f3;
   border-color: #d7d7d7;
-  max-height: 80px;
-  padding: 15px;
+  max-height: 55px;
+  padding: 1px;
 }
 
 .icon-documentos {

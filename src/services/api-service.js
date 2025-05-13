@@ -83,7 +83,26 @@ export class UsuarioService {
   }
 }
 
+export class ArtefatoAnuncioService {
+  path = '/imagens'
+
+  getByIdAnuncio (idAnuncio) {
+    return apiMercadoInstrumental.get(this.path + '/' + idAnuncio)
+  }
+
+  uploadArtefato (idArtefato, arquivo) {
+    const formData = new FormData()
+    formData.append('arquivo', arquivo)
+    return apiMercadoInstrumental.post(this.path + '/' + idArtefato + '/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
+}
+
 export const anuncioService = new AnuncioService()
 export const enumService = new EnumService()
 export const ibgeService = new IbgeService()
 export const usuarioService = new UsuarioService()
+export const artefatoAnuncioService = new ArtefatoAnuncioService()

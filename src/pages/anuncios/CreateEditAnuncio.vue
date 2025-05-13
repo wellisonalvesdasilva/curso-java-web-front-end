@@ -194,19 +194,14 @@
               </div>
             </div>
           </div>
-<div class="q-pa-md" v-show="tab === 'imagens'">
-  <div class="row q-col-gutter-md">
-    <div
-      class="col-12 col-md-6"
-      v-for="(item, index) in listImagens"
-      :key="index"
-    >
-        <UploaderComImagem :item="item" :getUrl="getUrl" />
-    </div>
-  </div>
-</div>
-
-          <div class="row">
+        <div class="q-pa-md" v-show="tab === 'imagens'">
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-md-12">
+                <UploaderComImagem :item="item" :getUrl="getUrl" />
+            </div>
+          </div>
+        </div>
+          <div class="row q-mt-md">
             <div class="col-12">
               <div style="float: right">
                 <q-btn
@@ -260,27 +255,7 @@ export default {
       prefix: 'R$ ',
       masked: false /* doesn't work with directive */
     })
-    const listImagens = ref([
-      {
-        descricao: 'Destaque',
-        imagem: 'https://images.tcdn.com.br/img/img_prod/885742/tuba_sinfonica_4_4_ideal_4_pistos_sib_modelo_j981_niquelada_nova_1181_1_47fce504ab835df8e14344fc6a0d80de.jpg'
-      },
-      {
-        descricao: '1'
-      },
-      {
-        descricao: '2'
-      },
-      {
-        descricao: '3'
-      },
-      {
-        descricao: '4'
-      },
-      {
-        descricao: '5'
-      }
-    ])
+
     const uploaderRefs = []
     return {
       uploaderRefs,
@@ -295,8 +270,7 @@ export default {
       estados: ref([]),
       municipios: ref([]),
       moneyFormatForDirective,
-      desabilitarMunicipio: ref(false),
-      listImagens
+      desabilitarMunicipio: ref(false)
     }
   },
   mounted () {

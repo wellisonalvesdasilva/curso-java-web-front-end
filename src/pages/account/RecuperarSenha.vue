@@ -1,7 +1,7 @@
 <template>
   <div class="q-pt-lg">
     <div class="text-h6 flex justify-center">
-      <p style="font-size: 30px">Recuperar Senha</p>
+      <p style="font-size: 30px">Recuperar senha</p>
     </div>
   </div>
   <q-card-section>
