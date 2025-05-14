@@ -18,7 +18,7 @@
           v-if="item.srcDir"
           name="visibility"
           size="20px"
-          @click="carregarPdf"
+          @click="carregarImagem(item)"
           class="q-ml-md cursor-pointer"
         />
         <!-- <img
@@ -38,8 +38,34 @@
     </q-card-section>
   </q-card>
   <q-file v-model="arquivo" ref="arquivoinput" style="display: none" />
-</template>
 
+  <q-dialog v-model="modalVisualizarImagem" persistent>
+    <q-card class="q-px-md modal-sm" style="min-width: 60%">
+      <q-card-section class="modal-title-container-left">
+        <h5>{{ 'Visualizar Imagem - ' + this.imagemEmVisualizacao?.titulo + '' + (this.imagemEmVisualizacao?.titulo == 1 ? ' (Capa)' : '')  }}</h5>
+      </q-card-section>
+      <div class="divisor-line" style="margin-top: 3px;"></div>
+      <hr class="separadorModal"/>
+          <q-card-section style="max-height: 70vh; overflow: auto;">
+            <div v-if="imagemEmVisualizacao" class="flex flex-center">
+              <img
+                :src="'data:image/' + imagemEmVisualizacao.headers + ';base64,' + imagemEmVisualizacao.base64"
+                alt="Imagem carregada"
+                style="max-width: 100%; max-height: 100%"
+              />
+            </div>
+          </q-card-section>
+          <div class="row q-mt-md" style="width: 100%">
+            <div class="col-12">
+              <div class="btn-container-right">
+                <q-btn class="btn-cancelar" label="Fechar" @click="fecharModal()"/>
+              </div>
+            </div>
+          </div>
+    </q-card>
+  </q-dialog>
+
+</template>
 <script>
 import { ref } from 'vue'
 import { artefatoAnuncioService } from 'src/services/api-service.js'
@@ -47,6 +73,7 @@ export default {
   data () {
     return {
       arquivo: ref(null),
+      imagemEmVisualizacao: ref(null),
       imagem: ref(null),
       iconExcluir: 'icons-geral/excluir.svg',
       iconDownload: '/imagens-errors/download.svg',
@@ -56,7 +83,14 @@ export default {
       iconError: '/imagens-errors/error.svg',
       iconErrorInvalid: '/imagens-errors/error_invalid.svg',
       iconErrorVencido: '/imagens-errors/error_denied.svg',
-      listImagens: ref([])
+      listImagens: ref([]),
+      modalVisualizarImagem: ref(false)
+    }
+  },
+  props: {
+    idAnuncio: {
+      type: Object,
+      default: () => null
     }
   },
   watch: {
@@ -66,10 +100,12 @@ export default {
           this.uploadArquivo()
         }
       }
+    },
+    idAnuncio: {
+      handler () {
+        this.buscarArtefatos()
+      }
     }
-  },
-  mounted () {
-    this.buscarArtefatos()
   },
   methods: {
     getClassCard (item) {
@@ -85,17 +121,32 @@ export default {
     uploadArquivo () {
       artefatoAnuncioService.uploadArtefato(this.imagem.idArtefato, this.arquivo).then((retorno) => {
         this.$q.notify({ message: 'Upload realizado com sucesso!', color: 'positive', textColor: 'white' })
+        this.arquivo = null
         this.buscarArtefatos()
       })
     },
     buscarArtefatos () {
-      artefatoAnuncioService.getByIdAnuncio(this.$route.params.id).then((retorno) => {
+      artefatoAnuncioService.getByIdAnuncio(this.idAnuncio).then((retorno) => {
         if (retorno) {
           this.listImagens = []
           this.listImagens = retorno.data
         }
       })
+    },
+    carregarImagem (item) {
+      artefatoAnuncioService.downloadArtefato(item.idArtefato).then((retorno) => {
+        this.imagemEmVisualizacao = retorno.data
+        this.imagemEmVisualizacao.titulo = item.numero
+        this.modalVisualizarImagem = true
+      })
+    },
+    fecharModal () {
+      this.modalVisualizarImagem = false
     }
+  },
+  mounted () {
+    debugger
+    this.buscarArtefatos()
   }
 }
 </script>

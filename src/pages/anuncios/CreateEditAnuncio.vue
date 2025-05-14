@@ -6,9 +6,8 @@
           <q-breadcrumbs
             separator=">"
             class="q-mb-none"
-            active-color="secondary"
-          >
-            <q-breadcrumbs-el to="/contratacao/contrato" label="Anúncios" />
+            active-color="secondary">
+            <q-breadcrumbs-el to="/admin/anuncios" label="Anúncios" />
             <q-breadcrumbs-el :label="title" class="breadcrumb-last" />
           </q-breadcrumbs>
         </div>
@@ -21,18 +20,22 @@
           />
         </div>
       </div>
-      <q-form greedy ref="formPessoa" @submit="cadastrarOuAtualizar">
+      <q-form greedy ref="formPessoa" @submit="cadastrarOuAtualizar(false)">
         <div class="main-container">
-          <div class="q-mb-md">
-            <h4 class="title q-mb-sm">
-              {{ anuncio?.id ? "Editar " : "Cadastrar " }} Anúncio
-            </h4>
-            <div class="divisor-line"></div>
+        <div class="flex justify-between items-center q-mb-sm">
+          <h2 class="title-text">{{ title }}</h2>
+          <q-space/>
+          <div>
+            <div class="flex">
+              <q-badge style="margin-right: 10px;" rounded :style="{ backgroundColor: anuncio?.status?.value === 'PUBLICADO' ? '#569f00' : '#EF8027' }" :label="anuncio?.status?.label" />
+            </div>
           </div>
+        </div>
+          <div class="divisor-line"></div>
           <q-tabs
             v-model="tab"
             dense
-            class="text-h6 text-grey titulo-abas"
+            class="q-mt-md text-h6 text-grey titulo-abas"
             active-color="primary"
             indicator-color="primary"
             narrow-indicator
@@ -194,10 +197,10 @@
               </div>
             </div>
           </div>
-        <div class="q-pa-md" v-show="tab === 'imagens'">
+        <div class="q-pa-md" v-if="tab === 'imagens'">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-12">
-                <UploaderComImagem :item="item" :getUrl="getUrl" />
+                <UploaderComImagem :idAnuncio="anuncio?.id" />
             </div>
           </div>
         </div>
@@ -213,7 +216,17 @@
                 />
                 <q-btn
                   type="submit"
-                  :label="anuncio?.id ? 'Salvar' : 'Cadastrar'"
+                  style="margin-right: 10px"
+                  label="Salvar Rascunho"
+                  no-caps
+                  class="btn-salvar"
+                />
+
+                <q-btn
+                  @click="cadastrarOuAtualizar(true)"
+                  v-if="anuncio?.id"
+                  type="button"
+                  label="Publicar"
                   no-caps
                   class="btn-cadastrar"
                 />
@@ -243,7 +256,8 @@ export default {
       novo: false,
       tipo: null,
       marca: null,
-      valor: null
+      valor: null,
+      status: { label: 'Rascunho', value: 'RASCUNHO' }
     })
     const $q = useQuasar()
     const tiposInstrumentos = ref([])
@@ -261,7 +275,7 @@ export default {
       uploaderRefs,
       $q,
       anuncio,
-      title: 'Cadastrar Anúncio',
+      title: ref('Cadastrar Anúncio'),
       tab: ref('dados-contrato'),
       valorFormatado: ref(''),
       tiposInstrumentos,
@@ -280,47 +294,51 @@ export default {
     this.buscarMarcas()
   },
   methods: {
-    getUrl (files) {
-      console.log(files)
-      return 'v1/api/teste'
-    },
     buscarPessoaParaEdicao () {
       if (!this.$route.params.id) return
+      this.title = 'Editar Anúncio'
       anuncioService.getById(this.$route.params.id).then((retorno) => {
         this.anuncio = retorno.data
         this.anuncio.valor = this.anuncio.valor.toFixed(2)
         this.buscarMunicipios()
       })
     },
-    cadastrarOuAtualizar () {
+    async cadastrarOuAtualizar (publicar) {
       const dto = { ...this.anuncio }
       dto.estado = dto.estado?.sigla || dto.estado
       dto.municipio = dto.municipio?.nome || dto.municipio
       dto.valor = this.$fmt.decimalToApi(dto.valor)
       dto.tipo = dto.tipo.value || dto.tipo
       dto.marca = dto.marca.value || dto.marca
+
       if (this.anuncio.id) {
-        anuncioService.update(dto.id, dto).then((response) => {
+        dto.isPublicacao = publicar
+        try {
+          await anuncioService.update(dto.id, dto)
           this.$q.notify({
             message: 'Registro editado com sucesso!',
             color: 'positive',
             textColor: 'white'
           })
           this.voltar()
-        }).catch((error) => {
+        } catch (error) {
           console.log(error)
-        })
+        }
       } else {
-        anuncioService.create(dto).then((response) => {
+        try {
+          const response = await anuncioService.create(dto)
           this.$q.notify({
-            message: 'Registro cadastrado com sucesso!',
+            message: 'Anúncio salvo. Prossiga com as imagens!',
             color: 'positive',
             textColor: 'white'
           })
-          this.voltar()
-        }).catch((error) => {
+          const id = response.data
+          await this.irParaEdicao(id)
+          this.anuncio.id = id
+          this.tab = 'imagens'
+        } catch (error) {
           console.log(error)
-        })
+        }
       }
     },
     buscarTiposInstrumentos () {
@@ -390,6 +408,9 @@ export default {
     },
     voltar () {
       this.$router.push('/admin/anuncios')
+    },
+    irParaEdicao (id) {
+      this.$router.push('/admin/anuncios/form/' + id)
     }
   }
 }

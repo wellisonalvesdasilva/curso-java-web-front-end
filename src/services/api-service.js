@@ -99,6 +99,10 @@ export class ArtefatoAnuncioService {
       }
     })
   }
+
+  downloadArtefato (idArtefato) {
+    return apiMercadoInstrumental.post(this.path + '/' + idArtefato + '/download')
+  }
 }
 
 export const anuncioService = new AnuncioService()
