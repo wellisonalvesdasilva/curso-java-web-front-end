@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Loading } from 'quasar'
 
 const apiMercadoInstrumental = axios.create({
   baseURL: process.env.API_MERCADO_INSTRUMENTAL
@@ -9,9 +10,39 @@ apiMercadoInstrumental.interceptors.request.use(config => {
   if (token) {
     config.headers.Authorization = `${token}`
   }
+  debugger
+  if (!config.preventLoading) {
+    Loading.show({ group: config.url })
+  }
   return config
 }, error => {
   return Promise.reject(error)
+})
+
+apiMercadoInstrumental.interceptors.response.use(response => {
+  Loading.hide(response.config.url)
+  return response
+}, (response) => {
+  Loading.hide(response.config.url)
+  if (response.response) {
+    switch (response.response.status) {
+      case 401:
+        return Promise.reject(new Error('Token Expirado'))
+      case 501:
+        return Promise.reject(new Error('Serviço Não implementado, contate o suporte técnico!'))
+      case 502:
+        return Promise.reject(new Error('Porta de entrada ruim, contate o suporte técnico!'))
+      case 503:
+        return Promise.reject(new Error('Serviço Indisponível, contate o suporte técnico!'))
+      case 504:
+        return Promise.reject(new Error('Tempo limite(time-out), tente novamente mais tarde ou contate o suporte técnico!'))
+      case 505:
+        return Promise.reject(new Error('Versão HTTP não suportada, contate o suporte técnico!'))
+      default:
+        return Promise.reject(response)
+    }
+  }
+  return Promise.reject(response)
 })
 
 export class AnuncioService {
@@ -54,12 +85,12 @@ export class EnumService {
 export class IbgeService {
   path = '/ibge-dados'
 
-  getEstados () {
-    return apiMercadoInstrumental.get(this.path + '/estados')
+  getEstados (preventLoading = true) {
+    return apiMercadoInstrumental.get(this.path + '/estados', { preventLoading })
   }
 
-  getMunicipios (estado) {
-    return apiMercadoInstrumental.get(this.path + '/municipios/' + estado)
+  getMunicipios (estado, preventLoading = true) {
+    return apiMercadoInstrumental.get(this.path + '/municipios/' + estado, { preventLoading })
   }
 }
 
@@ -105,8 +136,21 @@ export class ArtefatoAnuncioService {
   }
 }
 
+export class UsuarioInternoService {
+  path = '/usuariosInterno'
+
+  findDadosUsuarioLogado () {
+    return apiMercadoInstrumental.get(this.path)
+  }
+
+  updatePassword (senhaAtual, novaSenha) {
+    return apiMercadoInstrumental.post(this.path + '?senhaAtual=' + senhaAtual + '&novaSenha=' + novaSenha)
+  }
+}
+
 export const anuncioService = new AnuncioService()
+export const artefatoAnuncioService = new ArtefatoAnuncioService()
 export const enumService = new EnumService()
 export const ibgeService = new IbgeService()
 export const usuarioService = new UsuarioService()
-export const artefatoAnuncioService = new ArtefatoAnuncioService()
+export const usuarioInternoService = new UsuarioInternoService()

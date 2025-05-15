@@ -79,8 +79,8 @@
             <q-item-section avatar>
               <q-icon name="inbox" />
             </q-item-section>
-            <q-item-section @click="alterarSenha()">
-              Alterar Senha
+            <q-item-section @click="alterarDadosPessoais()">
+              Meu Perfil
             </q-item-section>
           </q-item>
           <q-item clickable v-ripple @click="logout()">
@@ -146,8 +146,8 @@ export default {
     this.obterFuncionarioBanco()
   },
   methods: {
-    alterarSenha () {
-      console.log('caiu aqui....')
+    alterarDadosPessoais () {
+      this.$router.push('/admin/profile')
     },
     logout () {
       this.$store.dispatch('auth/signOut')

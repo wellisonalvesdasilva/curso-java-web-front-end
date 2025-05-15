@@ -35,10 +35,7 @@
 
 <script>
 import { usuarioService } from 'src/services/api-service.js'
-import { useQuasar } from 'quasar'
 import { mapActions } from 'vuex'
-
-let $q
 
 export default {
   name: 'LoginPage',
@@ -54,15 +51,9 @@ export default {
     ...mapActions('auth', ['doLogin']),
     async submitForm () {
       if (!this.login.email || !this.login.senha) {
-        $q.notify({
-          type: 'negative',
-          message: 'Usuário e/ou senha estão incorretos.'
-        })
+        this.$msg.error('Usuário ou senha inválidos. Se você esqueceu seus dados, utilize a opção "Esqueci minha senha".')
       } else if (this.login.senha.length < 3) {
-        $q.notify({
-          type: 'negative',
-          message: 'A senha deve ter 3 ou mais caracteres.'
-        })
+        this.$msg.warning('A senha deve ter 3 ou mais caracteres.')
       } else {
         try {
           await this.doLogin(this.login)
@@ -70,29 +61,18 @@ export default {
           this.$router.push(toPath)
         } catch (err) {
           if (err.response.data.message) {
-            $q.notify({
-              type: 'negative',
-              message: err.response.data.message
-            })
+            this.$msg.error(err.response.data.message)
           }
         }
       }
     },
     esqueciMinhaSenha () {
       if (!this.login.email) {
-        this.$q.notify({
-          message: 'O e-mail deve ser informado.',
-          color: 'negative',
-          textColor: 'white'
-        })
+        this.$msg.warning('O campo e-mail deve ser informado!')
         return
       }
       usuarioService.requestPasswordRecovery(this.login.email).then((retorno) => {
-        this.$q.notify({
-          message: 'Enviamos um link para redefinir sua senha para o e-mail informado.',
-          color: 'positive',
-          textColor: 'white'
-        })
+        this.$msg.success('Enviamos um link para redefinir sua senha para o e-mail informado!')
       })
     },
     cadastrar () {
@@ -102,14 +82,13 @@ export default {
       const activate = this.$route.params.active || null
       if (activate) {
         usuarioService.activate(activate).then((retorno) => {
-          this.$q.notify({ message: 'Usuário ativado com sucesso!', color: 'positive', textColor: 'white' })
+          this.$msg.success('Usuário ativado com sucesso!')
           this.$router.push('/account/login')
         })
       }
     }
   },
   mounted () {
-    $q = useQuasar()
     this.tratamentoAtivacao()
   }
 }

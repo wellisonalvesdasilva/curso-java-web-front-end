@@ -50,7 +50,13 @@
           >
             <div class="row q-col-gutter-md q-mt-sm">
               <div class="q-gutter-sm col-12">
-                <q-toggle style="font-size: 15px;" size="lg" v-model="anuncio.novo" val="xl" label="Produto novo?" left-label/>
+                <q-toggle
+                style="font-size: 15px;"
+                size="lg"
+                v-model="anuncio.novo"
+                val="xl"
+                label="Produto novo?"
+                left-label/>
               </div>
               <div class="col-2">
               <q-select
@@ -114,7 +120,7 @@
               <q-select
                 stack-label
                 dense
-                label="Categoria"
+                label="Tipo"
                 v-model="anuncio.tipo"
                 use-input
                 emit-value
@@ -181,15 +187,26 @@
                 </q-input>
               </div>
               <div class="col-12">
-                        <q-input stack-label dense maxlength="4000" :rules="[vRequired]" v-model="anuncio.titulo" label="Parecer de aprovação" class="custom-textarea">
+              <q-input
+              stack-label dense maxlength="4000"
+              :rules="[vRequired]"
+              v-model="anuncio.titulo"
+              label="Parecer de aprovação"
+              class="custom-textarea">
           <template v-slot:label>
             <span class="input-label">Título</span>
           </template>
         </q-input>
               </div>
               <div class="col-12">
-        <q-input :rules="[vRequired]" stack-label dense maxlength="4000" autogrow v-model="anuncio.descricao"
-                 label="Descrição" class="custom-textarea">
+        <q-input
+                :rules="[vRequired]"
+                stack-label
+                dense maxlength="4000"
+                autogrow
+                v-model="anuncio.descricao"
+                label="Descrição"
+                class="custom-textarea">
           <template v-slot:label>
             <span class="input-label">Descrição </span>
           </template>
@@ -200,7 +217,7 @@
         <div class="q-pa-md" v-if="tab === 'imagens'">
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-12">
-                <UploaderComImagem :idAnuncio="anuncio?.id" />
+                <UploaderComImagem :visualizar="false" :idAnuncio="anuncio?.id" />
             </div>
           </div>
         </div>
@@ -215,6 +232,7 @@
                   class="btn-voltar"
                 />
                 <q-btn
+                  v-if="!isPublicado"
                   type="submit"
                   style="margin-right: 10px"
                   label="Salvar Rascunho"
@@ -269,7 +287,6 @@ export default {
       prefix: 'R$ ',
       masked: false /* doesn't work with directive */
     })
-
     const uploaderRefs = []
     return {
       uploaderRefs,
@@ -285,6 +302,13 @@ export default {
       municipios: ref([]),
       moneyFormatForDirective,
       desabilitarMunicipio: ref(false)
+    }
+  },
+  computed: {
+    isPublicado: {
+      get () {
+        return this.anuncio?.status?.value === 'PUBLICADO'
+      }
     }
   },
   mounted () {
@@ -303,42 +327,35 @@ export default {
         this.buscarMunicipios()
       })
     },
-    async cadastrarOuAtualizar (publicar) {
+    cadastrarOuAtualizar (publicar) {
       const dto = { ...this.anuncio }
       dto.estado = dto.estado?.sigla || dto.estado
       dto.municipio = dto.municipio?.nome || dto.municipio
       dto.valor = this.$fmt.decimalToApi(dto.valor)
       dto.tipo = dto.tipo.value || dto.tipo
       dto.marca = dto.marca.value || dto.marca
-
       if (this.anuncio.id) {
         dto.isPublicacao = publicar
-        try {
-          await anuncioService.update(dto.id, dto)
-          this.$q.notify({
-            message: 'Registro editado com sucesso!',
-            color: 'positive',
-            textColor: 'white'
+        anuncioService.update(dto.id, dto)
+          .then(response => {
+            this.$msg.success('Registro editado com sucesso!')
+            this.voltar()
           })
-          this.voltar()
-        } catch (error) {
-          console.log(error)
-        }
+          .catch(error => {
+            this.$msg.apiError('Erro ao cadastrar/atualizar!', error)
+          })
       } else {
-        try {
-          const response = await anuncioService.create(dto)
-          this.$q.notify({
-            message: 'Anúncio salvo. Prossiga com as imagens!',
-            color: 'positive',
-            textColor: 'white'
+        anuncioService.create(dto)
+          .then(response => {
+            this.$msg.success('Anúncio salvo. Prossiga com o upload das imagens!')
+            const id = response.data
+            this.irParaEdicao(id).then(() => {
+              this.anuncio.id = id
+              this.tab = 'imagens'
+            })
+          }).catch(error => {
+            this.$msg.apiError('Falha ao salvar o anúncio!', error)
           })
-          const id = response.data
-          await this.irParaEdicao(id)
-          this.anuncio.id = id
-          this.tab = 'imagens'
-        } catch (error) {
-          console.log(error)
-        }
       }
     },
     buscarTiposInstrumentos () {
@@ -346,7 +363,7 @@ export default {
         this.tiposInstrumentos = response.data
         this.listaCamposFiltrados.tiposInstrumentos = response.data
       }).catch(error => {
-        this.$msg.apiError('Erro ao buscar dossiê', error)
+        this.$msg.apiError('Erro ao buscar os tipos de instrumentos!', error)
       })
     },
     buscarMarcas () {
@@ -354,7 +371,7 @@ export default {
         this.marcas = response.data
         this.listaCamposFiltrados.marcas = response.data
       }).catch(error => {
-        this.$msg.apiError('Erro ao buscar dossiê', error)
+        this.$msg.apiError('Erro ao buscar as marcas!', error)
       })
     },
     buscarEstados () {
@@ -362,7 +379,7 @@ export default {
         this.estados = response.data
         this.listaCamposFiltrados.estados = response.data
       }).catch(error => {
-        this.$msg.apiError('Erro ao buscar dossiê', error)
+        this.$msg.apiError('Erro ao buscar os estados!', error)
       })
     },
     alterouEstado () {

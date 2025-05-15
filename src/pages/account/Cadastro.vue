@@ -86,7 +86,7 @@ export default {
       const avancar = this.validacoes()
       if (avancar) {
         usuarioService.create(this.usuario).then((retorno) => {
-          this.$q.notify({ message: 'Cadastro realizado! Verifique seu e-mail para ativar e acessar sua conta.', color: 'positive', textColor: 'white' })
+          this.$msg.success('Cadastro realizado! Verifique seu e-mail para ativar e acessar sua conta!')
           this.voltar()
         })
       }
@@ -96,20 +96,12 @@ export default {
     },
     validacoes () {
       if (this.usuario.senha !== this.usuario.confirmacao) {
-        this.$q.notify({
-          message: 'A confirmação de senha deve ser igual à senha.',
-          color: 'negative',
-          textColor: 'white'
-        })
+        this.$msg.warning('A confirmação de senha deve ser igual à nova senha informada!')
         return false
       }
       const whats = this.usuario.whats.replace(/\D/g, '')
       if (!/^\d{11}$/.test(whats)) {
-        this.$q.notify({
-          message: 'Informe um número de WhatsApp válido com DDD (11 dígitos).',
-          color: 'negative',
-          textColor: 'white'
-        })
+        this.$msg.warning('Informe um número de WhatsApp válido com DDD (11 dígitos)!')
         return false
       }
       return true

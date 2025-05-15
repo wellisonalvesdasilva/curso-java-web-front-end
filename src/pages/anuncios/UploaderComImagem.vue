@@ -30,6 +30,7 @@
         /> -->
         <img
           @click="uparDocumento(item)"
+          v-if="!visualizar"
           class="cursor-pointer q-ml-md icon-documentos"
           :src="iconUpload"
           alt="Upload Documento"
@@ -42,7 +43,7 @@
   <q-dialog v-model="modalVisualizarImagem" persistent>
     <q-card class="q-px-md modal-sm" style="min-width: 60%">
       <q-card-section class="modal-title-container-left">
-        <h5>{{ 'Visualizar Imagem - ' + this.imagemEmVisualizacao?.titulo + '' + (this.imagemEmVisualizacao?.titulo == 1 ? ' (Capa)' : '')  }}</h5>
+        <h5>{{ 'Visualizar Imagem' }}</h5>
       </q-card-section>
       <div class="divisor-line" style="margin-top: 3px;"></div>
       <hr class="separadorModal"/>
@@ -91,6 +92,10 @@ export default {
     idAnuncio: {
       type: Object,
       default: () => null
+    },
+    visualizar: {
+      type: Boolean,
+      default: () => false
     }
   },
   watch: {

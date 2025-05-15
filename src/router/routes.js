@@ -14,6 +14,7 @@ const routes = [
     path: '/admin',
     component: () => import('layouts/MainLayout.vue'),
     children: [
+      { path: 'profile', component: () => import('pages/profile/AlterarDadosPessoais.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios', component: () => import('pages/anuncios/GridAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios/form', component: () => import('pages/anuncios/CreateEditAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios/form/:id', component: () => import('pages/anuncios/CreateEditAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
