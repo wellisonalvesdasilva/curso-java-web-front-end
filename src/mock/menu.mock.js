@@ -11,8 +11,7 @@ export const MENU = [
       {
         to: '/admin/anuncios',
         label: 'Listar',
-        transacao: 'Geral-MensagemNotificacao-Inserir',
-        disable: true
+        transacao: 'Geral-MensagemNotificacao-Inserir'
       }
     ]
   }

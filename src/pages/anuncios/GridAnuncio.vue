@@ -1,73 +1,110 @@
 <template>
-  <div class="q-pa-md bg">
-    <div class="bg"></div>
-    <div class="main-container">
-      <div class="q-mb-md">
-        <h4 class="title">Consultar Pessoas</h4>
-        <div class="divisor-inline"></div>
-      </div>
-      <q-table flat bordered ref="tableRef" class="my-sticky-last-column-table" :rows="rows" :columns="columns"
-        :rows-per-page-options="pagination.perpageOptions" row-key="id" v-model:pagination="pagination"
-        :loading="loading" :filter="filter" binary-state-sort @request="buscarPessoas">
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props"
-              :class="col.label === 'Ações' ? 'action_column' : ''">
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props"
-              :class="col.label === 'Ações' ? 'action_column' : ''">
-              <q-input v-if="col.name != 'actions'" :model-value="filters[col.name]"
-                @change="val => filtroTrocado(col.name, val)" filled dense>
-              </q-input>
-            </q-th>
-          </q-tr>
-        </template>
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props" class="q-gutter-x-sm text-center action_column">
-            <q-btn class="btn-action q-ml-none" size="sm" round flat icon="visibility" @click="visualizar(props.row)">
-              <q-tooltip>Visualizar</q-tooltip>
-            </q-btn>
-            <q-btn class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
-              @click="editar(props.row)">
-              <q-tooltip>Editar Registro</q-tooltip>
-            </q-btn>
-            <q-btn class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
-              <q-tooltip>Excluir Registro</q-tooltip>
-            </q-btn>
-          </q-td>
-        </template>
-
-      </q-table>
-      <div class="row">
-        <div class="col-12">
-          <div style="float: right; margin-top: 40px">
-            <q-btn @click="exportar" style="margin-right: 10px;" label="Exportar" no-caps class="btn-voltar" />
-            <q-btn @click="cadastrar" label="Cadastrar" no-caps class="btn-cadastrar" />
-          </div>
+  <div>
+    <div class="bg">
+      <div class="row items-center justify-between q-mb-none">
+        <div class="col-auto breadcrumb-container">
+          <q-breadcrumbs
+            separator=">"
+            class="q-mb-none"
+            active-color="secondary">
+            <q-breadcrumbs-el to="/admin/anuncios" label="Anúncios" />
+            <q-breadcrumbs-el :label="title" class="breadcrumb-last" />
+          </q-breadcrumbs>
+        </div>
+        <div class="col-auto breadcrumb-container">
+          <q-btn
+            class="link-voltar q-pr-none"
+            icon="chevron_left"
+            label="Voltar"
+            @click="voltar"
+          />
         </div>
       </div>
+      <q-form greedy>
+        <div class="main-container">
+          <div class="flex justify-between items-center q-mb-sm">
+            <h2 class="title-text">{{ title }}</h2>
+            <q-space />
+          </div>
+          <div class="divisor-line"></div>
+        <div class="q-mt-lg">
+          <q-table flat bordered ref="tableRef" class="last-sticky-header-column-table mais_colunas table_header scroll_default--custom scroll_default--table my-sticky-last-column-table" :rows="rows" :columns="columns"
+          :rows-per-page-options="pagination.perpageOptions" row-key="id" v-model:pagination="pagination"
+          :loading="loading" :filter="filter" binary-state-sort @request="buscarPessoas">
+          <template v-slot:header="props">
+            <q-tr :props="props">
+              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+                {{ col.label }}
+              </q-th>
+            </q-tr>
+            <q-tr :props="props">
+              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+                <q-input v-if="col.name != 'actions'" :model-value="filters[col.name]"
+                  @change="val => filtroTrocado(col.name, val)" filled dense>
+                </q-input>
+              </q-th>
+            </q-tr>
+          </template>
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props" class="q-gutter-x-sm text-center">
+              <q-btn class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
+                @click="editar(props.row)">
+                <q-tooltip>Editar Registro</q-tooltip>
+              </q-btn>
+              <q-btn class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
+                <q-tooltip>Excluir Registro</q-tooltip>
+              </q-btn>
+            </q-td>
+          </template>
+            <template v-slot:body-cell-status="props">
+              <q-td :props="props">
+                <q-icon v-if="props.value === 'Publicado'" class="icon_gap" color="green" name="circle"
+                  size="10px"></q-icon>
+               <q-icon
+                  v-if="props.value === 'Rascunho' || props.value === 'Em Elaboração' || props.value === 'Suspenso'"
+                  class="icon_gap" color="orange" name="circle" size="10px"></q-icon>
+                {{ props.value }}
+              </q-td>
+            </template>
+          </q-table>
+        </div>
+          <div class="row q-mt-md">
+            <div class="col-12">
+              <div style="float: right">
+                <q-btn
+                  @click="cadastrar"
+                  type="button"
+                  label="Cadastrar"
+                  no-caps
+                  class="btn-cadastrar"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </q-form>
     </div>
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
-import { pessoaService } from 'src/services/api-service.js'
+import { anuncioService } from 'src/services/api-service.js'
 import { useQuasar } from 'quasar'
 
 const columns = [
   { name: 'id', align: 'center', label: 'Id', field: 'id' },
-  { name: 'nome', align: 'left', label: 'Nome', field: 'nome' },
-  { name: 'documento', align: 'left', label: 'Documento', field: 'documento' },
-  { name: 'profissao', align: 'left', label: 'Profissão', field: 'profissao' },
-  { name: 'estadoCivil', align: 'left', label: 'Estado Cívil', field: 'estadoCivil' },
-  { name: 'actions', required: true, align: 'center', field: 'actions' }
+  { name: 'status', align: 'left', label: 'Status', field: val => val.status.label },
+  { name: 'titulo', align: 'left', label: 'Título', field: 'titulo' },
+  { name: 'estado', align: 'center', label: 'Estado', field: 'estado' },
+  { name: 'municipio', align: 'left', label: 'Município', field: 'municipio' },
+  { name: 'Tipo', align: 'left', label: 'Tipo', field: val => val.tipo.label },
+  { name: 'Marca', align: 'left', label: 'Marca', field: val => val.marca.label },
+  { name: 'actions', label: 'Ações', required: true, align: 'center' }
 ]
 
 export default {
+  name: 'GridAnuncio',
   setup () {
     const $q = useQuasar()
     const tableRef = ref()
@@ -88,7 +125,7 @@ export default {
       const fetchCount = rowsPerPage
       pagination.value.rowsPerPage = fetchCount
       const req = { page: pageAt, size: fetchCount, direction: pagination.value.descending ? 'DESC' : 'ASC', ordenarPor: 'id' }
-      pessoaService.findAll(prepararFiltros(req)).then(retorno => {
+      anuncioService.findAll(prepararFiltros(req)).then(retorno => {
         rows.value.splice(0, rows.value.length, ...retorno.data.data)
         pagination.value.page = retorno.data.page + 1
         pagination.value.rowsNumber = retorno.data.totalRecords
@@ -133,33 +170,11 @@ export default {
       rows,
       buscarPessoas,
       filters,
-      $q
+      $q,
+      title: 'Gerenciar Anúncios'
     }
   },
-
   methods: {
-    exportar () {
-      pessoaService.exportar().then(result => {
-        this.downloadArquivoCsv(result.data, 'pessoas.csv')
-        this.$q.notify({ message: 'Arquivo exportado com sucesso!', color: 'positive', textColor: 'white' })
-      })
-    },
-    downloadArquivoCsv (base64, nomeArquivo) {
-      const byteCharacters = atob(base64)
-      const byteArrays = new Uint8Array(byteCharacters.length)
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteArrays[i] = byteCharacters.charCodeAt(i)
-      }
-      const blob = new Blob([byteArrays], { type: 'text/csv' })
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-
-      link.href = url
-      link.download = nomeArquivo
-      link.click()
-
-      URL.revokeObjectURL(url)
-    },
     filtroTrocado (campoNome, valor) {
       if (valor === null || valor === '') {
         delete this.filters[campoNome]
@@ -186,7 +201,7 @@ export default {
         },
         persistent: true
       }).onOk(() => {
-        pessoaService.delete(row.id).then(() => {
+        anuncioService.delete(row.id).then(() => {
           this.$q.notify({ message: 'Removido com sucesso!', color: 'positive', textColor: 'white' })
           this.buscarPessoas()
         }).catch(error => {
@@ -195,13 +210,10 @@ export default {
       })
     },
     cadastrar () {
-      this.$router.push('/pessoas/form')
+      this.$router.push('/admin/anuncios/form')
     },
     editar (row) {
-      this.$router.push('/pessoas/form/' + row.id)
-    },
-    visualizar (row) {
-      this.$router.push('/pessoas/view/' + row.id)
+      this.$router.push('/admin/anuncios/form/' + row.id)
     }
   }
 }
@@ -214,10 +226,10 @@ export default {
 
   thead tr:last-child th:last-child
     /* bg color is important for th; just specify one */
-    background-color: #00b4ff
+    background-color: #EF8027
 
   td:last-child
-    background-color: #00b4ff
+    background-color: #EF8027
 
   th:last-child,
   td:last-child

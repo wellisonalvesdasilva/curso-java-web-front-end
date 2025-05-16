@@ -74,6 +74,8 @@ export default {
         usuarioService.confirmacaoRecuperacaoSenha(this.senha, this.chave).then((retorno) => {
           this.$q.notify({ message: 'Sua senha foi atualizada com sucesso. Por favor, faça login novamente.', color: 'positive', textColor: 'white' })
           this.voltar()
+        }).catch(error => {
+          this.$msg.apiError('Falha ao salvar o anúncio!', error)
         })
       }
     },
@@ -82,11 +84,7 @@ export default {
     },
     validacoes () {
       if (this.senha !== this.confirmacao) {
-        this.$q.notify({
-          message: 'A confirmação de senha deve ser igual à senha.',
-          color: 'negative',
-          textColor: 'white'
-        })
+        this.$msg.warning('A confirmação de senha deve ser igual à nova senha informada!')
         return false
       }
       return true

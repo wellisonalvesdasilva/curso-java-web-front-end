@@ -48,6 +48,11 @@ apiMercadoInstrumental.interceptors.response.use(response => {
 export class AnuncioService {
   path = '/anuncios'
 
+  findAll (params, config) {
+    const finalConfig = Object.assign({ params }, config)
+    return apiMercadoInstrumental.get(this.path, finalConfig)
+  }
+
   create (anuncio) {
     return apiMercadoInstrumental.post(this.path, anuncio)
   }
@@ -58,11 +63,6 @@ export class AnuncioService {
 
   getById (id) {
     return apiMercadoInstrumental.get(this.path + '/' + id)
-  }
-
-  findAll (params, config) {
-    const finalConfig = Object.assign({ params }, config)
-    return apiMercadoInstrumental.get(this.path, finalConfig)
   }
 
   delete (id) {

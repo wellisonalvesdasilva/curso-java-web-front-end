@@ -159,7 +159,7 @@ export default {
   name: 'AlterarDadosPessoais',
   setup () {
     return {
-      title: ref('Suas Informações'),
+      title: ref('Meu Perfil'),
       usuario: ref({
       }),
       senhaAtual: ref(null),

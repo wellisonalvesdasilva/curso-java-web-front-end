@@ -346,13 +346,12 @@ export default {
           })
       } else {
         anuncioService.create(dto)
-          .then(response => {
+          .then(async response => {
             this.$msg.success('Anúncio salvo. Prossiga com o upload das imagens!')
             const id = response.data
-            this.irParaEdicao(id).then(() => {
-              this.anuncio.id = id
-              this.tab = 'imagens'
-            })
+            await this.irParaEdicao(id)
+            this.anuncio.id = id
+            this.tab = 'imagens'
           }).catch(error => {
             this.$msg.apiError('Falha ao salvar o anúncio!', error)
           })
