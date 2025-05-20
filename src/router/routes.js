@@ -3,10 +3,10 @@ const routes = [
   // Site
   {
     path: '',
-    component: () => import('layouts/SiteLayout.vue'),
-    children: [
-      { path: '/', component: () => import('pages/anuncios/GridAnuncio.vue') }
-    ]
+    component: () => import('layouts/SiteLayout.vue')
+    // children: [
+    //   { path: '/', component: () => import('pages/anuncios/GridAnuncio.vue') }
+    // ]
   },
 
   // Admin
@@ -18,8 +18,6 @@ const routes = [
       { path: 'anuncios', component: () => import('pages/anuncios/GridAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios/form', component: () => import('pages/anuncios/CreateEditAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios/form/:id', component: () => import('pages/anuncios/CreateEditAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
-      { path: 'anuncios/view/:id', component: () => import('pages/anuncios/ViewAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
-      { path: 'configuracoes/categorias', component: () => import('pages/categorias/GridAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: '', component: () => import('pages/IndexPage.vue') }
     ]
   },

@@ -80,6 +80,10 @@ export class EnumService {
   getMarcas () {
     return apiMercadoInstrumental.get(this.path + '/marcas')
   }
+
+  getSituacoes () {
+    return apiMercadoInstrumental.get(this.path + '/status')
+  }
 }
 
 export class IbgeService {

@@ -39,9 +39,38 @@
             </q-tr>
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
-                <q-input v-if="col.name != 'actions'" :model-value="filters[col.name]"
-                  @change="val => filtroTrocado(col.name, val)" filled dense>
+                <q-input v-if="col.name != 'actions' && col.name != 'status' && col.name != 'dataPublicacao' && col.name != 'estado' && col.name != 'municipio' && col.name != 'tipo' && col.name != 'marca'" :model-value="filters[col.name]" @change="val => filtroTrocado(col.name, val)" filled dense>
                 </q-input>
+                  <q-select
+                    v-else-if="col.name != 'dataPublicacao'"
+                    v-show="!['actions'].includes(col.name)"
+                    :option-value="opt => opt"
+                    v-model="filters[col.name]"
+                    :disable="col.name === 'municipio' && !filters.estado"
+                    :class="{'select-disabled': col.name === 'municipio' && !filters.estado}"
+                    :option-label="opt => col.name === 'estado' ? opt.sigla : col.name === 'municipio' ? opt.nome : opt.label"
+                    :input-style="{ width: '100px' }"
+                    :options="listaCamposFiltrados[col.name]" clearable dense
+                    fill-input filled
+                    hide-dropdown-icon hide-selected input-debounce=500 use-input
+                    @filter="(val, update, abort) => filterSelectResponse(val, update, abort, col.name)" @update:model-value="(val, update, abort) => filtroTrocado(col.name, val)">
+                  </q-select>
+                  <q-input v-else-if="col.name == 'dataPublicacao'" v-model="dataPublicacao" dense fill-input filled
+                    input-class="tamanho-minimo-data" mask="##/##/####" stack-label
+                    @change="val => filtroTrocado(col.name, this.$fmt.dataToApi(val))">
+                    <template v-slot:append>
+                      <q-icon class="cursor-pointer custom-input-icon-size" name="event">
+                        <q-popup-proxy ref="dataVigencia" cover transition-hide="scale" transition-show="scale">
+                          <q-date v-model="dataVigencia" mask="DD/MM/YYYY" today-btn
+                            @update:model-value="(val, update, abort) => filtroTrocado(col.name, this.$fmt.dataToApi(val))">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup color="primary" flat label="Fechar" />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
               </q-th>
             </q-tr>
           </template>
@@ -89,19 +118,8 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { anuncioService } from 'src/services/api-service.js'
+import { anuncioService, enumService, ibgeService } from 'src/services/api-service.js'
 import { useQuasar } from 'quasar'
-
-const columns = [
-  { name: 'id', align: 'center', label: 'Id', field: 'id' },
-  { name: 'status', align: 'left', label: 'Status', field: val => val.status.label },
-  { name: 'titulo', align: 'left', label: 'Título', field: 'titulo' },
-  { name: 'estado', align: 'center', label: 'Estado', field: 'estado' },
-  { name: 'municipio', align: 'left', label: 'Município', field: 'municipio' },
-  { name: 'Tipo', align: 'left', label: 'Tipo', field: val => val.tipo.label },
-  { name: 'Marca', align: 'left', label: 'Marca', field: val => val.marca.label },
-  { name: 'actions', label: 'Ações', required: true, align: 'center' }
-]
 
 export default {
   name: 'GridAnuncio',
@@ -136,50 +154,146 @@ export default {
     }
     function prepararFiltros (req) {
       const request = {}
-      Object.assign(request, filters)
-      for (const key of Object.keys(request)) {
-        if (request[key] === null) {
-          delete request[key]
+      for (const key in filters) {
+        const valor = filters[key]
+        if (valor === null || valor === '') {
           continue
         }
-        if (typeof request[key] === 'object') {
-          if (Array.isArray(request[key])) {
-            continue
+        if (typeof valor === 'object' && !Array.isArray(valor)) {
+          // Extrai a string apropriada para cada campo
+          if (key === 'estado' && valor.sigla) {
+            request[key] = valor.sigla
+          } else if (key === 'municipio' && valor.nome) {
+            request[key] = valor.nome
+          } else if (valor.label) {
+            request[key] = valor.label
+          } else {
+            // fallback: tenta pegar valor direto (caso incomum)
+            request[key] = valor.value || ''
           }
-          delete request[key]
-          if (request[key].id) {
-            request[key] = request[key].id
-            continue
-          }
-          request[key] = request[key].value
+        } else {
+          // Valor já é string ou número
+          request[key] = valor
         }
       }
-      Object.assign(request, req)
-      return request
+      // Junta os filtros com os dados de paginação/sorting
+      return {
+        ...request,
+        ...req
+      }
     }
-
     onMounted(() => {
       tableRef.value.requestServerInteraction()
     })
 
     return {
       tableRef,
+      columns: ref([]),
       loading,
       pagination,
-      columns,
       rows,
       buscarPessoas,
+      listaCamposFiltrados: ref([]),
+      listaCampos: ref([]),
       filters,
       $q,
       title: 'Gerenciar Anúncios'
     }
   },
+  mounted () {
+    this.carregarTabela()
+    this.buscarEstados()
+    // this.buscarMunicipios()
+    this.buscarTiposInstrumentos()
+    this.buscarMarcas()
+    this.buscarSituacoes()
+  },
+  computed: {
+    dataPublicacao: {
+      get () {
+        return this.$fmt.dataToDisplay(this.filters.dataPublicacao)
+      },
+      set (data) {
+        this.filters.dataPublicacao = this.$fmt.dataToApi(data)
+      }
+    }
+  },
   methods: {
+    carregarTabela () {
+      this.columns = [
+        { name: 'id', align: 'center', label: 'Código', field: 'id' },
+        { name: 'status', align: 'left', label: 'Situação', field: val => val.status.label },
+        { name: 'dataPublicacao', label: 'Data de Cadastro', align: 'left', field: val => this.$fmt.dataToDisplay(val.dataPublicacao) },
+        { name: 'titulo', align: 'left', label: 'Título', field: 'titulo' },
+        { name: 'estado', align: 'left', label: 'Estado', field: 'estado' },
+        { name: 'municipio', align: 'left', label: 'Município', field: 'municipio' },
+        { name: 'tipo', align: 'left', label: 'Tipo', field: val => val.tipo.label },
+        { name: 'marca', align: 'left', label: 'Marca', field: val => val.marca.label },
+        { name: 'actions', label: 'Ações', required: true, align: 'center' }
+      ]
+    },
+    buscarSituacoes () {
+      enumService.getSituacoes().then(response => {
+        this.listaCampos.status = response.data
+      }).catch(error => {
+        this.$msg.apiError('Erro ao buscar os tipos de instrumentos!', error)
+      })
+    },
+    buscarTiposInstrumentos () {
+      enumService.getTiposInstrumentos().then(response => {
+        this.listaCampos.tipo = response.data
+      }).catch(error => {
+        this.$msg.apiError('Erro ao buscar os tipos de instrumentos!', error)
+      })
+    },
+    buscarMarcas () {
+      enumService.getMarcas().then(response => {
+        this.listaCampos.marca = response.data
+      }).catch(error => {
+        this.$msg.apiError('Erro ao buscar as marcas!', error)
+      })
+    },
+    buscarEstados () {
+      ibgeService.getEstados().then(response => {
+        this.listaCampos.estado = response.data
+      }).catch(error => {
+        this.$msg.apiError('Erro ao buscar os estados!', error)
+      })
+    },
+    buscarMunicipios (uf) {
+      ibgeService.getMunicipios(uf, false).then(response => {
+        this.listaCampos.municipio = response.data
+      }).catch(error => {
+        this.$msg.apiError('Erro ao buscar os estados!', error)
+      })
+    },
+    filterSelectResponse (val, update, abort, colName) {
+      update(() => {
+        const needle = val.toLowerCase()
+        const options = this.listaCampos[colName] || []
+        let filtrada = []
+        if (colName === 'estado') {
+          filtrada = options.filter(it => it.sigla.toLowerCase().indexOf(needle) > -1)
+        } else if (colName === 'municipio') {
+          filtrada = options.filter(it => it.nome.toLowerCase().indexOf(needle) > -1)
+        } else {
+          filtrada = options.filter(it => this.$fmt.descricaoEnumResponse(it).toLowerCase().indexOf(needle) > -1)
+        }
+        this.listaCamposFiltrados[colName] = filtrada
+      })
+    },
     filtroTrocado (campoNome, valor) {
       if (valor === null || valor === '') {
         delete this.filters[campoNome]
+        if (campoNome === 'estado') {
+          const campoNomeComplementar = 'municipio'
+          delete this.filters[campoNomeComplementar]
+        }
       } else {
         this.filters[campoNome] = valor
+        if (campoNome === 'estado') {
+          this.buscarMunicipios(valor.sigla)
+        }
       }
       this.buscarPessoas()
     },
@@ -196,10 +310,11 @@ export default {
         cancel: {
           label: 'Cancelar',
           push: true,
-          outline: true,
-          color: 'blue'
+          color: 'blue',
+          class: 'btn-exclusao'
         },
-        persistent: true
+        persistent: true,
+        separateButtons: true
       }).onOk(() => {
         anuncioService.delete(row.id).then(() => {
           this.$q.notify({ message: 'Removido com sucesso!', color: 'positive', textColor: 'white' })
@@ -236,4 +351,12 @@ export default {
     position: sticky
     right: 0
     z-index: 1
+
+.select-disabled .q-field__control
+    background-color: #f0f0f0 !important
+    color: #999 !important
+    cursor: not-allowed
+
+.btn-exclusao
+    margin-right: 4px
 </style>
