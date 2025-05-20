@@ -1,34 +1,39 @@
 <template class="no-scroll">
   <q-layout class="no-scroll" view="hHh LpR lfr">
-    <q-header elevated class="header">
-      <q-toolbar>
-        <q-btn dense flat round v-if="isSmallScreen" icon="menu" @click="toggleLeftDrawer" />
-        <q-toolbar-title>
-          <router-link class="header-logo-container" clickable to="/">
-            <q-avatar style="height: 48px; width: 220px; border-radius: 8px; overflow: hidden;">
-              <img src="../assets/img/logo-mercado-instrumental.jpg" style="height: 100%; width: 100%; object-fit: contain;">
-            </q-avatar>
-            <div style="display:none;"> VERSÃO SPRINT 75 - PBI 2195 - 2024-03-07 17:40 </div>
-          </router-link>
-        </q-toolbar-title>
-        <span v-if="isAuthenticated">
-          Bem vindo, <b>{{ getMe?.nome?.toUpperCase() }}</b>!
-        </span>
-        <span>&nbsp;</span>
-        <q-btn stretch flat to="/account/login" v-if="!isAuthenticated">Entrar</q-btn>
+<q-header elevated class="header">
+  <q-toolbar class="q-gutter-sm q-px-md q-py-sm flex items-center justify-between">
+    <div class="row items-center q-col-gutter-sm">
+      <q-btn dense flat round v-if="isSmallScreen" icon="menu" @click="toggleLeftDrawer" />
 
-        <q-btn
-          padding="10px"
-          stretch
-          flat
-          icon="person"
-          class="q-ml-sm"
-          @click="toggleRightDrawer"
-          v-click-outside="toggleRightClose"
-        />
-      </q-toolbar>
-    </q-header>
+      <router-link class="header-logo-container" to="/">
+        <q-avatar class="responsive-logo">
+          <img src="../assets/img/logo-mercado-instrumental.jpg" alt="Logo" />
+        </q-avatar>
+        <div style="display: none;">VERSÃO SPRINT 75 - PBI 2195 - 2024-03-07 17:40</div>
+      </router-link>
+    </div>
 
+    <div class="row items-center no-wrap">
+      <div class="q-mr-md" v-if="isAuthenticated">
+        <span class="text-caption hidden-xs hidden-sm">Bem vindo, <b>{{ getMe?.nome?.toUpperCase() }}</b>!</span>
+      </div>
+
+      <q-btn stretch flat to="/account/login" v-if="!isAuthenticated" class="q-mr-sm">
+        Entrar
+      </q-btn>
+
+      <q-btn
+        padding="10px"
+        stretch
+        flat
+        icon="person"
+        class="q-ml-sm"
+        @click="toggleRightDrawer"
+        v-click-outside="toggleRightClose"
+      />
+    </div>
+  </q-toolbar>
+</q-header>
     <q-drawer v-click-outside="onClickOutside" show-if-above v-model="habilitaMenu" side="left" :mini="miniMode"
       @click.capture="drawerClick" @mouseover="miniState = false" @mouseout="miniState = true"
       class="sidebar-drawer sidebar-text">
@@ -282,3 +287,37 @@ export default {
   }
 }
 </script>
+<style>
+
+.responsive-logo {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.responsive-logo img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .header-logo-container {
+    max-width: 150px;
+  }
+
+  .header span {
+    font-size: 12px;
+  }
+
+  .hidden-xs {
+    display: none !important;
+  }
+}
+
+</style>

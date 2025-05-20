@@ -59,16 +59,16 @@
                     input-class="tamanho-minimo-data" mask="##/##/####" stack-label
                     @change="val => filtroTrocado(col.name, this.$fmt.dataToApi(val))">
                     <template v-slot:append>
-                      <q-icon class="cursor-pointer custom-input-icon-size" name="event">
-                        <q-popup-proxy ref="dataVigencia" cover transition-hide="scale" transition-show="scale">
-                          <q-date v-model="dataVigencia" mask="DD/MM/YYYY" today-btn
+                      <!-- <q-icon class="cursor-pointer custom-input-icon-size" name="event">
+                        <q-popup-proxy ref="dataPublicacao" cover transition-hide="scale" transition-show="scale">
+                          <q-date v-model="dataPublicacao" mask="DD/MM/YYYY" today-btn
                             @update:model-value="(val, update, abort) => filtroTrocado(col.name, this.$fmt.dataToApi(val))">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup color="primary" flat label="Fechar" />
                             </div>
                           </q-date>
                         </q-popup-proxy>
-                      </q-icon>
+                      </q-icon> -->
                     </template>
                   </q-input>
               </q-th>
@@ -156,6 +156,7 @@ export default {
       const request = {}
       for (const key in filters) {
         const valor = filters[key]
+        debugger
         if (valor === null || valor === '') {
           continue
         }
@@ -203,7 +204,6 @@ export default {
   mounted () {
     this.carregarTabela()
     this.buscarEstados()
-    // this.buscarMunicipios()
     this.buscarTiposInstrumentos()
     this.buscarMarcas()
     this.buscarSituacoes()

@@ -48,34 +48,35 @@
             style="margin-top: -30px"
             v-show="tab === 'dados-contrato'"
           >
-            <div class="row q-col-gutter-md q-mt-sm">
-              <div class="q-gutter-sm col-12">
-                <q-toggle
-                style="font-size: 15px;"
-                size="lg"
-                v-model="anuncio.novo"
-                val="xl"
-                label="Produto novo?"
-                left-label/>
-              </div>
-              <div class="col-2">
-              <q-select
-                stack-label
-                dense
-                label="Estado"
-                v-model="anuncio.estado"
-                use-input
-                emit-value
-                @update:model-value="val => alterouEstado()"
-                map-options
-                input-debounce="500"
-                @click="(val, update, abort) => buscarEstados(val)" clearable
-                :options="listaCamposFiltrados['estados']"
-                option-label="sigla"
-                @filter="(val, update, abort) => filterSelects(val, update, abort, 'estados')"
-                :rules="[vRequired]"
-              >
-                <template v-slot:label>
+<div class="row q-col-gutter-md q-mt-sm">
+  <div class="q-gutter-sm col-xs-12">
+    <q-toggle
+      style="font-size: 15px;"
+      size="lg"
+      v-model="anuncio.novo"
+      val="xl"
+      label="Produto novo?"
+      left-label/>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-2">
+    <q-select
+      stack-label
+      dense
+      label="Estado"
+      v-model="anuncio.estado"
+      use-input
+      emit-value
+      @update:model-value="val => alterouEstado()"
+      map-options
+      input-debounce="500"
+      @click="(val, update, abort) => buscarEstados(val)" clearable
+      :options="listaCamposFiltrados['estados']"
+      option-label="sigla"
+      @filter="(val, update, abort) => filterSelects(val, update, abort, 'estados')"
+      :rules="[vRequired]"
+    >
+       <template v-slot:label>
                   <span class="input-label">Estado</span>
                 </template>
                 <template v-slot:no-option>
@@ -85,26 +86,27 @@
                     </q-item-section>
                   </q-item>
                 </template>
-              </q-select>
-              </div>
-              <div class="col-3">
-              <q-select
-                stack-label
-                dense
-                label="Município"
-                :disable="!anuncio.estado || desabilitarMunicipio"
-                v-model="anuncio.municipio"
-                use-input
-                emit-value
-                map-options
-                input-debounce="500"
-                @click="(val, update, abort) => buscarMunicipios(val)" clearable
-                :options="listaCamposFiltrados['municipios']"
-                option-label="nome"
-                @filter="(val, update, abort) => filterSelects(val, update, abort, 'municipios')"
-                :rules="[vRequired]"
-              >
-                <template v-slot:label>
+    </q-select>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <q-select
+      stack-label
+      dense
+      label="Município"
+      :disable="!anuncio.estado || desabilitarMunicipio"
+      v-model="anuncio.municipio"
+      use-input
+      emit-value
+      map-options
+      input-debounce="500"
+      @click="(val, update, abort) => buscarMunicipios(val)" clearable
+      :options="listaCamposFiltrados['municipios']"
+      option-label="nome"
+      @filter="(val, update, abort) => filterSelects(val, update, abort, 'municipios')"
+      :rules="[vRequired]"
+    >
+ <template v-slot:label>
                   <span class="input-label">Município</span>
                 </template>
                 <template v-slot:no-option>
@@ -115,24 +117,25 @@
                   </q-item>
                 </template>
               </q-select>
-              </div>
-              <div class="col-2">
-              <q-select
-                stack-label
-                dense
-                label="Tipo"
-                v-model="anuncio.tipo"
-                use-input
-                emit-value
-                map-options
-                input-debounce="500"
-                @click="(val, update, abort) => buscarTiposInstrumentos(val)" clearable
-                :options="listaCamposFiltrados['tiposInstrumentos']"
-                option-label="label"
-                @filter="(val, update, abort) => filterSelects(val, update, abort, 'tiposInstrumentos')"
-                :rules="[vRequired]"
-              >
-                <template v-slot:label>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-2">
+    <q-select
+      stack-label
+      dense
+      label="Tipo"
+      v-model="anuncio.tipo"
+      use-input
+      emit-value
+      map-options
+      input-debounce="500"
+      @click="(val, update, abort) => buscarTiposInstrumentos(val)" clearable
+      :options="listaCamposFiltrados['tiposInstrumentos']"
+      option-label="label"
+      @filter="(val, update, abort) => filterSelects(val, update, abort, 'tiposInstrumentos')"
+      :rules="[vRequired]"
+    >
+      <template v-slot:label>
                   <span class="input-label">Tipo</span>
                 </template>
                 <template v-slot:no-option>
@@ -143,24 +146,25 @@
                   </q-item>
                 </template>
               </q-select>
-              </div>
-              <div class="col-3">
-              <q-select
-                stack-label
-                dense
-                label="Marca"
-                v-model="anuncio.marca"
-                use-input
-                emit-value
-                map-options
-                input-debounce="500"
-                @click="(val, update, abort) => buscarMarcas(val)" clearable
-                :options="listaCamposFiltrados['marcas']"
-                option-label="label"
-                @filter="(val, update, abort) => filterSelects(val, update, abort, 'marcas')"
-                :rules="[vRequired]"
-              >
-                <template v-slot:label>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-3">
+    <q-select
+      stack-label
+      dense
+      label="Marca"
+      v-model="anuncio.marca"
+      use-input
+      emit-value
+      map-options
+      input-debounce="500"
+      @click="(val, update, abort) => buscarMarcas(val)" clearable
+      :options="listaCamposFiltrados['marcas']"
+      option-label="label"
+      @filter="(val, update, abort) => filterSelects(val, update, abort, 'marcas')"
+      :rules="[vRequired]"
+    >
+<template v-slot:label>
                   <span class="input-label">Marca</span>
                 </template>
                 <template v-slot:no-option>
@@ -171,48 +175,55 @@
                   </q-item>
                 </template>
               </q-select>
-              </div>
-              <div class="col-2">
-                <q-input
-                  stack-label
-                  dense
-                  v-model="anuncio.valor"
-                  v-money="moneyFormatForDirective"
-                  :rules="[vRequired]"
-                  :lazy-rules="true"
-                  label="Valor do Anúncio">
-                  <template v-slot:label>
-                    <span class="input-label">Valor do Anúncio</span>
-                  </template>
-                </q-input>
-              </div>
-              <div class="col-12">
-              <q-input
-              stack-label dense maxlength="4000"
-              :rules="[vRequired]"
-              v-model="anuncio.titulo"
-              label="Parecer de aprovação"
-              class="custom-textarea">
-          <template v-slot:label>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-2">
+    <q-input
+      stack-label
+      dense
+      v-model="anuncio.valor"
+      v-money="moneyFormatForDirective"
+      :rules="[vRequired]"
+      :lazy-rules="true"
+      label="Valor do Anúncio"
+    >
+       <template v-slot:label>
             <span class="input-label">Título</span>
           </template>
         </q-input>
-              </div>
-              <div class="col-12">
-        <q-input
-                :rules="[vRequired]"
-                stack-label
-                dense maxlength="4000"
-                autogrow
-                v-model="anuncio.descricao"
-                label="Descrição"
-                class="custom-textarea">
-          <template v-slot:label>
-            <span class="input-label">Descrição </span>
+  </div>
+
+  <div class="col-xs-12">
+    <q-input
+      stack-label dense maxlength="4000"
+      :rules="[vRequired]"
+      v-model="anuncio.titulo"
+      label="Título"
+      class="custom-textarea"
+    >
+     <template v-slot:label>
+            <span class="input-label">Título </span>
           </template>
         </q-input>
-              </div>
-            </div>
+  </div>
+
+  <div class="col-xs-12">
+    <q-input
+      :rules="[vRequired]"
+      stack-label
+      dense maxlength="4000"
+      autogrow
+      v-model="anuncio.descricao"
+      label="Descrição"
+      class="custom-textarea"
+    >
+      <template v-slot:label>
+            <span class="input-label">Descrição </span>
+          </template>
+    </q-input>
+  </div>
+</div>
+
           </div>
         <div class="q-pa-md" v-if="tab === 'imagens'">
           <div class="row q-col-gutter-md">
@@ -224,13 +235,13 @@
           <div class="row q-mt-md">
             <div class="col-12">
               <div style="float: right">
-                <q-btn
+                <!-- <q-btn
                   @click="voltar"
                   style="margin-right: 10px"
                   label="Voltar"
                   no-caps
                   class="btn-voltar"
-                />
+                /> -->
                 <q-btn
                   v-if="!isPublicado"
                   type="submit"
