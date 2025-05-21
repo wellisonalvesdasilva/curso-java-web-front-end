@@ -7,13 +7,16 @@ const apiMercadoInstrumental = axios.create({
 
 apiMercadoInstrumental.interceptors.request.use(config => {
   const token = sessionStorage.getItem('token')
-  if (token) {
+
+  // Não adiciona o token em chamadas para '/anuncios-site'
+  if (token && !config.url.startsWith('/anuncios-site')) {
     config.headers.Authorization = `${token}`
   }
-  debugger
+
   if (!config.preventLoading) {
     Loading.show({ group: config.url })
   }
+
   return config
 }, error => {
   return Promise.reject(error)
@@ -152,6 +155,20 @@ export class UsuarioInternoService {
   }
 }
 
+export class AnuncioSiteService {
+  path = '/anuncios-site'
+
+  findAll (params, config) {
+    const finalConfig = Object.assign({ params }, config)
+    return apiMercadoInstrumental.get(this.path, finalConfig)
+  }
+
+  getById (id) {
+    return apiMercadoInstrumental.get(this.path + '/' + id)
+  }
+}
+
+export const anuncioSiteService = new AnuncioSiteService()
 export const anuncioService = new AnuncioService()
 export const artefatoAnuncioService = new ArtefatoAnuncioService()
 export const enumService = new EnumService()

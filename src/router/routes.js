@@ -3,10 +3,10 @@ const routes = [
   // Site
   {
     path: '',
-    component: () => import('layouts/SiteLayout.vue')
-    // children: [
-    //   { path: '/', component: () => import('pages/anuncios/GridAnuncio.vue') }
-    // ]
+    component: () => import('layouts/SiteLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/site/GridIndex.vue') }
+    ]
   },
 
   // Admin

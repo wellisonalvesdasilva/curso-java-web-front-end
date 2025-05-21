@@ -1,8 +1,8 @@
 {
   "name": "mercado-instrumental",
   "version": "0.0.1",
-  "description": "Mercado Instrumental",
-  "productName": "Mercado Instrumental",
+  "description": "Mercado Instrumental | Seu lugar de comprar ou vender instrumentos musicais",
+  "productName": "Mercado Instrumental | Seu lugar de comprar ou vender instrumentos musicais",
   "author": "WAS Software LTDA.",
   "private": true,
   "scripts": {
