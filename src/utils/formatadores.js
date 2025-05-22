@@ -368,5 +368,8 @@ export default {
       return this.telefone(chave.valorChave)
     }
     return chave.valorChave
+  },
+  fCurrency (value) {
+    return Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
 }

@@ -17,16 +17,14 @@
             <img src="../assets/img/logo-mercado-instrumental-site.jpg" alt="Logo" />
           </q-avatar>
         </router-link>
-
-        <!-- Campo de busca geral -->
         <q-input
           dense
           outlined
           debounce="300"
-          placeholder="Buscar..."
+          placeholder="Digite o que você procura..."
           v-model="buscaGeral"
           class="q-mx-md"
-          style="max-width: 300px; background-color: white; border-radius: 4px;"
+          style="width: 100%; max-width: 250px; background-color: white; border-radius: 4px;"
           clearable
           @keyup.enter="executarBusca"
           :rules="[val => val.length >= 0 || 'Digite algo para buscar']"
@@ -36,9 +34,16 @@
           </template>
         </q-input>
 
+        <q-btn
+            flat
+            dense
+            class="q-mr-md text-capitalize"
+            icon="policy"
+            label="Busca Detalhada"
+          />
         <!-- Mostrar botões normais apenas se NÃO for tela pequena -->
         <template v-if="!isSmallScreen">
-          <q-btn
+          <!-- <q-btn
             flat
             dense
             class="q-mr-xs text-capitalize"
@@ -79,24 +84,37 @@
                 </q-item>
               </q-list>
             </q-menu>
+          </q-btn> -->
+        </template>
+        <q-space />
+          <q-btn
+            flat
+            dense
+            @click="irParaAreaAnunciante"
+            class="q-mr-xs text-capitalize"
+            icon="post_add"
+            label="Publicar Anúncio"
+          >
           </q-btn>
           <q-btn
             flat
             dense
-            class="q-mr-md text-capitalize"
-            icon="search"
-            label="Busca Detalhada"
-          />
-        </template>
-        <q-space />
-        <q-btn flat @click="irParaCadastro">
-          <q-icon name="person_add" class="q-mr-xs" />
-          Cadastre-se
-        </q-btn>
-        <q-btn flat @click="irParaAreaAnunciante">
-          <q-icon name="lock" class="q-mr-xs" />
-          Área do Anunciante
-        </q-btn>
+            class="q-mr-xs text-capitalize"
+            icon="account_circle"
+            label="Conta"
+            @click="irParaAreaAnunciante"
+          >
+            <!-- <q-menu transition-show="jump-down" transition-hide="jump-up">
+              <q-list style="min-width: 150px">
+                <q-item clickable @click="irParaSobre">
+                  <q-item-section>Login</q-item-section>
+                </q-item>
+                <q-item clickable @click="irParaContato">
+                  <q-item-section>Cadastro</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu> -->
+          </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -118,7 +136,6 @@
         </q-item>
       </q-list>
     </q-expansion-item>
-
     <q-expansion-item label="Marcas" icon="branding_watermark" dense>
       <q-list>
         <q-item clickable @click="irParaSobre">
@@ -132,7 +149,6 @@
         </q-item>
       </q-list>
     </q-expansion-item>
-
     <q-item clickable @click="abrirBuscaDetalhada" icon="search">
       <q-item-section>Busca Detalhada</q-item-section>
     </q-item>
@@ -183,7 +199,11 @@ export default {
       this.$router.push('/account/cadastro')
     },
     irParaAreaAnunciante () {
-      this.$router.push('/account/login')
+      if (!this.isAuthenticated) {
+        this.$router.push('/account/login')
+      } else {
+        this.$router.push('/admin/anuncios')
+      }
     },
     irParaHome: function () {
       this.fechartudo()
@@ -318,7 +338,7 @@ export default {
 <style>
 .responsive-logo {
   width: 100%;
-  max-width: 200px;
+  max-width: 400px;
   height: auto;
   border-radius: 8px;
   overflow: hidden;
