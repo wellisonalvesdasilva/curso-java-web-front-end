@@ -150,13 +150,13 @@
                     <div class="row location-row q-mb-xs items-center">
                       <q-icon name="mdi-city" color="primary" size="18px" class="q-mr-sm" />
                       <div class="col">Cidade</div>
-                      <div class="col text-right">São Paulo</div>
+                      <div class="col text-right">{{ anuncio?.municipio }}</div>
                     </div>
 
                     <div class="row location-row items-center">
                       <q-icon name="mdi-flag" color="primary" size="18px" class="q-mr-sm" />
                       <div class="col">Estado</div>
-                      <div class="col text-right">MS</div>
+                      <div class="col text-right">{{ anuncio?.uf }}</div>
                     </div>
 
                   </div>

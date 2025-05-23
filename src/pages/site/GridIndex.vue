@@ -27,12 +27,12 @@
               <q-card>
                 <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
                   <q-img
-                    :src="anuncio.srcMiniatura"
-                    no-native-menu
-                    style="width: 100%; height: 197px; object-fit: contain;"
-                    alt="Miniatura do anúncio"
-                    class="q-pa-sm"
-                  />
+  :src="anuncio.srcMiniatura"
+  no-native-menu
+  style="width: 100%; height: 197px; object-fit: contain;"
+  alt="Miniatura do anúncio"
+  class="q-pa-sm zoom-hover"
+/>
                 </router-link>
 <q-card-section class="q-pa-sm">
   <div class="anuncio-content">
@@ -192,5 +192,13 @@ export default {
   align-items: center;
   font-size: 0.85rem;
   line-height: 1.2;
+}
+
+.zoom-hover {
+  transition: transform 0.3s ease;
+}
+
+.zoom-hover:hover {
+  transform: scale(1.01);
 }
 </style>
