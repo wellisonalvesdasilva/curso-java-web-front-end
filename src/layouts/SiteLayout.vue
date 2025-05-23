@@ -374,4 +374,5 @@ export default {
 .q-field--with-bottom {
 padding-bottom: 0px
 }
+
 </style>

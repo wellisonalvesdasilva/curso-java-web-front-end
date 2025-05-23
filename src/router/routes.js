@@ -5,7 +5,8 @@ const routes = [
     path: '',
     component: () => import('layouts/SiteLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/site/GridIndex.vue') }
+      { path: '', component: () => import('pages/site/GridIndex.vue') },
+      { path: 'anuncio/:id', component: () => import('pages/site/ViewAnuncio.vue') }
     ]
   },
 
