@@ -78,7 +78,7 @@
                     :color="anuncio?.isUsado ? 'deep-purple' : 'purple'"
                     class="q-mt-xs"
                   >
-                    {{ anuncio?.isUsado ? "Usado" : "Novo" }}
+                    {{ anuncio?.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
                   </q-badge>
                 </div>
 
@@ -92,7 +92,7 @@
                 <div class="seller-section rounded-borders q-pa-md q-mb-md">
                   <div class="row items-center">
                     <div class="col-md-7">
-                      <p class="seller-title q-mb-none">Fale com o vendedor:</p>
+                      <p class="seller-title q-mb-none">Fale com o anunciante:</p>
                     </div>
                     <div class="col-md-5 text-right">
                       <div class="seller-name">{{ anuncio?.vendedor?.nome || 'Nome do Vendedor' }}</div>
@@ -131,7 +131,7 @@
 
                   <div class="visits-item row ">
                     <div class="col-md-10">
-                      <p class="q-ma-none"><strong>Visitas neste anúncio:</strong> 63</p>
+                      <p class="q-ma-none"><strong>Visitas neste anúncio:</strong> {{ anuncio?.quantidadeAcesso }}</p>
                     </div>
                   </div>
 

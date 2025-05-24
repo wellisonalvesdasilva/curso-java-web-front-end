@@ -19,7 +19,7 @@
             <q-space />
           </div>
           <div class="divisor-line"></div>
-          <div class="row q-col-gutter-md q-mt-md">
+          <div class="row q-col-gutter-md q-mt-md" v-if="anunciosPagina.length > 0">
             <div
               v-for="anuncio in anunciosPagina"
               :key="anuncio.idAnuncio"
@@ -41,7 +41,7 @@
 
     <div class="anuncio-condicao">
       <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
-        {{ anuncio.isUsado ? "Usado" : "Novo" }}
+        {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
       </q-badge>
     </div>
 
@@ -63,8 +63,22 @@
               </q-card>
             </div>
           </div>
+          <div class="row q-col-gutter-md q-mt-md" v-else>
+            <div class="col-12">
+              <q-banner
+  class="bg-purple-8 text-center text-white"
+  dense
+  rounded
+>
+  <template v-slot:avatar>
+    <q-icon name="info" color="#aaaaa" />
+  </template>
+  Nenhum dado encontrado para os parâmetros informados.
+</q-banner>
+            </div>
+          </div>
           <!-- Paginação -->
-          <div class="q-mt-lg flex justify-center teste">
+          <div class="q-mt-lg flex justify-center teste"  v-if="anunciosPagina.length > 0">
             <q-pagination
               v-model="current"
               :max="totalPages"
@@ -75,15 +89,15 @@
               @update:model-value="onPageChange"
             />
           </div>
-
           <!-- Informações de registros -->
-          <div class="q-mt-md text-center text-caption text-grey-7 q-pa-sm bg-grey-2 rounded-borders">
+          <div class="q-mt-md text-center text-caption text-grey-7 q-pa-sm bg-grey-2 rounded-borders"  v-if="anunciosPagina.length > 0">
             Página {{ anuncios.page + 1 }} de {{ anuncios.totalPages }} - Exibindo {{ registrosExibidos }} de {{ anuncios.totalRecords }} registros no total
           </div>
         </div>
       </q-form>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -107,6 +121,10 @@ export default {
     }
   },
   computed: {
+    filtro () {
+      console.log(this.$store.state.filtros.filtroAnuncios)
+      return this.$store.state.filtros.filtroAnuncios
+    },
     anunciosPagina () {
       return this.anuncios.data
     },
@@ -119,13 +137,25 @@ export default {
     },
     ...mapGetters('auth', ['isAuthenticated', 'getMe'])
   },
+  watch: {
+    filtro: {
+      handler () {
+        this.current = 1 // Reinicia para a primeira página, se desejado
+        this.carregarAnuncios()
+      },
+      deep: true,
+      immediate: false
+    }
+  },
   mounted () {
     this.carregarAnuncios()
   },
   methods: {
     carregarAnuncios () {
+      let params = { page: this.current - 1, size: this.anuncios.pageSize, direction: 'ASC', ordenarPor: 'id' }
+      params = this.incluirFiltrosBuscaDetalhada(params)
       anuncioSiteService
-        .findAll({ page: this.current - 1, size: this.anuncios.pageSize, direction: 'ASC', ordenarPor: 'id' })
+        .findAll(params)
         .then(response => {
           const data = response.data
           this.anuncios = {
@@ -139,6 +169,21 @@ export default {
         .catch(error => {
           this.$msg.apiError('Erro ao buscar os anúncios!', error)
         })
+    },
+    incluirFiltrosBuscaDetalhada (params) {
+      const filtros = this.$store.state.filtros.filtroAnuncios || null
+      if (filtros != null) {
+        params.estado = filtros.estado?.sigla
+        params.municipio = filtros.municipio?.nome
+        params.tipo = filtros.tipo
+        params.marca = filtros.marca
+        params.titulo = filtros.titulo
+        params.descricao = filtros.descricao
+        params.precoMin = this.$fmt.decimalToApi(filtros.valorInicial)
+        params.precoMax = this.$fmt.decimalToApi(filtros.valorFinal)
+        params.condicao = filtros.novo
+      }
+      return params
     },
     onPageChange (page) {
       this.current = page
