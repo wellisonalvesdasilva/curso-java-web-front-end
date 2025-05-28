@@ -32,6 +32,7 @@ export const init = async ({ commit, dispatch }) => {
     api.defaults.headers.common.Authorization = token
     dispatch('getMe', token)
   } else {
-    commit('removeToken')
+    window.sessionStorage.removeItem('token')
+    window.sessionStorage.removeItem('perfis')
   }
 }

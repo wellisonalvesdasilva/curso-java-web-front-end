@@ -166,6 +166,10 @@ export class AnuncioSiteService {
   getById (id) {
     return apiMercadoInstrumental.get(this.path + '/' + id)
   }
+
+  envioEmail (dto, idAnuncio) {
+    return apiMercadoInstrumental.post(this.path + '/envio-email/' + idAnuncio, dto)
+  }
 }
 
 export const anuncioSiteService = new AnuncioSiteService()

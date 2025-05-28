@@ -119,7 +119,7 @@
       color="primary"
       icon="mdi-email"
       label="Enviar e-mail"
-      :to="`mailto:${anuncio.vendedor.email}`"
+      @click="abrirModalParaEnvioEmail"
       class="full-width-sm"
     />
   </div>
@@ -186,10 +186,95 @@
       </q-form>
     </div>
   </div>
+
+<q-dialog v-model="exibirModalEnviarEmail">
+
+  <q-card
+    class="q-px-md modal-sm"
+    style="min-width: 60%; max-height: 85vh; display: flex; flex-direction: column;">
+<q-form greedy ref="form" @submit="confirmarDisparoEmail()">
+<q-card-section class="modal-title-container-left" style="flex-shrink: 0;">
+      <h5 class="q-mb-none">Enviar uma mensagem para o anunciante</h5>
+    </q-card-section>
+    <div class="divisor-line"></div>
+    <q-card-section
+      style="font-size: 14px; overflow-y: hidden; flex-grow: 1; padding-top: 0;">
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col-xs-12 col-sm-12  q-mt-md">
+        <q-input
+          stack-label
+          dense
+          :rules="[vRequired]"
+          v-model="filtro.nome"
+          label="Seu nome">
+          <template v-slot:label>
+            <span class="input-label">Seu nome</span>
+          </template>
+        </q-input>
+      </div>
+      <div class="col-xs-8 col-sm-8">
+        <q-input
+          stack-label
+          :rules="[vRequired]"
+          dense
+          label="Seu e-mail"
+          v-model="filtro.email">
+          <template v-slot:label>
+            <span class="input-label">Seu e-mail</span>
+          </template>
+        </q-input>
+      </div>
+        <div class="col-xs-4 col-sm-4">
+          <q-input
+            label="Whatsapp"
+            :rules="[vRequired]"
+            v-model="filtro.whats"
+            mask="## #####-####"
+            fill-mask
+            unmasked-value
+            required
+          ></q-input>
+        </div>
+      <div class="col-xs-12 col-sm-12">
+        <q-input
+          :rules="[vRequired]"
+          stack-label
+          dense maxlength="4000"
+          autogrow
+          v-model="filtro.mensagem"
+          label="Mensagem"
+          class="custom-textarea"
+        >
+          <template v-slot:label>
+                <span class="input-label">Mensagem </span>
+              </template>
+        </q-input>
+      </div>
+    </div>
+    </q-card-section>
+    <div class="row q-mt-md">
+                <div class="col-12">
+                  <div style="float: right">
+    <q-btn
+      type="submit"
+      label="Enviar"
+      icon="outgoing_mail"
+      no-caps
+      class="btn-cadastrar"
+    />
+</div>
+</div>
+</div>
+
+    </q-form>
+  </q-card>
+</q-dialog>
+
 </template>
 
 <script>
 import { anuncioSiteService } from 'src/services/api-service.js'
+import { ref } from 'vue'
 
 export default {
   name: 'GridIndex',
@@ -198,13 +283,35 @@ export default {
       title: 'Visualizar Anúncio',
       slide: 1,
       fullscreen: false,
-      anuncio: null
+      anuncio: null,
+      exibirModalEnviarEmail: ref(false),
+      filtro: ref({
+        nome: null,
+        email: null,
+        whats: null,
+        mensagem: null
+      })
     }
   },
   mounted () {
     this.detalharAnuncio()
   },
   methods: {
+    abrirModalParaEnvioEmail () {
+      this.resetDto()
+      this.exibirModalEnviarEmail = true
+    },
+    confirmarDisparoEmail () {
+      this.$refs.form.validate().then(isValid => {
+        if (!isValid) return
+        anuncioSiteService.envioEmail(this.filtro, this.$route.params.id)
+          .then(response => {
+            this.$msg.success('E-mail enviado com sucesso!')
+          }).catch(error => {
+            this.$msg.apiError('Erro ao cadastrar/atualizar!', error)
+          })
+      })
+    },
     voltar () {
       this.$router.go(-1)
     },
@@ -224,6 +331,12 @@ export default {
       const date = new Date(dataCadastro)
       const options = { year: 'numeric', month: 'long' }
       return date.toLocaleDateString('pt-BR', options)
+    },
+    resetDto () {
+      this.filtro.nome = null
+      this.filtro.email = null
+      this.filtro.whats = null
+      this.filtro.mensagem = null
     }
   }
 }

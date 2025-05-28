@@ -568,9 +568,9 @@ export default {
     },
     irParaAreaAnunciante () {
       if (!this.isAuthenticated) {
-        this.$router.push('/account/login')
+        window.location.href = '/account/login'
       } else {
-        this.$router.push('/admin/anuncios')
+        window.location.href = '/admin/anuncios'
       }
     },
     irParaHome: function () {

@@ -11,14 +11,14 @@
             <q-breadcrumbs-el :label="title" class="breadcrumb-last" />
           </q-breadcrumbs>
         </div>
-        <div class="col-auto breadcrumb-container">
+        <!-- <div class="col-auto breadcrumb-container">
           <q-btn
             class="link-voltar q-pr-none"
             icon="chevron_left"
             label="Voltar"
             @click="voltar"
           />
-        </div>
+        </div> -->
       </div>
       <q-form greedy>
         <div class="main-container">
@@ -156,7 +156,6 @@ export default {
       const request = {}
       for (const key in filters) {
         const valor = filters[key]
-        debugger
         if (valor === null || valor === '') {
           continue
         }
@@ -229,6 +228,7 @@ export default {
         { name: 'municipio', align: 'left', label: 'Município', field: 'municipio' },
         { name: 'tipo', align: 'left', label: 'Tipo', field: val => val.tipo.label },
         { name: 'marca', align: 'left', label: 'Marca', field: val => val.marca.label },
+        { name: 'quantidadeAcesso', align: 'center', label: 'Quantidade de Visualizações', field: 'quantidadeAcesso' },
         { name: 'actions', label: 'Ações', required: true, align: 'center' }
       ]
     },

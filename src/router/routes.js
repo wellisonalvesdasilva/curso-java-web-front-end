@@ -27,7 +27,7 @@ const routes = [
     path: '/account',
     component: () => import('layouts/UsuarioLayout.vue'),
     children: [
-      { path: 'login', component: () => import('pages/account/Login.vue') },
+      { name: 'Login', path: 'login', component: () => import('pages/account/Login.vue') },
       { path: 'login/:active', component: () => import('pages/account/Login.vue') },
       { path: 'cadastro', component: () => import('pages/account/Cadastro.vue') },
       { path: 'recuperacao-senha/:chave', component: () => import('pages/account/RecuperarSenha.vue') }

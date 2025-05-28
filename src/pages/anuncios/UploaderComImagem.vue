@@ -150,7 +150,6 @@ export default {
     }
   },
   mounted () {
-    debugger
     this.buscarArtefatos()
   }
 }

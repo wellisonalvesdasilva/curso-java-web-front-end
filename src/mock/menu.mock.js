@@ -1,6 +1,6 @@
 export const MENU = [
   {
-    label: 'Anúncios',
+    label: 'Gerenciar Anúncios',
     icon: 'img:/icons-menu/icon-contaspagar.svg',
     items: [
       {

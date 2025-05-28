@@ -5,7 +5,7 @@
     <div class="row items-center q-col-gutter-sm">
       <q-btn dense flat round v-if="isSmallScreen" icon="menu" @click="toggleLeftDrawer" />
 
-      <router-link class="header-logo-container" to="/">
+      <router-link class="header-logo-container" to="/admin">
         <q-avatar class="responsive-logo">
           <img src="../assets/img/logo-mercado-instrumental.jpg" alt="Logo" />
         </q-avatar>
@@ -44,7 +44,7 @@
               <q-icon name="img:/icons-menu/icon-home.svg" />
             </q-item-section>
             <q-item-section>
-              Início
+              Ir para o Site
             </q-item-section>
           </q-item>
           <q-expansion-item v-for="(item, key) in menus" :key="key" :label="item.label" :default-opened="item.oppend"
@@ -162,9 +162,9 @@ export default {
       console.log('teste')
     },
     irParaHome: function () {
-      this.fechartudo()
-      this.$router.push('/admin')
-      this.handleShow(null)
+      // this.fechartudo()
+      this.$router.push('/')
+      // this.handleShow(null)
     },
     onClickOutside (event) {
       this.fechartudo()

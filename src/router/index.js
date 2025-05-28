@@ -34,12 +34,12 @@ export default route(function ({ store, ssrContext }) {
     console.log(auth)
     if (to.matched.some(record => record.meta.requireLogin) && !auth.isAuthenticated) {
       next({
-        name: 'LoginIn',
+        name: 'Login',
         query: { to: to.path }
       })
     } else if (to.matched.some(record => record.meta.requireLogin) && to.meta.transacao != null && !securityState.hasTransaction(to.meta.transacao)) {
       messages.error('Você não tem permissão para acessar esta página. Verifique a rota informada.')
-      next({ name: 'LoginIn' })
+      next({ name: 'Login' })
     } else next()
   })
   return Router
