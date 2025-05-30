@@ -1,4 +1,17 @@
 <template>
+<div class="upload-warning-wrapper q-mb-md flex justify-end">
+  <div class="upload-warning flex items-center">
+    <q-icon
+      name="mdi-alert-circle-outline"
+      size="18px"
+      class="upload-warning__icon"
+    />
+    <span class="upload-warning__text">
+      Para melhor visualização, envie imagens com <strong>800 x 600px</strong>
+    </span>
+  </div>
+</div>
+
   <q-card
     v-for="(item, index) in listImagens"
     :key="index"
@@ -129,6 +142,9 @@ export default {
         this.arquivo = null
         this.buscarArtefatos()
       })
+        .catch(error => {
+          this.$msg.apiError('Erro ao buscar os anúncios!', error)
+        })
     },
     buscarArtefatos () {
       artefatoAnuncioService.getByIdAnuncio(this.idAnuncio).then((retorno) => {
@@ -154,3 +170,21 @@ export default {
   }
 }
 </script>
+<style>
+.upload-warning {
+  background: #fff9e6;
+  color: #8a6d03;                   /* amarelo escuro suave para o texto */
+  font-weight: 500;
+  font-size: 12px;                  /* fonte menor */
+  max-width: 350px;
+}
+
+.upload-warning__icon {
+  color: #fbc02d;
+  margin-right: 6px;
+}
+
+.upload-warning__text strong {
+  color: #b28704;                   /* amarelo mais forte para destaque */
+}
+</style>

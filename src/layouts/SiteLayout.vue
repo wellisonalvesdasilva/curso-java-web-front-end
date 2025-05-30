@@ -585,7 +585,7 @@ export default {
       if (!this.isAuthenticated) {
         window.location.href = '/account/login'
       } else {
-        window.location.href = '/admin/anuncios'
+        window.location.href = '/admin/anuncios/form'
       }
     },
     irParaHome: function () {

@@ -26,13 +26,18 @@
               class="col-12 col-sm-6 col-md-3 col-lg-3">
               <q-card>
                 <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
-                  <q-img
-  :src="anuncio.srcMiniatura"
-  no-native-menu
-  style="width: 100%; height: 197px; object-fit: contain;"
-  alt="Miniatura do anúncio"
+<div
+  style="width: 100%; aspect-ratio: 306 / 211;"
   class="q-pa-sm zoom-hover"
-/>
+>
+  <q-img
+    :src="anuncio.srcMiniatura"
+    no-native-menu
+    alt="Miniatura do anúncio"
+    style="width: 100%; height: 100%; object-fit: contain;"
+  />
+</div>
+
                 </router-link>
 <q-card-section class="q-pa-sm">
   <div class="anuncio-content">
@@ -230,6 +235,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+img, q-img {
+  max-width: 100%;
+  display: block;
 }
 
 .info-line {

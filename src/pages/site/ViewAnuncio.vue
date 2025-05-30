@@ -22,51 +22,66 @@
         <div class="main-container q-gutter-md">
           <div class="row q-col-gutter-lg q-mt-xs">
             <!-- Imagens + Descrição -->
-<div class="col-12 col-md-6">
+<div class="col-12 col-md-4">
     <q-card flat bordered class="rounded-borders">
-      <q-carousel
-        ref="carousel"
-        swipeable
-        animated
-        arrows
-        control-color="deep-purple-5"
-        v-model="slide"
-        infinite
-        :height="fullscreen ? '100vh' : '280px'"
-        class="rounded-borders"
-      >
-        <q-carousel-slide
-          v-for="(img, index) in anuncio?.srcsDir"
-          :key="index"
-          :name="index + 1"
-          :img-src="img"
-        />
-        <template v-slot:control>
-          <q-carousel-control position="bottom-right" :offset="[18, 18]">
-            <q-btn
-              push
-              round
-              dense
-              color="white"
-              text-color="primary"
-              :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
-              @click="toggleFullscreen"
-            />
-          </q-carousel-control>
-        </template>
-      </q-carousel>
+<q-carousel
+  ref="carousel"
+  swipeable
+  animated
+  arrows
+  control-color="deep-purple-5"
+  v-model="slide"
+  infinite
+  :height="fullscreen ? '100vh' : '280px'"
+  class="rounded-borders"
+>
+  <q-carousel-slide
+    v-for="(img, index) in anuncio?.srcsDir"
+    :key="index"
+    :name="index + 1"
+    class="q-pa-none flex flex-center"
+  >
+    <!-- Container com borda branca -->
+    <div
+      style="background: white; padding: 4px; width: 100%; height: 100%; box-sizing: border-box;"
+      class="flex flex-center"
+    >
+      <img
+        :src="img"
+        alt="Imagem do slide"
+        class="fit"
+        style="max-height: 100%; max-width: 100%; object-fit: contain;"
+      />
+    </div>
+  </q-carousel-slide>
+
+  <template v-slot:control>
+    <q-carousel-control position="bottom-right" :offset="[18, 18]">
+      <q-btn
+        push
+        round
+        dense
+        color="white"
+        text-color="primary"
+        :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+        @click="toggleFullscreen"
+      />
+    </q-carousel-control>
+  </template>
+</q-carousel>
+
     </q-card>
 
-    <q-card flat bordered class="q-mt-md q-pa-md rounded-borders description-card" v-if="!fullscreen">
-      <h6 class="description-title">Descrição</h6>
-      <p class="description-text">
-        {{ anuncio?.descricao || 'Descrição não disponível.' }}
-      </p>
-    </q-card>
+<q-card flat bordered class="q-mt-md q-pa-md rounded-borders description-card" v-if="!fullscreen">
+  <h6 class="description-title">Descrição</h6>
+  <p class="description-text text-justify text-sm">
+    {{ anuncio?.descricao || 'Descrição não disponível.' }}
+  </p>
+</q-card>
   </div>
 
             <!-- Informações do Anúncio -->
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-8">
               <q-card flat bordered class="q-pa-md rounded-borders">
                 <div class="q-mb-sm">
                   <h5 class="titulo-anuncio">{{ anuncio?.titulo || 'Título do Anúncio' }}</h5>
@@ -194,7 +209,7 @@
     style="min-width: 60%; max-height: 85vh; display: flex; flex-direction: column;">
 <q-form greedy ref="form" @submit="confirmarDisparoEmail()">
 <q-card-section class="row items-center justify-between">
-  <div class="text-h6 text-weight-bold">Enviar Mensagem</div>
+  <div class="text-h6 text-weight-bold">Enviar e-mail</div>
   <q-btn icon="close" flat round dense v-close-popup />
 </q-card-section>
     <div class="divisor-line"></div>
@@ -435,9 +450,10 @@ export default {
 }
 
 .description-text {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: #555;
   line-height: 1.6;
+ text-align: justify;
 }
 
 /* Seção vendedor */
