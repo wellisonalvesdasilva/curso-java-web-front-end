@@ -22,48 +22,48 @@
         <div class="main-container q-gutter-md">
           <div class="row q-col-gutter-lg q-mt-xs">
             <!-- Imagens + Descrição -->
-            <div class="col-12 col-md-6">
-              <q-card flat bordered class="rounded-borders">
-                <q-carousel
-                  swipeable
-                  animated
-                  arrows
-                  control-color="deep-purple-5"
-                  v-model="slide"
-                  v-model:fullscreen="fullscreen"
-                  infinite
-                  height="280px"
-                  class="rounded-borders"
-                >
-                  <q-carousel-slide
-                    v-for="(img, index) in anuncio?.srcsDir"
-                    :key="index"
-                    :name="index + 1"
-                    :img-src="img"
-                  />
-                  <template v-slot:control>
-                    <q-carousel-control position="bottom-right" :offset="[18, 18]">
-                      <q-btn
-                        push
-                        round
-                        dense
-                        color="white"
-                        text-color="primary"
-                        :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                        @click="fullscreen = !fullscreen"
-                      />
-                    </q-carousel-control>
-                  </template>
-                </q-carousel>
-              </q-card>
+<div class="col-12 col-md-6">
+    <q-card flat bordered class="rounded-borders">
+      <q-carousel
+        ref="carousel"
+        swipeable
+        animated
+        arrows
+        control-color="deep-purple-5"
+        v-model="slide"
+        infinite
+        :height="fullscreen ? '100vh' : '280px'"
+        class="rounded-borders"
+      >
+        <q-carousel-slide
+          v-for="(img, index) in anuncio?.srcsDir"
+          :key="index"
+          :name="index + 1"
+          :img-src="img"
+        />
+        <template v-slot:control>
+          <q-carousel-control position="bottom-right" :offset="[18, 18]">
+            <q-btn
+              push
+              round
+              dense
+              color="white"
+              text-color="primary"
+              :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              @click="toggleFullscreen"
+            />
+          </q-carousel-control>
+        </template>
+      </q-carousel>
+    </q-card>
 
-              <q-card flat bordered class="q-mt-md q-pa-md rounded-borders description-card">
-                <h6 class="description-title">Descrição</h6>
-                <p class="description-text">
-                  {{ anuncio?.descricao || 'Descrição não disponível.' }}
-                </p>
-              </q-card>
-            </div>
+    <q-card flat bordered class="q-mt-md q-pa-md rounded-borders description-card" v-if="!fullscreen">
+      <h6 class="description-title">Descrição</h6>
+      <p class="description-text">
+        {{ anuncio?.descricao || 'Descrição não disponível.' }}
+      </p>
+    </q-card>
+  </div>
 
             <!-- Informações do Anúncio -->
             <div class="col-12 col-md-6">
@@ -193,9 +193,10 @@
     class="q-px-md modal-sm"
     style="min-width: 60%; max-height: 85vh; display: flex; flex-direction: column;">
 <q-form greedy ref="form" @submit="confirmarDisparoEmail()">
-<q-card-section class="modal-title-container-left" style="flex-shrink: 0;">
-      <h5 class="q-mb-none">Enviar uma mensagem para o anunciante</h5>
-    </q-card-section>
+<q-card-section class="row items-center justify-between">
+  <div class="text-h6 text-weight-bold">Enviar Mensagem</div>
+  <q-btn icon="close" flat round dense v-close-popup />
+</q-card-section>
     <div class="divisor-line"></div>
     <q-card-section
       style="font-size: 14px; overflow-y: hidden; flex-grow: 1; padding-top: 0;">
@@ -212,7 +213,7 @@
           </template>
         </q-input>
       </div>
-      <div class="col-xs-8 col-sm-8">
+      <div class="col-xs-8 col-sm-9">
         <q-input
           stack-label
           :rules="[vRequired]"
@@ -224,16 +225,23 @@
           </template>
         </q-input>
       </div>
-        <div class="col-xs-4 col-sm-4">
-          <q-input
-            label="Whatsapp"
-            :rules="[vRequired]"
-            v-model="filtro.whats"
-            mask="## #####-####"
-            fill-mask
-            unmasked-value
-            required
-          ></q-input>
+        <div class="col-xs-4 col-sm-3">
+<q-input
+  stack-label
+  dense
+  label="Whatsapp"
+  :rules="[vRequired]"
+  v-model="filtro.whats"
+  mask="## #####-####"
+  fill-mask
+  unmasked-value
+  required
+>
+  <template v-slot:label>
+    <span class="input-label">Whatsapp</span>
+  </template>
+</q-input>
+
         </div>
       <div class="col-xs-12 col-sm-12">
         <q-input
@@ -252,18 +260,22 @@
       </div>
     </div>
     </q-card-section>
-    <div class="row q-mt-md">
-                <div class="col-12">
-                  <div style="float: right">
-    <q-btn
-      type="submit"
-      label="Enviar"
-      icon="outgoing_mail"
-      no-caps
-      class="btn-cadastrar"
-    />
-</div>
-</div>
+<div class="row q-mt-md">
+  <div class="col-12">
+    <div
+      class="btn-container"
+      style="display: flex; justify-content: flex-end;"
+    >
+      <q-btn
+        type="submit"
+        label="Enviar"
+        icon="outgoing_mail"
+        no-caps
+        class="btn-cadastrar"
+        style="min-width: 120px;"
+      />
+    </div>
+  </div>
 </div>
 
     </q-form>
@@ -295,8 +307,38 @@ export default {
   },
   mounted () {
     this.detalharAnuncio()
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        this.fullscreen = false
+      }
+    })
   },
   methods: {
+    async toggleFullscreen () {
+      const carouselEl = this.$refs.carousel.$el
+
+      if (!this.fullscreen) {
+        // Tenta entrar em fullscreen usando a Fullscreen API
+        if (carouselEl.requestFullscreen) {
+          try {
+            await carouselEl.requestFullscreen()
+            this.fullscreen = true
+          } catch (err) {
+            console.error('Erro ao entrar em fullscreen:', err)
+            this.fullscreen = true // fallback visual, mesmo sem fullscreen nativo
+          }
+        } else {
+          // Se não suportar fullscreen nativo, apenas ativa o fullscreen visual
+          this.fullscreen = true
+        }
+      } else {
+        // Sai do fullscreen
+        if (document.fullscreenElement) {
+          await document.exitFullscreen()
+        }
+        this.fullscreen = false
+      }
+    },
     abrirModalParaEnvioEmail () {
       this.resetDto()
       this.exibirModalEnviarEmail = true
@@ -343,6 +385,17 @@ export default {
 </script>
 
 <style scoped>
+
+@media (max-width: 600px) {
+  .btn-container {
+    justify-content: center !important; /* centraliza o botão no mobile, opcional */
+  }
+  .btn-container > .btn-cadastrar {
+    width: 100% !important; /* botão ocupa toda largura na tela pequena */
+    min-width: unset !important; /* remove largura mínima para não forçar tamanho */
+  }
+}
+
 /* Layout geral */
 .main-wrapper {
   font-family: 'Roboto', sans-serif;
@@ -549,6 +602,29 @@ export default {
   .full-width-sm {
     width: 100% !important;
   }
+}
+
+.q-carousel.rounded-borders.fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+}
+
+/* No fullscreen escondemos a descrição para otimizar espaço */
+.description-card {
+  display: block;
+}
+
+.description-card[style*="display: none"] {
+  display: none !important;
+}
+
+/* Para evitar overflow no body quando fullscreen */
+body.fullscreen {
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
 }
 
 /* Carousel controla o fullscreen button - mantém estilização roxa */

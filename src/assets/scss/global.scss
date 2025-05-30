@@ -63,7 +63,8 @@ a {
   background-color: map-get($map: $grey-colors, $key: 4);
 
   @media (max-width: 768px) {
-    padding-left: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 
