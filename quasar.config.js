@@ -10,7 +10,8 @@
 
 import ESLintPlugin from 'eslint-webpack-plugin'
 import { configure } from 'quasar/wrappers'
-require('dotenv').config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 module.exports = configure(function (/* ctx */) {
   return {
