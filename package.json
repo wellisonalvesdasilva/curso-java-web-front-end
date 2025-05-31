@@ -10,7 +10,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "start": "npx serve dist/spa"
+    "start": "node index.js"
   },
   "dependencies": {
     "@quasar/babel-preset-app": "^2.0.3",
@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.1",
-    "@quasar/app-vite": "^2.2.0",
+    "@quasar/app-vite": "^1.8.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.11.0",
     "eslint-config-standard": "^17.0.0",
