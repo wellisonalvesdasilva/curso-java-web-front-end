@@ -1,39 +1,39 @@
 <template class="no-scroll">
   <q-layout class="no-scroll" view="hHh LpR lfr">
-<q-header elevated class="header">
-  <q-toolbar class="q-gutter-sm q-px-md q-py-sm flex items-center justify-between">
-    <div class="row items-center q-col-gutter-sm">
-      <q-btn dense flat round v-if="isSmallScreen" icon="menu" @click="toggleLeftDrawer" />
+    <q-header elevated class="header">
+      <q-toolbar class="flex items-center justify-between">
+        <div class="row items-center">
+          <q-btn dense flat round v-if="isSmallScreen" icon="menu" @click="toggleLeftDrawer" />
 
-      <router-link class="header-logo-container" to="/admin">
-        <q-avatar class="responsive-logo">
-          <img src="../assets/img/logo-mercado-instrumental.jpg" alt="Logo" />
-        </q-avatar>
-        <div style="display: none;">VERSÃO SPRINT 75 - PBI 2195 - 2024-03-07 17:40</div>
-      </router-link>
-    </div>
+          <router-link class="header-logo-container" to="/admin">
+            <q-avatar class="responsive-logo">
+              <img src="../assets/img/logo-mercado-instrumental.jpg" alt="Logo" />
+            </q-avatar>
+            <div style="display: none;">VERSÃO SPRINT 75 - PBI 2195 - 2024-03-07 17:40</div>
+          </router-link>
+        </div>
 
-    <div class="row items-center no-wrap">
-      <div class="q-mr-md" v-if="isAuthenticated">
-        <span class="text-caption hidden-xs hidden-sm">Bem vindo, <b>{{ getMe?.nome?.toUpperCase() }}</b>!</span>
-      </div>
+        <div class="row items-center">
+          <div class="q-mr-md" v-if="isAuthenticated">
+            <span class="text-caption hidden-xs hidden-sm">Bem vindo, <b>{{ getMe?.nome?.toUpperCase() }}</b>!</span>
+          </div>
 
-      <q-btn stretch flat to="/account/login" v-if="!isAuthenticated" class="q-mr-sm">
-        Entrar
-      </q-btn>
+          <q-btn stretch flat to="/account/login" v-if="!isAuthenticated" class="q-mr-sm">
+            Entrar
+          </q-btn>
 
-      <q-btn
-        padding="10px"
-        stretch
-        flat
-        icon="person"
-        class="q-ml-sm"
-        @click="toggleRightDrawer"
-        v-click-outside="toggleRightClose"
-      />
-    </div>
-  </q-toolbar>
-</q-header>
+          <q-btn
+            padding="10px"
+            stretch
+            flat
+            icon="person"
+            class="q-ml-sm"
+            @click="toggleRightDrawer"
+            v-click-outside="toggleRightClose"
+          />
+        </div>
+      </q-toolbar>
+    </q-header>
     <q-drawer v-click-outside="onClickOutside" show-if-above v-model="habilitaMenu" side="left" :mini="miniMode"
       @click.capture="drawerClick" @mouseover="miniState = false" @mouseout="miniState = true"
       class="sidebar-drawer sidebar-text">
@@ -47,7 +47,8 @@
               Ir para o Site
             </q-item-section>
           </q-item>
-          <q-expansion-item v-for="(item, key) in menus" :key="key" :label="item.label" :default-opened="item.oppend"
+
+          <q-expansion-item v-for="(item, key) in menus" :key="key" :label="item.label" :default-opened="false"
             :icon="item.icon" :to="item.to" expand-separator class="sidebar-expansionlvl1" ref="expansionItems"
             @click="menuPrincipalShow(item.label)">
             <div v-if="item.items">
@@ -69,6 +70,7 @@
           </q-expansion-item>
         </q-list>
       </q-scroll-area>
+
       <div class="q-mini-drawer-hide absolute botao-menu">
         <q-btn dense round unelevated size="md" icon="chevron_left" @click="miniMode = true" />
       </div>
@@ -111,15 +113,14 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
     <q-footer elevated class="bg-grey-8 text-white">
       <q-toolbar>
         <q-toolbar-title class="text-subtitle2 text-center">
-          Desenvolvido por WAS Software LTDA.
+          mercadoinstrumental@gmail.com
         </q-toolbar-title>
         <div class="text-caption float-right">
-          <div>
-            Versão 1.0
-          </div>
+          <div>Versão 1.0</div>
         </div>
       </q-toolbar>
     </q-footer>
@@ -158,30 +159,25 @@ export default {
       this.$store.dispatch('auth/signOut')
       this.$router.push('/account/login')
     },
-    obterFuncionarioBanco: function () {
+    obterFuncionarioBanco () {
       console.log('teste')
     },
-    irParaHome: function () {
-      // this.fechartudo()
+    irParaHome () {
       this.$router.push('/')
-      // this.handleShow(null)
     },
-    onClickOutside (event) {
+    onClickOutside () {
       this.fechartudo()
       this.miniMode = true
     },
     isUsuarioTemAcesso (item) {
-      if (!item.transacao) {
-        return false
-      }
-      return true
+      return !!item.transacao
     },
     atualizarMenu () {
-      this.expansionItems.forEach((item, index) => {
+      this.expansionItems.forEach((item) => {
         if (item.label !== this.menuPrincipal) {
           item.hide()
         } else {
-          this.expansionItemsSubMenu.forEach((item, index) => {
+          this.expansionItemsSubMenu.forEach((item) => {
             if (item.label !== this.subMenu) {
               item.hide()
             }
@@ -204,13 +200,7 @@ export default {
       this.atualizarMenu()
     },
     filtrarMenusItens (todosItens) {
-      const itens = []
-      todosItens.forEach(item => {
-        if (this.isUsuarioTemAcesso(item)) {
-          itens.push(item)
-        }
-      })
-      return itens
+      return todosItens.filter(item => this.isUsuarioTemAcesso(item))
     },
     filtrarMenusPrincipais () {
       this.menus = []
@@ -226,9 +216,9 @@ export default {
           item.expansionItem.forEach(itExp => {
             itExp.subMenu = this.filtrarMenusItens(itExp.subMenu)
           })
-          const teste = item.expansionItem.filter(itExp => itExp.subMenu.length > 0)
-          if (teste.length > 0) {
-            item.expansionItem = teste
+          const ativos = item.expansionItem.filter(itExp => itExp.subMenu.length > 0)
+          if (ativos.length > 0) {
+            item.expansionItem = ativos
             this.menus.push(item)
           }
         }
@@ -239,11 +229,9 @@ export default {
     const $q = useQuasar()
     const leftDrawerOpen = ref(false)
     const rightDrawerOpen = ref(false)
-    const habilitaMenu = ref(true)
+    const habilitaMenu = ref(false) // ← menu fechado ao iniciar
     const miniMode = ref(true)
-    const rotaHome = '/'
     return {
-      rotaHome,
       menuPrincipal: ref(null),
       subMenu: ref(null),
       itensmenu: ref(null),
@@ -261,7 +249,6 @@ export default {
           e.stopPropagation()
         }
       },
-      link: ref('inbox'),
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
         if ($q.screen.lt.md) {
@@ -287,8 +274,8 @@ export default {
   }
 }
 </script>
-<style>
 
+<style>
 .responsive-logo {
   width: 100%;
   max-width: 200px;
@@ -318,6 +305,10 @@ export default {
   .hidden-xs {
     display: none !important;
   }
+
+  .q-toolbar .q-btn {
+  align-self: center !important;
 }
 
+}
 </style>

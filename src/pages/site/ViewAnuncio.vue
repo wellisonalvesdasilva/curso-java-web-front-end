@@ -83,12 +83,12 @@
             <!-- Informações do Anúncio -->
             <div class="col-12 col-md-8">
               <q-card flat bordered class="q-pa-md rounded-borders">
-                <div class="q-mb-sm">
+                <div class="q-mb-">
                   <h5 class="titulo-anuncio">{{ anuncio?.titulo || 'Título do Anúncio' }}</h5>
-                  <p class="text-caption text-grey-7">
+                  <p style="font-size: 0.9rem;" class="text-caption text-grey-7">
                     Publicado em {{ this.$fmt.dataToDisplay(anuncio?.dataPublicacao) }}
                   </p>
-                  <q-badge
+                  <q-badge style="font-size: 0.9rem;"
                     outline
                     :color="anuncio?.isUsado ? 'deep-purple' : 'purple'"
                     class="q-mt-xs"
@@ -103,42 +103,42 @@
 
                 <q-separator class="q-my-md" />
 
-                <!-- Fale com o vendedor -->
+                <!-- Fale com o anunciante -->
                 <div class="seller-section rounded-borders q-pa-md q-mb-md">
-                  <div class="row items-center">
-                    <div class="col-md-7">
-                      <p class="seller-title q-mb-none">Fale com o anunciante:</p>
-                    </div>
-                    <div class="col-md-5 text-right">
-                      <div class="seller-name">{{ anuncio?.vendedor?.nome || 'Nome do Vendedor' }}</div>
-                    </div>
+                  <div class="row">
+                    <div class="col-6 text-left">
+    <p class="seller-title q-mb-none">Anunciante:</p>
+  </div>
+  <div class="col-6 text-right">
+    <div class="seller-name">{{ anuncio?.vendedor?.nome || 'Nome do Vendedor' }}</div>
+  </div>
                   </div>
                   <q-separator class="q-my-md" />
-<div class="row q-col-gutter-sm q-gutter-y-sm justify-between items-center">
-  <div v-if="anuncio?.vendedor?.numeroWhatsApp" class="col-12 col-sm-auto">
-    <q-btn
-      unelevated
-      color="green-7"
-      icon="mdi-whatsapp"
-      label="Enviar WhatsApp"
-      :href="`https://wa.me/${anuncio.vendedor.numeroWhatsApp}`"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="full-width-sm"
-    />
-  </div>
+                  <div class="row q-col-gutter-sm q-gutter-y-sm justify-between items-center">
+                    <div v-if="anuncio?.vendedor?.numeroWhatsApp" class="col-12 col-sm-auto">
+                      <q-btn
+                        unelevated
+                        color="green-7"
+                        icon="mdi-whatsapp"
+                        label="Enviar WhatsApp"
+                        :href="`https://wa.me/${anuncio.vendedor.numeroWhatsApp}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="full-width-sm"
+                      />
+                    </div>
 
-  <div v-if="anuncio?.vendedor?.email" class="col-12 col-sm-auto text-right">
-    <q-btn
-      outline
-      color="primary"
-      icon="mdi-email"
-      label="Enviar e-mail"
-      @click="abrirModalParaEnvioEmail"
-      class="full-width-sm"
-    />
-  </div>
-</div>
+                    <div v-if="anuncio?.vendedor?.email" class="col-12 col-sm-auto text-right">
+                      <q-btn
+                        outline
+                        color="primary"
+                        icon="mdi-email"
+                        label="Enviar e-mail"
+                        @click="abrirModalParaEnvioEmail"
+                        class="full-width-sm"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <!-- Visitas e Localização -->
@@ -157,13 +157,10 @@
                       <div class="col-md-10">
                         <p class="q-ma-none"><strong>Localização</strong></p>
                       </div>
-                      <div class="col-md-2 text-right">
-                        <q-icon name="mdi-map-marker" color="primary" size="20px" />
-                      </div>
                     </div>
 
                     <div class="row location-row q-mb-xs items-center">
-                      <q-icon name="mdi-city" color="primary" size="18px" class="q-mr-sm" />
+                      <q-icon name="mdi-map-marker" color="primary" size="18px" class="q-mr-sm" />
                       <div class="col">Cidade</div>
                       <div class="col text-right">{{ anuncio?.municipio }}</div>
                     </div>
@@ -475,6 +472,7 @@ export default {
   font-size: 1.1rem;
   font-weight: 600;
   color: #512da8;
+  text-align: right !important;
 }
 
 .contact-buttons {

@@ -1,154 +1,147 @@
 <template>
-<q-layout view="hHh LpR lfr">
-  <!-- HEADER -->
-  <q-header elevated class="header">
-    <q-toolbar class="q-gutter-sm q-px-md q-py-sm flex items-center justify-between">
+  <q-layout view="hHh LpR lfr">
+    <q-header elevated class="header">
+      <q-toolbar class="q-gutter-sm q-px-md q-py-sm flex items-center justify-between">
+        <template v-if="isSmallScreen">
+          <div
+            class="q-toolbar row items-center"
+            style="position: relative; width: 100%; height: 70px; padding-left: 12px; padding-right: 56px; display: flex; align-items: center;"
+          >
+            <router-link
+              @click="limparFiltros()"
+              to="/"
+              style="position: absolute; left: 50%; transform: translateX(-50%)"
+            >
+              <img
+                src="../assets/img/logo-mercado-instrumental-site.jpg"
+                alt="Logo"
+                style="max-height: 82px; width: auto; margin-top: -10px; margin-bottom: -10px;"
+              />
+            </router-link>
+            <q-btn
+  v-if="isSmallScreen"
+  icon="filter_alt"
+  color="primary"
+  round
+  unelevated
+  class="q-pa-sm"
+  style="position: fixed; right: 12px; top: 50%; transform: translateY(-50%); z-index: 1000"
+  @click="abrirModalBuscaDetalhada"
+/>
 
-      <!-- Mobile: Menu + Logo -->
-<template v-if="isSmallScreen">
-  <div
-    class="q-toolbar row items-center"
-    style="position: relative; width: 100%; height: 70px; padding-left: 12px; padding-right: 56px; display: flex; align-items: center;"
-  >
-    <!-- Logo centralizada -->
-    <router-link
-      @click="limparFiltros()"
-      to="/"
-      style="position: absolute; left: 50%; transform: translateX(-50%);"
+          </div>
+        </template>
+
+        <template v-else>
+          <router-link @click="limparFiltros()" to="/" class="header-logo-container q-mx-sm" style="margin-right: 32px">
+            <q-avatar class="responsive-logo">
+              <img src="../assets/img/logo-mercado-instrumental-site.jpg" alt="Logo" />
+            </q-avatar>
+          </router-link>
+
+          <q-input
+            dense
+            outlined
+            :disable="botaoBusca === 'Editar Filtros' && buscaGeral == null"
+            placeholder="Digite o que você procura..."
+            v-model="buscaGeral"
+            class="q-mx-md"
+            @keyup.enter="executarBusca"
+            style="width: 100%; max-width: 250px; background-color: white; border-radius: 4px"
+            clearable
+            :rules="[val => val.length >= 0 || 'Digite algo para buscar']"
+          >
+            <template v-slot:append>
+              <q-icon name="search" @click="executarBusca" class="cursor-pointer" />
+            </template>
+          </q-input>
+
+          <q-btn
+            flat
+            dense
+            @keyup.enter="executarBusca"
+            class="q-mr-md text-capitalize"
+            icon="policy"
+            :disable="buscaGeral != null && buscaGeral != ''"
+            :label="botaoBusca"
+            @click="abrirModalBuscaDetalhada"
+          />
+
+          <q-space />
+
+          <!-- <q-btn
+            flat
+            dense
+            @click="irParaAreaAnunciante"
+            class="q-mr-xs text-capitalize"
+            icon="post_add"
+            label="Publicar Anúncio"
+          /> -->
+          <q-btn
+            flat
+            dense
+            class="q-mr-xs text-capitalize"
+            icon="account_circle"
+            label="Minha Conta"
+            @click="irParaAreaAnunciante"
+          />
+        </template>
+      </q-toolbar>
+    </q-header>
+
+    <q-drawer
+      v-if="isSmallScreen"
+      v-model="leftDrawerOpen"
+      side="left"
+      bordered
     >
-      <img
-        src="../assets/img/logo-mercado-instrumental-site.jpg"
-        alt="Logo"
-        style="max-height: 82px; width: auto; margin-top: -10px; margin-bottom: -10px;"
-      />
-    </router-link>
+      <q-list padding>
+        <q-item-label header>Menu</q-item-label>
+        <q-item>
+          <q-input
+            dense
+            outlined
+            v-model="buscaGeral"
+            placeholder="Digite o que você procura..."
+            :disable="botaoBusca === 'Editar Filtros' && buscaGeral == null"
+            style="width: 100%; background-color: white; border-radius: 4px"
+            clearable
+          >
+            <template v-slot:append>
+              <q-icon name="search" @click="executarBusca" class="cursor-pointer" />
+            </template>
+          </q-input>
+        </q-item>
+        <q-item :disable="buscaGeral != null && buscaGeral != ''" clickable @click="abrirModalBuscaDetalhada">
+          <q-item-section avatar><q-icon name="policy" /></q-item-section>
+          <q-item-section>{{ botaoBusca }}</q-item-section>
+        </q-item>
+        <!-- <q-item clickable @click="irParaAreaAnunciante">
+          <q-item-section avatar><q-icon name="post_add" /></q-item-section>
+          <q-item-section>Publicar Anúncio</q-item-section>
+        </q-item> -->
+        <q-item clickable @click="irParaAreaAnunciante">
+          <q-item-section avatar><q-icon name="account_circle" /></q-item-section>
+          <q-item-section>Minha Conta</q-item-section>
+        </q-item>
+      </q-list>
+    </q-drawer>
 
-    <!-- Botão menu fixo no canto direito -->
-    <q-btn
-      dense
-      flat
-      round
-      icon="menu"
-      @click="toggleLeftDrawer"
-      style="position: absolute; right: -35px;"
-    />
-  </div>
-</template>
+    <q-page-container>
+      <router-view />
+    </q-page-container>
 
-      <!-- Desktop: Logo + Busca + Botões -->
-      <template v-else>
-        <router-link @click="limparFiltros()" to="/" class="header-logo-container q-mx-sm" style="margin-right: 32px;">
-          <q-avatar class="responsive-logo">
-            <img src="../assets/img/logo-mercado-instrumental-site.jpg" alt="Logo" />
-          </q-avatar>
-        </router-link>
-
-        <q-input
-          dense
-          outlined
-          :disable="botaoBusca === 'Editar Filtros' && buscaGeral == null"
-          placeholder="Digite o que você procura..."
-          v-model="buscaGeral"
-          class="q-mx-md"
-          @keyup.enter="executarBusca"
-          style="width: 100%; max-width: 250px; background-color: white; border-radius: 4px;"
-          clearable
-          :rules="[val => val.length >= 0 || 'Digite algo para buscar']"
-        >
-          <template v-slot:append>
-            <q-icon name="search" @click="executarBusca" class="cursor-pointer" />
-          </template>
-        </q-input>
-
-        <q-btn
-          flat
-          dense
-          @keyup.enter="executarBusca"
-          class="q-mr-md text-capitalize"
-          icon="policy"
-          :disable="buscaGeral != null && buscaGeral != ''"
-          :label="botaoBusca"
-          @click="abrirModalBuscaDetalhada"
-        />
-
-        <q-space />
-
-        <q-btn
-          flat
-          dense
-          @click="irParaAreaAnunciante"
-          class="q-mr-xs text-capitalize"
-          icon="post_add"
-          label="Publicar Anúncio"
-        />
-        <q-btn
-          flat
-          dense
-          class="q-mr-xs text-capitalize"
-          icon="account_circle"
-          label="Conta"
-          @click="irParaAreaAnunciante"
-        />
-      </template>
-    </q-toolbar>
-  </q-header>
-
-  <!-- MENU LATERAL (somente em telas pequenas) -->
-  <q-drawer
-    v-if="isSmallScreen"
-    v-model="leftDrawerOpen"
-    side="left"
-    bordered
-  >
-    <q-list padding>
-      <q-item-label header>Menu</q-item-label>
-<q-item>
-  <q-input
-    dense
-    outlined
-    v-model="buscaGeral"
-    placeholder="Digite o que você procura..."
-    :disable="botaoBusca === 'Editar Filtros' && buscaGeral == null"
-    style="width: 100%; background-color: white; border-radius: 4px;"
-    clearable
-  >
-    <template v-slot:append>
-      <q-icon name="search" @click="executarBusca" class="cursor-pointer" />
-    </template>
-  </q-input>
-</q-item>
-      <q-item :disable="buscaGeral != null && buscaGeral != ''" clickable @click="abrirModalBuscaDetalhada">
-        <q-item-section avatar><q-icon name="policy" /></q-item-section>
-        <q-item-section>{{ botaoBusca }}</q-item-section>
-      </q-item>
-      <q-item clickable @click="irParaAreaAnunciante">
-        <q-item-section avatar><q-icon name="post_add" /></q-item-section>
-        <q-item-section>Publicar Anúncio</q-item-section>
-      </q-item>
-      <q-item clickable @click="irParaAreaAnunciante">
-        <q-item-section avatar><q-icon name="account_circle" /></q-item-section>
-        <q-item-section>Conta</q-item-section>
-      </q-item>
-    </q-list>
-  </q-drawer>
-
-  <!-- PÁGINA -->
-  <q-page-container>
-    <router-view />
-  </q-page-container>
-
-  <!-- RODAPÉ -->
-  <q-footer elevated class="bg-grey-8 text-white">
-    <q-toolbar>
-      <q-toolbar-title class="text-subtitle2 text-center">
-        Desenvolvido por WAS Software LTDA.
-      </q-toolbar-title>
-      <div class="text-caption float-right">
-        <div>Versão 1.0</div>
-      </div>
-    </q-toolbar>
-  </q-footer>
-</q-layout>
+    <q-footer elevated class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title class="text-subtitle2 text-center">
+          mercadoinstrumental@gmail.com
+        </q-toolbar-title>
+        <div class="text-caption float-right">
+          <div>Versão 1.0</div>
+        </div>
+      </q-toolbar>
+    </q-footer>
+  </q-layout>
 
 <q-dialog v-model="modalVisualizarBuscaDetalhada">
   <q-card
@@ -168,7 +161,7 @@
     >
       <div class="text-primary text-bold q-mb-sm">Localização</div>
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <q-select
             stack-label
             dense
@@ -197,7 +190,7 @@
             </template>
           </q-select>
         </div>
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <q-select
             stack-label
             dense
@@ -230,7 +223,7 @@
 
       <div class="text-primary text-bold q-mb-sm">Características do Instrumento</div>
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <q-select
             stack-label
             dense
@@ -258,7 +251,7 @@
             </template>
           </q-select>
         </div>
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <q-select
             stack-label
             dense
@@ -287,28 +280,27 @@
           </q-select>
         </div>
       </div>
-
       <div class="text-primary text-bold q-mb-sm">Informações Adicionais</div>
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-xs-12 col-sm-4">
+        <div class="col-xs-5 col-sm-4">
           <q-input stack-label dense v-model="filtro.titulo" label="Título">
             <template v-slot:label>
               <span class="input-label">Título</span>
             </template>
           </q-input>
         </div>
-        <div class="col-xs-6 col-sm-5">
+        <div class="col-xs-4 col-sm-5">
           <q-input stack-label dense label="Descrição" v-model="filtro.descricao">
             <template v-slot:label>
               <span class="input-label">Descrição</span>
             </template>
           </q-input>
         </div>
-        <div class="col-xs-6 col-sm-3">
+        <div class="col-xs-3 col-sm-3">
           <div class="q-mt-lg">
             <q-toggle
               v-model="filtro.novo"
-              label="Instrumento novo?"
+              label="Novo?"
               left-label
               size="md"
               dense
@@ -319,7 +311,7 @@
 
       <div class="text-primary text-bold q-mb-sm">Faixa de Valor</div>
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <q-input
             stack-label
             dense
@@ -333,7 +325,7 @@
             </template>
           </q-input>
         </div>
-        <div class="col-xs-12 col-sm-6">
+        <div class="col-xs-6 col-sm-6">
           <q-input
             stack-label
             dense

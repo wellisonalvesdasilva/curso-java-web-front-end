@@ -188,7 +188,7 @@
       label="Valor do Anúncio"
     >
        <template v-slot:label>
-            <span class="input-label">Título</span>
+            <span class="input-label">Valor do Anúncio</span>
           </template>
         </q-input>
   </div>

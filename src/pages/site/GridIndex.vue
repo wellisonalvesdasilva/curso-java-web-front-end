@@ -3,7 +3,7 @@
     <div class="bg q-mt-lg">
       <q-form greedy>
         <div class="main-container">
-        <div v-if="isAuthenticated" class="text-right p-2 bg-light rounded shadow-sm">
+        <!-- <div v-if="isAuthenticated" class="text-right p-2 bg-light rounded shadow-sm">
           <span class="text-caption hidden-xs hidden-sm">
 <span style="font-size: 1rem; color: #9c27b0; font-weight: bold;">
   Bem-vindo(a), <span style="text-transform: uppercase;">{{ getMe?.nome }}!</span>
@@ -13,17 +13,30 @@
               {{ new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) }}
             </span>
           </span>
+        </div> -->
+                <!-- Botão ANUNCIAR posicionado logo abaixo do header, sem position fixed -->
+                <div style="width: 100%; display: flex; justify-content: flex-end; padding: 0px 0px 0 0;">
+          <q-btn
+            label="Anunciar"
+            color="red"
+            icon="publish"
+            dense
+            unelevated
+            style="min-width: 100px; font-weight: bold;"
+            @click="irParaAreaAnunciante"
+          />
         </div>
           <div class="flex justify-between items-center q-mb-sm">
             <h2 class="title-text">{{ title }}</h2>
             <q-space />
           </div>
           <div class="divisor-line"></div>
+          <div v-if="this.anuncios?.data">
           <div class="row q-col-gutter-md q-mt-md" v-if="anunciosPagina.length > 0">
             <div
               v-for="anuncio in anunciosPagina"
               :key="anuncio.idAnuncio"
-              class="col-12 col-sm-6 col-md-3 col-lg-3">
+              class="col-6 col-sm-6 col-md-3 col-lg-3">
               <q-card>
                 <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
 <div
@@ -99,6 +112,7 @@
             Página {{ anuncios.page + 1 }} de {{ anuncios.totalPages }} - Exibindo {{ registrosExibidos }} de {{ anuncios.totalRecords }} registros no total
           </div>
         </div>
+        </div>
       </q-form>
     </div>
   </div>
@@ -116,7 +130,7 @@ export default {
     return {
       title: 'Anúncios',
       anuncios: ref({
-        data: [],
+        data: null,
         totalPages: 1,
         pageSize: 4,
         totalRecords: 0,
@@ -131,7 +145,7 @@ export default {
       return this.$store.state.filtros.filtroAnuncios
     },
     anunciosPagina () {
-      return this.anuncios.data
+      return this.anuncios?.data
     },
     totalPages () {
       return this.anuncios.totalPages || 1
@@ -156,6 +170,13 @@ export default {
     this.carregarAnuncios()
   },
   methods: {
+    irParaAreaAnunciante () {
+      if (!this.isAuthenticated) {
+        window.location.href = '/account/login'
+      } else {
+        window.location.href = '/admin/anuncios/form'
+      }
+    },
     carregarAnuncios () {
       let params = { page: this.current - 1, size: this.anuncios.pageSize, direction: 'ASC', ordenarPor: 'id' }
       params = this.incluirFiltrosBuscaDetalhada(params)
