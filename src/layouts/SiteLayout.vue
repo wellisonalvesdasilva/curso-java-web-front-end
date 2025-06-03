@@ -282,30 +282,19 @@
       </div>
       <div class="text-primary text-bold q-mb-sm">Informações Adicionais</div>
       <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-xs-5 col-sm-4">
+        <div class="col-xs-6 col-sm-4">
           <q-input stack-label dense v-model="filtro.titulo" label="Título">
             <template v-slot:label>
               <span class="input-label">Título</span>
             </template>
           </q-input>
         </div>
-        <div class="col-xs-4 col-sm-5">
+        <div class="col-xs-6 col-sm-5">
           <q-input stack-label dense label="Descrição" v-model="filtro.descricao">
             <template v-slot:label>
               <span class="input-label">Descrição</span>
             </template>
           </q-input>
-        </div>
-        <div class="col-xs-3 col-sm-3">
-          <div class="q-mt-lg">
-            <q-toggle
-              v-model="filtro.novo"
-              label="Novo?"
-              left-label
-              size="md"
-              dense
-            />
-          </div>
         </div>
       </div>
 
