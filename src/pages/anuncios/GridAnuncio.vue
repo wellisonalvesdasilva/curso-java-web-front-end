@@ -96,7 +96,7 @@
             <div class="col-12">
               <div style="float: right">
               <q-btn
-                v-if="!title.includes('Revisão')"
+                v-if="!isRevisao"
                 @click="cadastrar"
                 type="button"
                 label="Cadastrar"

@@ -27,7 +27,7 @@
     <q-footer elevated class="bg-grey-9 text-white">
       <q-toolbar class="q-pa-sm justify-center items-center">
         <div class="text-caption text-center">
-          <strong>Versão 1.0.0.0 de 09/06/2025</strong>
+          <strong>Versão 1.0.0.0 de 04/06/2025</strong>
         </div>
       </q-toolbar>
     </q-footer>
@@ -47,8 +47,10 @@ export default {
 <style lang="scss" scoped>
 @media (max-width: 600px) {
   .responsive-card {
-    margin-left: 40px;
-    margin-right: 40px;
+    width: calc(100% - 32px); // margem lateral total de 32px (16px cada lado)
+    max-width: 100%;
+    margin-left: 16px;
+    margin-right: 16px;
   }
 }
 
@@ -56,6 +58,7 @@ export default {
   max-width: 390px;
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
 }
 
 </style>
