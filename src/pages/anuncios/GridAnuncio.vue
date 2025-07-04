@@ -11,14 +11,6 @@
             <q-breadcrumbs-el :label="title" class="breadcrumb-last" />
           </q-breadcrumbs>
         </div>
-        <!-- <div class="col-auto breadcrumb-container">
-          <q-btn
-            class="link-voltar q-pr-none"
-            icon="chevron_left"
-            label="Voltar"
-            @click="voltar"
-          />
-        </div> -->
       </div>
       <q-form greedy>
         <div class="main-container">
@@ -28,7 +20,8 @@
           </div>
           <div class="divisor-line"></div>
         <div class="q-mt-lg">
-          <q-table flat bordered ref="tableRef" class="last-sticky-header-column-table mais_colunas table_header scroll_default--custom scroll_default--table my-sticky-last-column-table" :rows="rows" :columns="columns"
+        <q-table
+          flat bordered ref="tableRef" class="last-sticky-header-column-table mais_colunas table_header scroll_default--custom scroll_default--table my-sticky-last-column-table" :rows="rows" :columns="columns"
           :rows-per-page-options="pagination.perpageOptions" row-key="id" v-model:pagination="pagination"
           :loading="loading" :filter="filter" binary-state-sort @request="buscarPessoas">
           <template v-slot:header="props">
@@ -59,16 +52,6 @@
                     input-class="tamanho-minimo-data" mask="##/##/####" stack-label
                     @change="val => filtroTrocado(col.name, this.$fmt.dataToApi(val))">
                     <template v-slot:append>
-                      <!-- <q-icon class="cursor-pointer custom-input-icon-size" name="event">
-                        <q-popup-proxy ref="dataPublicacao" cover transition-hide="scale" transition-show="scale">
-                          <q-date v-model="dataPublicacao" mask="DD/MM/YYYY" today-btn
-                            @update:model-value="(val, update, abort) => filtroTrocado(col.name, this.$fmt.dataToApi(val))">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup color="primary" flat label="Fechar" />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon> -->
                     </template>
                   </q-input>
               </q-th>
@@ -76,21 +59,33 @@
           </template>
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-x-sm text-center">
-              <q-btn class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
+              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO')" class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
                 @click="editar(props.row)">
-                <q-tooltip>Editar Registro</q-tooltip>
+               <q-tooltip>{{ isRevisao ? 'Revisar' : 'Editar'}}</q-tooltip>
               </q-btn>
-              <q-btn class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
-                <q-tooltip>Excluir Registro</q-tooltip>
+              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO')" v-if="!isRevisao" class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
+                <!-- <q-tooltip>Excluir</q-tooltip> -->
               </q-btn>
+              <q-btn
+              v-if="props.row.idPagamentoLytex != null"
+              class="btn-action"
+              size="sm"
+              @click="irParaLytex(props.row)"
+              round
+              flat
+              icon="open_in_new">
+              <q-tooltip>Fatura</q-tooltip>
+            </q-btn>
             </q-td>
           </template>
             <template v-slot:body-cell-status="props">
               <q-td :props="props">
                 <q-icon v-if="props.value === 'Publicado'" class="icon_gap" color="green" name="circle"
                   size="10px"></q-icon>
+                <q-icon v-if="props.value === 'Expirado'" class="icon_gap" color="red" name="circle"
+                  size="10px"></q-icon>
                <q-icon
-                  v-if="props.value === 'Rascunho' || props.value === 'Em Elaboração' || props.value === 'Suspenso'"
+                  v-if="props.value === 'Rascunho' || props.value === 'Aguardando Revisão para Publicação' || props.value === 'Aguardando Confirmação de Pagamento'"
                   class="icon_gap" color="orange" name="circle" size="10px"></q-icon>
                 {{ props.value }}
               </q-td>
@@ -100,13 +95,14 @@
           <div class="row q-mt-md">
             <div class="col-12">
               <div style="float: right">
-                <q-btn
-                  @click="cadastrar"
-                  type="button"
-                  label="Cadastrar"
-                  no-caps
-                  class="btn-cadastrar"
-                />
+              <q-btn
+                v-if="!title.includes('Revisão')"
+                @click="cadastrar"
+                type="button"
+                label="Cadastrar"
+                no-caps
+                class="btn-cadastrar"
+              />
               </div>
             </div>
           </div>
@@ -120,11 +116,13 @@
 import { ref, onMounted } from 'vue'
 import { anuncioService, enumService, ibgeService } from 'src/services/api-service.js'
 import { useQuasar } from 'quasar'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'GridAnuncio',
   setup () {
     const $q = useQuasar()
+    const route = useRoute()
     const tableRef = ref()
     const rows = ref([])
     const loading = ref(false)
@@ -142,7 +140,7 @@ export default {
       const pageAt = page - 1
       const fetchCount = rowsPerPage
       pagination.value.rowsPerPage = fetchCount
-      const req = { page: pageAt, size: fetchCount, direction: pagination.value.descending ? 'DESC' : 'ASC', ordenarPor: 'id' }
+      const req = { page: pageAt, size: fetchCount, direction: pagination.value.descending ? 'DESC' : 'ASC', ordenarPor: 'id', listarParaRevisao: route.path.includes('/revisao') }
       anuncioService.findAll(prepararFiltros(req)).then(retorno => {
         rows.value.splice(0, rows.value.length, ...retorno.data.data)
         pagination.value.page = retorno.data.page + 1
@@ -197,7 +195,17 @@ export default {
       listaCampos: ref([]),
       filters,
       $q,
-      title: 'Gerenciar Anúncios'
+      route
+    }
+  },
+  props: {
+    title: {
+      type: String,
+      default: () => 'Gerenciar Anúncios'
+    },
+    isRevisao: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -222,13 +230,13 @@ export default {
       this.columns = [
         { name: 'id', align: 'center', label: 'Código', field: 'id' },
         { name: 'status', align: 'left', label: 'Situação', field: val => val.status.label },
-        { name: 'dataPublicacao', label: 'Data de Cadastro', align: 'left', field: val => this.$fmt.dataToDisplay(val.dataPublicacao) },
         { name: 'titulo', align: 'left', label: 'Título', field: 'titulo' },
         { name: 'estado', align: 'left', label: 'Estado', field: 'estado' },
         { name: 'municipio', align: 'left', label: 'Município', field: 'municipio' },
         { name: 'tipo', align: 'left', label: 'Tipo', field: val => val.tipo.label },
         { name: 'marca', align: 'left', label: 'Marca', field: val => val.marca.label },
         { name: 'quantidadeAcesso', align: 'center', label: 'Quantidade de Visualizações', field: 'quantidadeAcesso' },
+        { name: 'dataPublicacao', label: 'Data de Publicação', align: 'left', field: val => this.$fmt.dataToDisplay(val.dataPublicacao) },
         { name: 'actions', label: 'Ações', required: true, align: 'center' }
       ]
     },
@@ -328,7 +336,10 @@ export default {
       this.$router.push('/admin/anuncios/form')
     },
     editar (row) {
-      this.$router.push('/admin/anuncios/form/' + row.id)
+      this.$router.push((this.isRevisao ? '/admin/anuncios/revisao/form/' : '/admin/anuncios/form/') + row.id)
+    },
+    irParaLytex (row) {
+      window.open(row.urlBaseLytex + '/' + row.hashIdPagamentoLytex)
     }
   }
 }

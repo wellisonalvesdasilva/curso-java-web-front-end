@@ -114,16 +114,14 @@
       <router-view />
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title class="text-subtitle2 text-center">
-          mercadoinstrumental@gmail.com
-        </q-toolbar-title>
-        <div class="text-caption float-right">
-          <div>Versão 1.0</div>
+    <q-footer elevated class="bg-grey-9 text-white">
+      <q-toolbar class="q-pa-sm justify-center items-center">
+        <div class="text-caption text-center">
+          <strong>Versão 1.0.0.0 de 09/06/2025</strong>
         </div>
       </q-toolbar>
     </q-footer>
+
   </q-layout>
 </template>
 
@@ -131,11 +129,12 @@
 <style lang="scss" scoped></style>
 
 <script>
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
 import { MENU } from '../mock/menu.mock'
 import { useQuasar } from 'quasar'
 import vClickOutside from 'click-outside-vue3'
 import { mapGetters } from 'vuex'
+import securityState from '../utils/securityState'
 
 export default {
   directives: {
@@ -170,7 +169,7 @@ export default {
       this.miniMode = true
     },
     isUsuarioTemAcesso (item) {
-      return !!item.transacao
+      return securityState.hasTransaction(item.transacao)
     },
     atualizarMenu () {
       this.expansionItems.forEach((item) => {
@@ -204,22 +203,37 @@ export default {
     },
     filtrarMenusPrincipais () {
       this.menus = []
+
       MENU.forEach(item => {
-        if (item.items) {
-          item.itens = this.filtrarMenusItens(item.items)
-          if (item.itens.length > 0) {
-            this.menus.push(item)
+        const novoItem = { ...item } // clonar objeto original superficialmente
+
+        // Se tiver itens diretos (nível 2)
+        if (novoItem.items) {
+          const itensFiltrados = this.filtrarMenusItens(novoItem.items)
+          if (itensFiltrados.length > 0) {
+            novoItem.items = itensFiltrados
+            this.menus.push(novoItem)
             return
           }
         }
-        if (item.expansionItem) {
-          item.expansionItem.forEach(itExp => {
-            itExp.subMenu = this.filtrarMenusItens(itExp.subMenu)
+
+        // Se tiver expansionItems (nível 2 com submenu)
+        if (novoItem.expansionItem) {
+          const expansionFiltrada = []
+
+          novoItem.expansionItem.forEach(itExp => {
+            const subMenuFiltrado = this.filtrarMenusItens(itExp.subMenu || [])
+            if (subMenuFiltrado.length > 0) {
+              expansionFiltrada.push({
+                ...itExp,
+                subMenu: subMenuFiltrado
+              })
+            }
           })
-          const ativos = item.expansionItem.filter(itExp => itExp.subMenu.length > 0)
-          if (ativos.length > 0) {
-            item.expansionItem = ativos
-            this.menus.push(item)
+
+          if (expansionFiltrada.length > 0) {
+            novoItem.expansionItem = expansionFiltrada
+            this.menus.push(novoItem)
           }
         }
       })
@@ -240,7 +254,6 @@ export default {
       leftDrawerOpen,
       habilitaMenu,
       miniMode,
-      securityState: inject('securityState'),
       drawer: ref(false),
       drawerClick (e) {
         if (miniMode.value) {

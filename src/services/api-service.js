@@ -71,6 +71,10 @@ export class AnuncioService {
   delete (id) {
     return apiMercadoInstrumental.delete(this.path + '/' + id)
   }
+
+  getInfoHasAnuncioFree () {
+    return apiMercadoInstrumental.get(this.path + '/hasAnuncioFree')
+  }
 }
 
 export class EnumService {

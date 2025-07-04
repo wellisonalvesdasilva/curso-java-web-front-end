@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 import validators from '../validators/validator-set'
 
-const api = axios.create({ baseURL: 'https://mercado-instrumental-api-production.up.railway.app/v1/api' })
+const api = axios.create({ baseURL: process.env.API_MERCADO_INSTRUMENTAL })
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios

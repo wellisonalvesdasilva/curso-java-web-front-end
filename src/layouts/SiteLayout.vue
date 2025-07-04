@@ -45,6 +45,7 @@
             :disable="botaoBusca === 'Editar Filtros' && buscaGeral == null"
             placeholder="Digite o que você procura..."
             v-model="buscaGeral"
+            @clear="executarBusca"
             class="q-mx-md"
             @keyup.enter="executarBusca"
             style="width: 100%; max-width: 250px; background-color: white; border-radius: 4px"
@@ -131,13 +132,10 @@
       <router-view />
     </q-page-container>
 
-    <q-footer elevated class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title class="text-subtitle2 text-center">
-          mercadoinstrumental@gmail.com
-        </q-toolbar-title>
-        <div class="text-caption float-right">
-          <div>Versão 1.0</div>
+    <q-footer elevated class="bg-grey-9 text-white">
+      <q-toolbar class="q-pa-sm justify-center items-center">
+        <div class="text-caption text-center">
+          <strong>Versão 1.0.0.0 de 09/06/2025</strong>
         </div>
       </q-toolbar>
     </q-footer>
@@ -566,7 +564,7 @@ export default {
       if (!this.isAuthenticated) {
         window.location.href = '/account/login'
       } else {
-        window.location.href = '/admin/anuncios/form'
+        window.location.href = '/admin/anuncios'
       }
     },
     irParaHome: function () {
