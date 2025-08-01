@@ -45,20 +45,21 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@media (max-width: 600px) {
-  .responsive-card {
-    width: calc(100% - 32px); // margem lateral total de 32px (16px cada lado)
-    max-width: 100%;
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-}
 
 .responsive-card {
   max-width: 390px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+}
+
+@media (max-width: 500px) {
+  .responsive-card {
+    width: calc(100% - 100px); /* margem lateral total de 32px (16px cada lado) */
+    max-width: 100%;
+    margin-left: 50px;
+    margin-right: 16px;
+  }
 }
 
 </style>

@@ -47,7 +47,6 @@
               Ir para o Site
             </q-item-section>
           </q-item>
-
           <q-expansion-item v-for="(item, key) in menus" :key="key" :label="item.label" :default-opened="false"
             :icon="item.icon" :to="item.to" expand-separator class="sidebar-expansionlvl1" ref="expansionItems"
             @click="menuPrincipalShow(item.label)">
@@ -117,7 +116,7 @@
     <q-footer elevated class="bg-grey-9 text-white">
       <q-toolbar class="q-pa-sm justify-center items-center">
         <div class="text-caption text-center">
-          <strong>Versão 1.0.0.0 de 09/06/2025</strong>
+          <strong>Versão 1.0.0.1 de 06/08/2025</strong>
         </div>
       </q-toolbar>
     </q-footer>

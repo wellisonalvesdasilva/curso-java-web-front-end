@@ -20,7 +20,7 @@
     <q-card-section class="flex flex-center">
       <img :src="getIconeCard(item)" :alt="'icone de erro'" />
       <span class="q-ml-sm" :class="'text-bold'">
-        Imagem {{ item.numero == 1 ?  item.numero + ' (Capa)' : item.numero }}
+        {{ item.numero == 1 ?  'Capa' : item.numero - 1 }}
         <!-- <q-tooltip> Válido até xxxx </q-tooltip> -->
       </span>
     </q-card-section>
@@ -127,10 +127,10 @@ export default {
   },
   methods: {
     getClassCard (item) {
-      return item.srcDir ? 'content-card-ok' : 'content-card-vencido'
+      return ((item.numero === 1 || item.numero === 2) && item.srcDir === null) ? 'content-card-error' : item.srcDir ? 'content-card-ok' : 'content-card-vencido'
     },
     getIconeCard (item) {
-      return item.srcDir ? this.iconSucesso : this.iconErrorVencido
+      return ((item.numero === 1 || item.numero === 2) && item.srcDir === null) ? this.iconError : item.srcDir ? this.iconSucesso : this.iconErrorVencido
     },
     uparDocumento (imagem) {
       this.imagem = imagem

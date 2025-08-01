@@ -135,7 +135,7 @@
     <q-footer elevated class="bg-grey-9 text-white">
       <q-toolbar class="q-pa-sm justify-center items-center">
         <div class="text-caption text-center">
-          <strong>Versão 1.0.0.0 de 09/06/2025</strong>
+            <strong>Versão 1.0.0.1 de 06/08/2025</strong>
         </div>
       </q-toolbar>
     </q-footer>
@@ -564,7 +564,7 @@ export default {
       if (!this.isAuthenticated) {
         window.location.href = '/account/login'
       } else {
-        window.location.href = '/admin/anuncios'
+        window.location.href = '/admin'
       }
     },
     irParaHome: function () {

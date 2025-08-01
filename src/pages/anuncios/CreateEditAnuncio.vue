@@ -35,12 +35,12 @@
           <q-tabs
             v-model="tab"
             dense
-            class="q-mt-md text-h6 text-grey titulo-abas"
+            class="q-mt-lg text-h6 text-grey titulo-abas"
             active-color="primary"
             indicator-color="primary"
             narrow-indicator
           >
-            <q-tab name="plano-desejado" label="Plano" />
+            <q-tab name="plano-desejado" label="Plano Desejado" />
             <q-tab :disable="!planoSelecionado" name="dados-basicos" label="Dados Básicos" />
             <q-tab :disable="!anuncio?.id" name="imagens" label="Imagens" />
           </q-tabs>
@@ -233,181 +233,418 @@
             </div>
           </div>
         </div>
-        <div class="q-pa-lg" v-if="tab === 'plano-desejado'">
-          <q-card
-            class="q-pa-md bg-white"
-            style="
-              max-width: 1000px;
-              margin: auto;
-              border: 1px solid #e0e0e0;
-              border-radius: 12px;
-              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            "
+  <div class="q-pa-lg" v-if="tab === 'plano-desejado'">
+    <q-card class="q-pa-md bg-white shadow-3">
+      <div class="q-pa-md">
+
+        <!-- Layout Desktop (Tabela) -->
+        <div v-if="!isMobile" class="q-mb-md">
+          <q-markup-table
+            flat
+            bordered
+            class="shadow-2 rounded-borders table-wrapper"
+            style="border-radius: 12px; overflow-x: auto;"
           >
-            <!-- Aviso: Escolha um plano -->
-            <div
-              v-if="!planoSelecionado"
-              class="q-mb-md flex items-center q-pa-sm"
-              style="
-                background-color: #fff8e1;
-                border: 2px solid #ffc107;
-                border-radius: 10px;
-                color: #795548;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-              "
-            >
-              <q-icon name="warning" size="20px" class="q-mr-sm text-warning" />
-              <div><strong>Escolha um plano</strong> para continuar.</div>
-            </div>
-
-            <!-- Lista de planos -->
-            <div class="row q-col-gutter-md">
-              <div
-                v-for="plano in planos"
-                :key="plano.id"
-                class="col-12 col-sm-6 col-md-3"
-              >
-                <q-card
-                  flat
-                  bordered
-                  class="full-height text-white relative-position"
-                  :style="{
-                    backgroundColor: plano.bg,
-                    borderRadius: '10px',
-                    boxShadow: plano.destaque
-                      ? '0 0 14px 4px rgba(255, 215, 0, 0.7)'
-                      : '0 2px 4px rgba(0, 0, 0, 0.1)'
-                  }"
-                >
-                  <q-card-section class="text-center">
-                    <!-- Ícone -->
-                    <q-icon :name="plano.icone" size="36px" class="q-mb-sm" />
-
-                    <!-- Nome -->
-                    <div class="text-subtitle1 text-bold">
-                      {{ plano.nome }}
-                    </div>
-
-                    <!-- Duração -->
-                    <div class="text-caption q-mt-xs">
-                      {{ plano.duracao }}
-                    </div>
-
-                    <!-- Valor -->
-                    <div class="q-mt-md">
-                      <div class="text-body2 text-bold">
-                        {{ plano.valorAvista }}
-                      </div>
-                    </div>
-
-                    <!-- Radio -->
-                    <q-radio
-                      :model-value="planoSelecionado"
-                      :val="plano.id"
-                      :disabled="anuncio?.id"
-                      v-if="plano.id !== 'GRATIS' || (plano.id === 'GRATIS' && !hasAnuncioFree)"
-                      color="white"
-                      class="q-mt-md"
-                      checked-icon="radio_button_checked"
-                      unchecked-icon="radio_button_unchecked"
-                      size="md"
-                      @update:model-value="evitarTroca"
-                    />
-
-                    <!-- Recomendado -->
-                    <div
-                      v-if="plano.destaque"
-                      class="q-mt-md text-caption"
-                      style="color: #FFC107; font-weight: 500;"
-                    >
-                      🔥 Recomendado
-                    </div>
-                  </q-card-section>
-                </q-card>
-              </div>
-            </div>
-
-            <!-- Informações complementares -->
-            <div class="q-mt-xl text-center">
-              <div
-                style="
-                  color: #4A4A4A;
-                  font-size: 15px;
-                  font-weight: 500;
-                  margin-bottom: 6px;
-                "
-              >
-                💳 Formas de pagamento: <span style="font-weight: 600;">PIX</span> ou <span style="font-weight: 600;">Boleto Bancário.  </span>
-              </div>
-
-              <div
-                style="
-                  color: #EF6C00;
-                  font-size: 14px;
-                  font-style: italic;
-                  font-weight: 500;
-                "
-              >
-                * O plano grátis está disponível apenas uma vez por usuário.
-              </div>
-            </div>
-          </q-card>
+            <thead>
+              <tr class="bg-grey-3 text-white text-weight-bold text-center">
+                <th class="bg-grey-3 text-grey-9 text-left text-subtitle2"></th>
+                <th class="bg-blue-5 text-white text-subtitle2">Premium</th>
+                <th class="bg-amber-5 text-white text-subtitle2">Avançado</th>
+                <th class="bg-grey-6 text-white text-subtitle2">Básico</th>
+                <th class="bg-red-5 text-white text-subtitle2">Grátis</th>
+              </tr>
+            </thead>
+            <tbody class="text-center text-body1">
+              <tr>
+                <td class="text-left text-weight-medium bg-grey-2">Valor</td>
+                <td class="text-weight-bold">R$ 99,90</td>
+                <td class="text-weight-bold">R$ 79,90</td>
+                <td class="text-weight-bold">R$ 59,90</td>
+                <td class="text-weight-bold">Primeiro Anúncio</td>
+              </tr>
+              <tr>
+                <td class="text-left text-weight-medium bg-grey-2">Tempo de Veiculação</td>
+                <td>60 dias</td>
+                <td>45 dias</td>
+                <td>30 dias</td>
+                <td>20 dias</td>
+              </tr>
+              <tr>
+                <td class="text-left text-weight-medium bg-grey-2">Fixo na Página de Destaque</td>
+                <td><q-icon name="check" color="green" size="md" /></td>
+                <td><q-icon name="check" color="green" size="md" /></td>
+                <td><q-icon name="close" color="red" size="md" /></td>
+                <td><q-icon name="close" color="red" size="md" /></td>
+              </tr>
+<tr>
+  <td class="text-left text-weight-medium bg-grey-2">Selecionar</td>
+  <td>
+    <div :style="anuncio?.id ? 'pointer-events: none;' : ''">
+      <q-radio :disable="anuncio?.id" v-model="planoSelecionado" val="PREMIUM" color="blue" />
+    </div>
+  </td>
+  <td>
+    <div :style="anuncio?.id ? 'pointer-events: none;' : ''">
+      <q-radio :disable="anuncio?.id" v-model="planoSelecionado" val="AVANCADO" color="amber" />
+    </div>
+  </td>
+  <td>
+    <div :style="anuncio?.id ? 'pointer-events: none;' : ''">
+      <q-radio :disable="anuncio?.id" v-model="planoSelecionado" val="BASICO" color="grey-8" />
+    </div>
+  </td>
+  <td>
+    <div :style="anuncio?.id ? 'pointer-events: none;' : ''">
+      <q-radio :disable="hasAnuncioFree || anuncio?.id" v-model="planoSelecionado" val="GRATIS" color="red" />
+    </div>
+  </td>
+</tr>
+            </tbody>
+          </q-markup-table>
         </div>
-      <div class="row q-mt-md">
-            <div class="col-12">
-              <div style="float: right">
-                <!-- <q-btn
-                  @click="voltar"
-                  style="margin-right: 10px"
-                  label="Voltar"
-                  no-caps
-                  class="btn-voltar"
-                /> -->
 
-                <q-btn
-                  v-if="tab === 'plano-desejado'"
-                  :disable="!planoSelecionado"
-                  type="button"
-                  style="margin-right: 10px"
-                  label="Continuar"
-                  no-caps
-                  icon="chevron_right"
-                  class="btn-salvar"
-                  @click="tab = 'dados-basicos'"
-                />
-
-                <q-btn
-                  v-if="!permiteRascunho && !estaNaRevisao && tab !== 'plano-desejado'"
-                  type="submit"
-                  style="margin-right: 10px"
-                  label="Salvar Rascunho"
-                  no-caps
-                  icon="save"
-                  class="btn-salvar"
-                />
-
-                <q-btn
-                  @click="cadastrarOuAtualizar('AGUARDANDO_PUBLICACAO')"
-                  v-if="anuncio?.id && estaNaRevisao === false"
-                  type="button"
-                  label="Cadastrar"
-                  no-caps
-                  icon="save"
-                  class="btn-cadastrar"
-                />
-
-                <q-btn
-                  @click="cadastrarOuAtualizar('PUBLICADO')"
-                  v-if="anuncio?.id && estaNaRevisao"
-                  type="button"
-                  label="Salvar e Aprovar"
-                  no-caps
-                  class="btn-aprovar"
-                  icon="save"
-                />
-              </div>
+        <!-- Layout Mobile (Cards empilhados) -->
+      <div v-else class="q-gutter-md">
+        <!-- Premium -->
+        <q-card
+          class="q-pa-lg"
+          style="
+            cursor: pointer;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+            box-shadow:
+              0 8px 16px rgba(13, 71, 161, 0.3),
+              inset 0 0 12px rgba(255, 255, 255, 0.3);
+            transition: box-shadow 0.4s ease, border 0.4s ease;
+            border: 3px solid transparent;
+            color: #0d47a1;
+            font-family: 'Roboto', sans-serif;
+            user-select: none;
+          "
+          :class="planoSelecionado === 'PREMIUM' ? 'premium-planoSelecionado' : ''"
+          @click="!anuncio?.id && (planoSelecionado = 'PREMIUM')"
+          v-ripple
+          @mouseenter="$el.style.boxShadow='0 12px 28px rgba(13, 71, 161, 0.5), inset 0 0 16px rgba(255,255,255,0.4)'"
+          @mouseleave="$el.style.boxShadow=planoSelecionado === 'PREMIUM' ? '0 12px 28px rgba(13, 71, 161, 0.7), inset 0 0 20px rgba(255,255,255,0.5)' : '0 8px 16px rgba(13, 71, 161, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.3)'"
+        >
+          <div :style="anuncio?.id ? 'pointer-events: none;' : ''" class="row items-center justify-between q-mb-md">
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 700; letter-spacing: 0.04em;">Premium</div>
+              <!-- <div style="font-size: 1rem; opacity: 0.85; margin-top: -4px;">Plano completo com todos recursos</div> -->
             </div>
+            <!-- <q-radio
+              :disabled="anuncio?.id"
+              v-model="planoSelecionado"
+              val="PREMIUM"
+              color="#0d47a1"
+              size="28px"
+              @click.stop
+              unchecked-icon="radio_button_unchecked"
+              checked-icon="radio_button_checked"
+            /> -->
           </div>
+
+          <div
+            style="font-size: 2rem; font-weight: 900; color: #08306b; margin-bottom: 12px; text-shadow: 1px 1px 3px rgba(0,0,0,0.15);"
+          >
+            R$ 99,90
+          </div>
+
+          <q-chip
+            dense
+            outline
+            style="background: rgba(13, 71, 161, 0.15); color: #08306b; font-weight: 600; font-size: 0.9rem; padding: 4px 12px;"
+          >
+            Ativo por 60 dias
+          </q-chip>
+
+          <div style="margin-top: 16px; font-weight: 600; color: #0d47a1; font-size: 1.1rem;">
+            Recursos:
+          </div>
+
+          <ul
+            style="list-style: none; padding-left: 0; margin-top: 6px; font-size: 1rem; color: #19519f;"
+          >
+            <li style="display: flex; align-items: center; margin-bottom: 8px;">
+              <q-icon
+                name="check"
+                color="#7fff00"
+                size="24px"
+                style="text-shadow: 0 0 6px #7fff00;"
+                class="q-mr-sm"
+              />
+              Fixo na Página de Destaque
+            </li>
+          </ul>
+        </q-card>
+        <!-- Avançado -->
+        <q-card
+          class="q-pa-lg"
+          style="
+            cursor: pointer;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffe082 100%);
+            box-shadow:
+              0 8px 16px rgba(111, 79, 30, 0.3),
+              inset 0 0 12px rgba(255, 255, 255, 0.3);
+            transition: box-shadow 0.4s ease, border 0.4s ease;
+            border: 3px solid transparent;
+            color: #6f4f1e;
+            user-select: none;
+            font-family: 'Roboto', sans-serif;
+          "
+          :class="planoSelecionado === 'AVANCADO' ? 'avancado-planoSelecionado' : ''"
+          @click="!anuncio?.id && (planoSelecionado = 'AVANCADO')"
+          v-ripple
+          @mouseenter="$el.style.boxShadow='0 12px 28px rgba(111, 79, 30, 0.5), inset 0 0 16px rgba(255,255,255,0.4)'"
+          @mouseleave="$el.style.boxShadow=planoSelecionado === 'AVANCADO' ? '0 12px 28px rgba(111, 79, 30, 0.7), inset 0 0 20px rgba(255,255,255,0.5)' : '0 8px 16px rgba(111, 79, 30, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.3)'"
+        >
+          <div :style="anuncio?.id ? 'pointer-events: none;' : ''" class="row items-center justify-between q-mb-md">
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 700; letter-spacing: 0.04em;">Avançado</div>
+              <!-- <div style="font-size: 1rem; opacity: 0.85; margin-top: -4px;">Plano intermediário</div> -->
+            </div>
+            <!-- <q-radio
+              :disabled="anuncio?.id"
+              v-model="planoSelecionado"
+              val="AVANCADO"
+              color="#6f4f1e"
+              size="28px"
+              @click.stop
+              unchecked-icon="radio_button_unchecked"
+              checked-icon="radio_button_checked"
+            /> -->
+          </div>
+
+          <div
+            style="font-size: 2rem; font-weight: 900; color: #4e342e; margin-bottom: 12px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1);"
+          >
+            R$ 79,90
+          </div>
+
+          <q-chip
+            dense
+            outline
+            style="background: rgba(111, 79, 30, 0.15); color: #4e342e; font-weight: 600; font-size: 0.9rem; padding: 4px 12px;"
+          >
+            Ativo por 45 dias
+          </q-chip>
+
+          <div style="margin-top: 16px; font-weight: 600; color: #6f4f1e; font-size: 1.1rem;">
+            Recursos:
+          </div>
+
+          <ul
+            style="list-style: none; padding-left: 0; margin-top: 6px; font-size: 1rem; color: #6d4c41;"
+          >
+            <li style="display: flex; align-items: center; margin-bottom: 8px;">
+              <q-icon
+                name="check"
+                color="#7fff00"
+                size="24px"
+                style="text-shadow: 0 0 6px #7fff00;"
+                class="q-mr-sm"
+              />
+              Fixo na Página de Destaque
+            </li>
+          </ul>
+        </q-card>
+        <!-- Básico -->
+        <q-card
+          class="q-pa-lg"
+          style="
+            cursor: pointer;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%);
+            box-shadow:
+              0 8px 16px rgba(55, 71, 79, 0.3),
+              inset 0 0 12px rgba(255, 255, 255, 0.4);
+            transition: box-shadow 0.4s ease, border 0.4s ease;
+            border: 3px solid transparent;
+            color: #37474f;
+            user-select: none;
+            font-family: 'Roboto', sans-serif;
+          "
+          :class="planoSelecionado === 'BASICO' ? 'basico-planoSelecionado' : ''"
+           @click="!anuncio?.id && (planoSelecionado = 'BASICO')"
+          v-ripple
+          @mouseenter="$el.style.boxShadow='0 12px 28px rgba(55, 71, 79, 0.5), inset 0 0 16px rgba(255,255,255,0.45)'"
+          @mouseleave="$el.style.boxShadow=planoSelecionado === 'BASICO' ? '0 12px 28px rgba(55, 71, 79, 0.7), inset 0 0 20px rgba(255,255,255,0.5)' : '0 8px 16px rgba(55, 71, 79, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.4)'"
+        >
+          <div :style="anuncio?.id ? 'pointer-events: none;' : ''" class="row items-center justify-between q-mb-md">
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 700; letter-spacing: 0.04em;">Básico</div>
+              <!-- <div style="font-size: 1rem; opacity: 0.85; margin-top: -4px;">Plano básico para começar</div> -->
+            </div>
+            <!-- <q-radio
+            :disabled="anuncio?.id"
+              v-model="planoSelecionado"
+              val="BASICO"
+              color="#37474f"
+              size="28px"
+              @click.stop
+              unchecked-icon="radio_button_unchecked"
+              checked-icon="radio_button_checked"
+            /> -->
+          </div>
+          <div style="font-size: 2rem; font-weight: 900; color: #263238; margin-bottom: 12px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">
+            R$ 59,90
+          </div>
+          <q-chip
+            dense
+            outline
+            style="background: rgba(55, 71, 79, 0.15); color: #263238; font-weight: 600; font-size: 0.9rem; padding: 4px 12px;">
+            Ativo por 30 dias
+          </q-chip>
+          <div style="margin-top: 16px; font-weight: 600; color: #37474f; font-size: 1.1rem;">
+            Recursos:
+          </div>
+          <ul style="list-style: none; padding-left: 0; margin-top: 6px; font-size: 1rem; color: #c62828;">
+            <li style="display: flex; align-items: center; margin-bottom: 8px;">
+              <q-icon
+                name="close"
+                color="#ef9a9a"
+                size="24px"
+                style="text-shadow: 0 0 6px #ef9a9a;"
+                class="q-mr-sm"
+              />
+              Fixo na Página de Destaque
+            </li>
+          </ul>
+        </q-card>
+        <!-- Grátis -->
+        <q-card
+          class="q-pa-lg"
+          style="
+            cursor: pointer;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
+            box-shadow:
+              0 8px 16px rgba(183, 28, 28, 0.3),
+              inset 0 0 12px rgba(255, 255, 255, 0.4);
+            transition: box-shadow 0.4s ease, border 0.4s ease;
+            border: 3px solid transparent;
+            color: #b71c1c;
+            user-select: none;
+            font-family: 'Roboto', sans-serif;
+          "
+          :class="planoSelecionado === 'GRATIS' ? 'gratis-planoSelecionado' : ''"
+           @click="(!anuncio?.id && !hasAnuncioFree) && (planoSelecionado = 'GRATIS')"
+          v-ripple
+          @mouseenter="$el.style.boxShadow='0 12px 28px rgba(183, 28, 28, 0.5), inset 0 0 16px rgba(255,255,255,0.5)'"
+          @mouseleave="$el.style.boxShadow=planoSelecionado === 'GRATIS' ? '0 12px 28px rgba(183, 28, 28, 0.7), inset 0 0 20px rgba(255,255,255,0.6)' : '0 8px 16px rgba(183, 28, 28, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.4)'"
+        >
+          <div :style="anuncio?.id ? 'pointer-events: none;' : ''" class="row items-center justify-between q-mb-md">
+            <div>
+              <div style="font-size: 1.8rem; font-weight: 700; letter-spacing: 0.04em;">Grátis</div>
+              <div style="font-size: 1rem; opacity: 0.85; margin-top: 4px;">Somente o primeiro anúncio</div>
+            </div>
+            <!-- <q-radio
+              :disabled="anuncio?.id"
+              v-model="planoSelecionado"
+              val="Grátis"
+              color="#b71c1c"
+              size="28px"
+              @click.stop
+              unchecked-icon="radio_button_unchecked"
+              checked-icon="radio_button_checked"
+            /> -->
+          </div>
+
+          <div
+            style="font-size: 2rem; font-weight: 900; color: #7f0000; margin-bottom: 12px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1);"
+          >
+            1º Anúncio
+          </div>
+
+          <q-chip
+            dense
+            outline
+            style="background: rgba(183, 28, 28, 0.15); color: #7f0000; font-weight: 600; font-size: 0.9rem; padding: 4px 12px;"
+          >
+            Ativo por 20 dias
+          </q-chip>
+
+          <div style="margin-top: 16px; font-weight: 600; color: #b71c1c; font-size: 1.1rem;">
+            Recursos:
+          </div>
+
+          <ul
+            style="list-style: none; padding-left: 0; margin-top: 6px; font-size: 1rem; color: #c62828;"
+          >
+            <li style="display: flex; align-items: center; margin-bottom: 8px;">
+              <q-icon
+                name="close"
+                color="#ef9a9a"
+                size="24px"
+                style="text-shadow: 0 0 6px #ef9a9a;"
+                class="q-mr-sm"
+              />
+              Fixo na Página de Destaque
+            </li>
+          </ul>
+        </q-card>
+      </div>
+      <div class="q-mt-md text-right text-weight-medium text-subtitle1">
+        Plano selecionado:
+        <span class="text-primary text-weight-bold">{{ obterDescricaoPlano(planoSelecionado) || 'Nenhum' }}</span>
+      </div>
+    </div>
+    </q-card>
+  </div>
+<div class="row q-mt-md">
+  <div class="col-12">
+    <div class="row justify-end q-gutter-sm">
+      <!-- <q-btn
+        @click="voltar"
+        label="Voltar"
+        no-caps
+        class="btn-voltar col-12 col-sm-auto"
+      /> -->
+
+      <q-btn
+        v-if="tab === 'plano-desejado'"
+        :disable="!planoSelecionado"
+        type="button"
+        label="Continuar"
+        no-caps
+        icon="chevron_right"
+        class="btn-salvar col-12 col-sm-auto"
+        @click="tab = 'dados-basicos'"
+      />
+
+      <q-btn
+        v-if="!permiteRascunho && !estaNaRevisao && tab !== 'plano-desejado'"
+        type="submit"
+        label="Salvar Rascunho"
+        no-caps
+        icon="save"
+        class="btn-cadastrar col-12 col-sm-auto"
+      />
+
+      <q-btn
+        @click="cadastrarOuAtualizar('AGUARDANDO_PUBLICACAO')"
+        v-if="anuncio?.id && estaNaRevisao === false"
+        type="button"
+        label="Cadastrar"
+        no-caps
+        icon="save"
+        class="btn-aprovar col-12 col-sm-auto"
+      />
+
+      <q-btn
+        @click="cadastrarOuAtualizar('PUBLICADO')"
+        v-if="anuncio?.id && estaNaRevisao"
+        type="button"
+        label="Salvar/Aprovar"
+        no-caps
+        icon="update"
+        class="btn-aprovar col-12 col-sm-auto"
+      />
+    </div>
+  </div>
+</div>
+
         </div>
       </q-form>
     </div>
@@ -415,7 +652,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { anuncioService, enumService, ibgeService } from 'src/services/api-service.js'
 import { useQuasar } from 'quasar'
 import UploaderComImagem from './UploaderComImagem.vue'
@@ -426,6 +663,8 @@ export default {
     UploaderComImagem
   },
   setup () {
+    const modalVisivel = ref(false)
+    const isMobile = computed(() => $q.screen.lt.md)
     const anuncio = ref({
       id: null,
       novo: false,
@@ -446,43 +685,9 @@ export default {
       masked: false /* doesn't work with directive */
     })
     const uploaderRefs = []
-    const planos = [
-      {
-        id: 'GRATIS',
-        nome: 'Plano Grátis',
-        duracao: 'Duração: 15 dias',
-        valorAvista: 'Sem custo',
-        bg: '#FB8C00',
-        icone: 'mdi-gift'
-      },
-      {
-        id: 'BASICO',
-        nome: 'Plano Básico',
-        duracao: 'Ativo por 20 dias',
-        valorAvista: 'R$ 30,00 à vista',
-        bg: '#5C6BC0',
-        icone: 'mdi-star-outline'
-      },
-      {
-        id: 'PREMIUM',
-        nome: 'Plano Premium',
-        duracao: 'Ativo por 30 dias',
-        valorAvista: 'R$ 40,00 à vista',
-        bg: '#7E57C2',
-        icone: 'mdi-star-half-full'
-      },
-      {
-        id: 'AVANCADO',
-        nome: 'Plano Avançado',
-        duracao: 'Ativo por 60 dias',
-        valorAvista: 'R$ 60,00 à vista',
-        bg: '#6A1B9A',
-        icone: 'mdi-star',
-        destaque: true
-      }
-    ]
     return {
-      planos,
+      modalVisivel,
+      planoSelecionado: ref(null),
       uploaderRefs,
       $q,
       anuncio,
@@ -497,7 +702,7 @@ export default {
       moneyFormatForDirective,
       hasAnuncioFree: ref(false),
       desabilitarMunicipio: ref(false),
-      planoSelecionado: ref(null)
+      isMobile
     }
   },
   computed: {
@@ -545,7 +750,13 @@ export default {
       if (this.anuncio.id) {
         anuncioService.update(dto.id, dto)
           .then(response => {
-            this.$msg.success('Ação realizada com sucesso!' + (status === 'AGUARDANDO_PUBLICACAO' ? ' Em breve, você receberá um e-mail com informações sobre a publicação.' : ''))
+            if (response?.data !== '') {
+              this.$msg.warning('Prossiga com o pagamento!')
+              const url = response?.data
+              window.open(url, '_blank')
+            } else {
+              this.$msg.success('Ação realizada com sucesso!' + (status === 'AGUARDANDO_PUBLICACAO' ? ' Em breve, você receberá um e-mail com informações sobre a publicação.' : ''))
+            }
             this.voltar()
           })
           .catch(error => {
@@ -640,6 +851,9 @@ export default {
       if (!this.anuncio?.id) {
         this.planoSelecionado = novoValor
       }
+    },
+    obterDescricaoPlano (val) {
+      return val === null ? '' : val === 'PREMIUM' ? 'Premium' : val === 'AVANCADO' ? 'Avançado' : val === 'BASICO' ? 'Básico' : 'Grátis'
     }
   }
 }
@@ -648,4 +862,90 @@ export default {
 
 <style scoped>
 
+.plan-card {
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border: 1.5px solid #ddd;
+}
+
+.plan-card-planoSelecionado {
+  border-color: var(--q-primary);
+  box-shadow: 0 0 8px var(--q-primary);
+}
+
+.my-card {
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  margin-bottom: 10px;
+  border-radius: 12px;
+}
+
+.planoSelecionado-card {
+  border-width: 2px !important;
+}
+
+.table-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #eee;
+  font-size: 15px;
+}
+
+.styled-table th {
+  font-weight: bold;
+}
+
+.label {
+  font-weight: 500;
+  background-color: #f5f5f5;
+  text-align: left;
+  padding-left: 16px;
+}
+
+.premium-planoSelecionado {
+  border-color: #0d47a1 !important;
+  box-shadow: 0 12px 28px rgba(13, 71, 161, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.5) !important;
+}
+
+.avancado-planoSelecionado {
+  border-color: #6f4f1e !important;
+  box-shadow: 0 12px 28px rgba(111, 79, 30, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.5) !important;
+}
+
+.basico-planoSelecionado {
+  border-color: #455a64 !important;
+  box-shadow: 0 12px 28px rgba(55, 71, 79, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.5) !important;
+}
+
+.gratis-planoSelecionado {
+  border-color: #b71c1c !important;
+  box-shadow: 0 12px 28px rgba(183, 28, 28, 0.7), inset 0 0 20px rgba(255, 255, 255, 0.6) !important;
+}
+
+.table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  font-size: 1.05rem;
+}
+@media (max-width: 600px) {
+  .table-wrapper {
+    font-size: 0.95rem;
+  }
+}
 </style>

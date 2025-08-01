@@ -1,9 +1,14 @@
 <template>
   <div>
     <div class="bg q-mt-lg">
-      <q-form greedy>
+                <div class="q-mb-sm" style="width: 100%; display: flex; justify-content: flex-end; padding: 0px 0px 0 0;">
+            <!-- Banners promocionais para anúncio -->
+
+            <q-btn label="Anunciar" color="red" icon="publish" dense unelevated
+              style="min-width: 100px; font-weight: bold;" @click="irParaAreaAnunciante" />
+          </div>
         <div class="main-container">
-        <!-- <div v-if="isAuthenticated" class="text-right p-2 bg-light rounded shadow-sm">
+          <!-- <div v-if="isAuthenticated" class="text-right p-2 bg-light rounded shadow-sm">
           <span class="text-caption hidden-xs hidden-sm">
 <span style="font-size: 1rem; color: #9c27b0; font-weight: bold;">
   Bem-vindo(a), <span style="text-transform: uppercase;">{{ getMe?.nome }}!</span>
@@ -14,104 +19,74 @@
             </span>
           </span>
         </div> -->
-                <!-- Botão ANUNCIAR posicionado logo abaixo do header, sem position fixed -->
-                <div style="width: 100%; display: flex; justify-content: flex-end; padding: 0px 0px 0 0;">
-          <q-btn
-            label="Anunciar"
-            color="red"
-            icon="publish"
-            dense
-            unelevated
-            style="min-width: 100px; font-weight: bold;"
-            @click="irParaAreaAnunciante"
-          />
+          <div>
+              <q-img src="https://assets-portal-cms.olx.com.br/1576x300_3_d91d551874.png" alt="Banner Anuncie aqui" />
+            </div>
         </div>
-          <div class="flex justify-between items-center q-mb-sm">
-            <h2 class="title-text">{{ title }}</h2>
-            <q-space />
-          </div>
-          <div class="divisor-line"></div>
-          <div v-if="this.anuncios?.data">
-          <div class="row q-col-gutter-md q-mt-md" v-if="anunciosPagina.length > 0">
-            <div
-              v-for="anuncio in anunciosPagina"
-              :key="anuncio.idAnuncio"
-              class="col-6 col-sm-6 col-md-3 col-lg-3">
-              <q-card>
-                <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
-<div
-  style="width: 100%; aspect-ratio: 306 / 211;"
-  class="q-pa-sm zoom-hover"
->
-  <q-img
-    :src="anuncio.srcMiniatura"
-    no-native-menu
-    alt="Miniatura do anúncio"
-    style="width: 100%; height: 100%; object-fit: contain;"
-  />
-</div>
-
-                </router-link>
-<q-card-section class="q-pa-sm">
-  <div class="anuncio-content">
-    <div class="anuncio-title">{{ anuncio.titulo }}</div>
-    <div class="anuncio-valor">{{ this.$fmt.fCurrency(anuncio.valor) }}</div>
-
-    <div class="anuncio-condicao">
-      <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
-        {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
-      </q-badge>
     </div>
-
-    <div class="anuncio-info">
-      <div class="info-line">
-        <q-icon name="category" size="16px" class="q-mr-xs text-grey-7" />
-        <span class="text-caption text-grey-8">Marca:</span>
-        <span class="text-caption text-dark q-ml-xs">{{ anuncio.marca?.label || 'Não informada' }}</span>
-      </div>
-      <div class="info-line q-mt-xs">
-        <q-icon name="place" size="16px" class="q-mr-xs text-grey-7" />
-        <span class="text-caption text-grey-8">Local:</span>
-        <span class="text-caption text-dark q-ml-xs">{{ anuncio.municipio }}/{{ anuncio.uf }}</span>
-      </div>
-    </div>
-  </div>
-</q-card-section>
-
-              </q-card>
+        <div class="bg">
+      <q-form greedy>
+        <div class="main-container">
+          <div v-if="anunciosPagina?.length > 0">
+            <q-banner class="bg-purple-1 text-primary q-mb-md" rounded>
+              <template v-slot:avatar>
+                <q-icon name="star" color="deep-purple" />
+              </template>
+              <div class="text-subtitle1 text-weight-medium">Instrumentos em destaque</div>
+              <div class="text-caption text-grey-8">Exclusivo para o Plano Destaque.</div>
+            </q-banner>
+            <div class="row q-col-gutter-md q-mb-lg">
+              <div v-for="anuncio in anunciosPagina" :key="`destaque-${anuncio.idAnuncio}`"
+                class="col-6 col-sm-2 col-md-2 col-lg-2">
+                <q-card class="card-destaque">
+                  <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
+                    <div class="q-pa-sm destaque-img-container">
+                      <q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm z-top" rounded
+                        label="Destaque" />
+                      <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio"
+                        class="destaque-img" />
+                    </div>
+                  </router-link>
+                  <q-card-section class="q-pa-sm">
+                    <div class="anuncio-content">
+                      <div class="anuncio-title">{{ formatarTitulo(anuncio.titulo) }}</div>
+                      <div class="anuncio-valor">{{ $fmt.fCurrency(anuncio.valor) }}</div>
+                      <div class="anuncio-condicao">
+                        <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
+                          {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
+                        </q-badge>
+                      </div>
+                      <div class="anuncio-info">
+                        <div class="info-line">
+                          <q-icon name="category" size="16px" class="q-mr-xs text-grey-7" />
+                          <span class="text-caption text-grey-8">Marca:</span>
+                         <span class="text-caption text-dark q-ml-xs">
+  {{ formatarMarca(anuncio.marca?.label) }}
+</span>
+                        </div>
+                        <div class="info-line q-mt-xs">
+                          <q-icon name="place" size="16px" class="q-mr-xs text-grey-7" />
+                          <span class="text-caption text-grey-8">Local:</span>
+                          <span class="text-caption text-dark q-ml-xs">
+  {{ formatarLocal(anuncio.municipio, anuncio.uf) }}
+</span>
+                        </div>
+                      </div>
+                    </div>
+                  </q-card-section>
+                </q-card>
+              </div>
+            </div>
+            <div class="q-mt-lg flex justify-center" v-if="anunciosPagina.length > 0">
+              <q-pagination v-model="current" :max="totalPages" direction-links unelevated color="black"
+                active-color="purple" @update:model-value="onPageChange" />
+            </div>
+            <div class="q-mt-md text-center text-caption text-grey-7 q-pa-sm bg-grey-2 rounded-borders"
+              v-if="anunciosPagina.length > 0">
+              Página {{ anuncios.page + 1 }} de {{ anuncios.totalPages }} - Exibindo {{ registrosExibidos }} de {{
+                anuncios.totalRecords }} registros no total
             </div>
           </div>
-          <div class="row q-col-gutter-md q-mt-md" v-else>
-            <div class="col-12">
-              <q-banner
-  class="bg-purple-8 text-center text-white"
-  dense
-  rounded
->
-  <template v-slot:avatar>
-    <q-icon name="info" color="#aaaaa" />
-  </template>
-  Nenhum dado encontrado para os parâmetros informados.
-</q-banner>
-            </div>
-          </div>
-          <!-- Paginação -->
-          <div class="q-mt-lg flex justify-center teste"  v-if="anunciosPagina.length > 0">
-            <q-pagination
-              v-model="current"
-              :max="totalPages"
-              direction-links
-              unelevated
-              color="black"
-              active-color="purple"
-              @update:model-value="onPageChange"
-            />
-          </div>
-          <!-- Informações de registros -->
-          <div class="q-mt-md text-center text-caption text-grey-7 q-pa-sm bg-grey-2 rounded-borders"  v-if="anunciosPagina.length > 0">
-            Página {{ anuncios.page + 1 }} de {{ anuncios.totalPages }} - Exibindo {{ registrosExibidos }} de {{ anuncios.totalRecords }} registros no total
-          </div>
-        </div>
         </div>
       </q-form>
     </div>
@@ -170,6 +145,13 @@ export default {
     this.carregarAnuncios()
   },
   methods: {
+    formatarTitulo (titulo) {
+      if (!titulo) return ''.padEnd(47, ' ')
+      const maxLength = 47
+      if (titulo.length < maxLength) return titulo.padEnd(maxLength, ' ')
+      if (titulo.length > maxLength) return titulo.slice(0, 44) + '...'
+      return titulo
+    },
     irParaAreaAnunciante () {
       if (!this.isAuthenticated) {
         window.location.href = '/account/login'
@@ -214,6 +196,20 @@ export default {
     onPageChange (page) {
       this.current = page
       this.carregarAnuncios()
+    },
+    formatarMarca (marca) {
+      const texto = marca || 'Não informada'
+      const maxLength = 22
+      if (texto.length < maxLength) return texto.padEnd(maxLength, ' ')
+      if (texto.length > maxLength) return texto.slice(0, 19) + '...'
+      return texto
+    },
+    formatarLocal (municipio, uf) {
+      const texto = municipio && uf ? `${municipio}/${uf}` : 'Não informado'
+      const maxLength = 22
+      if (texto.length < maxLength) return texto.padEnd(maxLength, ' ')
+      if (texto.length > maxLength) return texto.slice(0, 19) + '...'
+      return texto
     }
   }
 }
@@ -228,17 +224,16 @@ export default {
 }
 
 .anuncio-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #333;
   line-height: 1.3;
-  max-height: 3em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em; /* força ocupar 2 linhas com base no line-height */
+  white-space: normal;
 }
 
 .anuncio-valor {
@@ -257,7 +252,9 @@ export default {
   flex-direction: column;
   gap: 4px;
 }
-img, q-img {
+
+img,
+q-img {
   max-width: 100%;
   display: block;
 }
@@ -275,5 +272,38 @@ img, q-img {
 
 .zoom-hover:hover {
   transform: scale(1.01);
+}
+
+.destaque-img-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.destaque-img {
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+}
+
+.destaque-img-container:hover .destaque-img {
+  transform: scale(1.05);
+}
+
+.banner-wrapper {
+  display: flex;
+  justify-content: center;
+  /* Se quiser alinhar verticalmente no meio do container pai, pode adicionar: */
+  /* align-items: center; */
+}
+
+.banner-728x90 {
+  width: 728px;
+  height: 90px;
+}
+
+.banner-728x90 .q-img__image {
+  width: 728px !important;
+  height: 90px !important;
+  object-fit: contain;
 }
 </style>

@@ -17,13 +17,25 @@ export const MENU = [
     ]
   },
   {
+    label: 'Indicações e Ganhos',
+    transacao: 'ROLE_ANUNCIANTE',
+    icon: 'img:/icons-menu/icon-contratacoes.svg',
+    items: [
+      {
+        to: '/admin/afiliado',
+        label: 'Minhas Comissões',
+        transacao: 'ROLE_ANUNCIANTE'
+      }
+    ]
+  },
+  {
     label: 'Administração',
     transacao: 'ROLE_ADMINISTRADOR',
     icon: 'img:/icons-menu/icon-config.svg',
     items: [
       {
         to: '/admin/anuncios/revisao',
-        label: 'Revisar Anúncios',
+        label: 'Revisão de Anúncios',
         transacao: 'ROLE_ADMINISTRADOR'
       }
     ]

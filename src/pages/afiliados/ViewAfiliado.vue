@@ -12,13 +12,13 @@
           </q-breadcrumbs>
         </div>
       </div>
+           <div class="main-container q-mt-md">
+        <div class="flex justify-between items-center q-mb-sm">
+          <h2 class="title-text">{{ title }}</h2>
+          <q-space />
+        </div>
+        <div class="divisor-line"></div>
       <q-form greedy>
-        <div class="main-container">
-          <div class="flex justify-between items-center q-mb-sm">
-            <h2 class="title-text">{{ title }}</h2>
-            <q-space />
-          </div>
-          <div class="divisor-line"></div>
         <div class="q-mt-lg">
         <q-table
           flat bordered ref="tableRef" class="last-sticky-header-column-table mais_colunas table_header scroll_default--custom scroll_default--table my-sticky-last-column-table" :rows="rows" :columns="columns"
@@ -59,30 +59,20 @@
           </template>
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-x-sm text-center">
-              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO')" class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
+              <q-btn class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
                 @click="editar(props.row)">
-               <q-tooltip>{{ isRevisao ? 'Revisar' : 'Editar'}}</q-tooltip>
+               <q-tooltip>Editar</q-tooltip>
               </q-btn>
-              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO')" v-if="!isRevisao" class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
-                <!-- <q-tooltip>Excluir</q-tooltip> -->
+              <q-btn class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
+                <q-tooltip>Excluir</q-tooltip>
               </q-btn>
-              <q-btn
-              v-if="props.row.idPagamentoLytex != null"
-              class="btn-action"
-              size="sm"
-              @click="irParaLytex(props.row)"
-              round
-              flat
-              icon="open_in_new">
-              <q-tooltip>Fatura</q-tooltip>
-            </q-btn>
             </q-td>
           </template>
             <template v-slot:body-cell-status="props">
               <q-td :props="props">
                 <q-icon v-if="props.value === 'Publicado'" class="icon_gap" color="green" name="circle"
                   size="10px"></q-icon>
-                <q-icon v-if="props.value === 'Expirado'  || props.value === 'Aguardando Confirmação de Pagamento' " class="icon_gap" color="red" name="circle"
+                <q-icon v-if="props.value === 'Expirado' || props.value === 'Aguardando Confirmação de Pagamento'" class="icon_gap" color="red" name="circle"
                   size="10px"></q-icon>
                <q-icon
                   v-if="props.value === 'Rascunho' || props.value === 'Aguardando Revisão para Publicação'"
@@ -92,46 +82,24 @@
             </template>
           </q-table>
         </div>
-         <div class="row q-mt-md">
-  <div class="col-12">
-    <div class="row justify-end q-col-gutter-sm">
-      <div class="col-12 col-sm-auto">
-        <q-btn
-          @click="atualizar"
-          type="button"
-          label="Atualizar"
-          icon="refresh"
-          no-caps
-          class="btn-voltar full-width"
-        />
-      </div>
-      <div class="col-12 col-sm-auto" v-if="!isRevisao">
-        <q-btn
-          @click="cadastrar"
-          type="button"
-          label="Cadastrar"
-          no-caps
-          class="btn-cadastrar full-width"
-        />
-      </div>
-    </div>
-  </div>
-</div>
-        </div>
       </q-form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
-import { anuncioService, enumService, ibgeService } from 'src/services/api-service.js'
+import { anuncioService, enumService } from 'src/services/api-service.js'
 import { useQuasar } from 'quasar'
 import { useRoute } from 'vue-router'
 
 export default {
   name: 'GridAnuncio',
   setup () {
+    const valorRecebido = 0
+    const valorAReceber = 0
+    const linkAfiliado = 'http://www.mercadoinstrumental.com.br/cadastro?WSAFAS23FASF'
     const $q = useQuasar()
     const route = useRoute()
     const tableRef = ref()
@@ -196,6 +164,9 @@ export default {
     })
 
     return {
+      valorRecebido,
+      valorAReceber,
+      linkAfiliado,
       tableRef,
       columns: ref([]),
       loading,
@@ -212,7 +183,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: () => 'Gerenciar Anúncios'
+      default: () => 'Minhas Comissões'
     },
     isRevisao: {
       type: Boolean,
@@ -221,9 +192,6 @@ export default {
   },
   mounted () {
     this.carregarTabela()
-    this.buscarEstados()
-    this.buscarTiposInstrumentos()
-    this.buscarMarcas()
     this.buscarSituacoes()
   },
   computed: {
@@ -237,57 +205,46 @@ export default {
     }
   },
   methods: {
-    atualizar () {
-      this.tableRef.requestServerInteraction()
-      this.$msg.warning('Listagem atualizada!')
-    },
     carregarTabela () {
       this.columns = [
-        { name: 'id', align: 'center', label: 'Código', field: 'id' },
-        { name: 'status', align: 'left', label: 'Situação', field: val => val.status.label },
-        { name: 'titulo', align: 'left', label: 'Título', field: 'titulo' },
-        { name: 'estado', align: 'left', label: 'Estado', field: 'estado' },
-        { name: 'municipio', align: 'left', label: 'Município', field: 'municipio' },
-        { name: 'tipo', align: 'left', label: 'Tipo', field: val => val.tipo.label },
-        { name: 'marca', align: 'left', label: 'Marca', field: val => val.marca.label },
-        { name: 'quantidadeAcesso', align: 'center', label: 'Quantidade de Visualizações', field: 'quantidadeAcesso' },
-        { name: 'dataPublicacao', label: 'Data de Publicação', align: 'left', field: val => this.$fmt.dataToDisplay(val.dataPublicacao) },
+        { name: 'status', align: 'left', label: 'Status da Comissão', field: val => val.status.label },
+        { name: 'titulo', align: 'left', label: 'Título do Anúncio', field: 'titulo' },
+        { name: 'status', align: 'left', label: 'Situação do Anúncio', field: val => val.status.label },
+        { name: 'quantidadeAcesso', align: 'center', label: 'Valor do Plano do Anúncio', field: 'quantidadeAcesso' },
+        { name: 'quantidadeAcesso', align: 'center', label: 'Minha Comissão (20%)', field: 'quantidadeAcesso' },
         { name: 'actions', label: 'Ações', required: true, align: 'center' }
       ]
+    },
+    copiarLinkAfiliado () {
+      navigator.clipboard.writeText(this.linkAfiliado).then(() => {
+        this.$q.notify({
+          message: 'Link copiado com sucesso!',
+          color: 'positive',
+          icon: 'check'
+        })
+      })
+    },
+    compartilharLink () {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Cadastre-se com meu link!',
+          text: 'Use meu link para se cadastrar e anunciar com desconto:',
+          url: this.linkAfiliado
+        }).catch(() => {
+          // O usuário cancelou ou o recurso não está disponível
+        })
+      } else {
+        this.$q.notify({
+          message: 'Navegador não suporta compartilhamento direto.',
+          color: 'warning'
+        })
+      }
     },
     buscarSituacoes () {
       enumService.getSituacoes().then(response => {
         this.listaCampos.status = response.data
       }).catch(error => {
         this.$msg.apiError('Erro ao buscar os tipos de instrumentos!', error)
-      })
-    },
-    buscarTiposInstrumentos () {
-      enumService.getTiposInstrumentos().then(response => {
-        this.listaCampos.tipo = response.data
-      }).catch(error => {
-        this.$msg.apiError('Erro ao buscar os tipos de instrumentos!', error)
-      })
-    },
-    buscarMarcas () {
-      enumService.getMarcas().then(response => {
-        this.listaCampos.marca = response.data
-      }).catch(error => {
-        this.$msg.apiError('Erro ao buscar as marcas!', error)
-      })
-    },
-    buscarEstados () {
-      ibgeService.getEstados().then(response => {
-        this.listaCampos.estado = response.data
-      }).catch(error => {
-        this.$msg.apiError('Erro ao buscar os estados!', error)
-      })
-    },
-    buscarMunicipios (uf) {
-      ibgeService.getMunicipios(uf, false).then(response => {
-        this.listaCampos.municipio = response.data
-      }).catch(error => {
-        this.$msg.apiError('Erro ao buscar os estados!', error)
       })
     },
     filterSelectResponse (val, update, abort, colName) {

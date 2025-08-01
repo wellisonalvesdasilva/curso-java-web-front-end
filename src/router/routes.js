@@ -17,6 +17,7 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'profile', component: () => import('pages/profile/AlterarDadosPessoais.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
+      { path: 'afiliado', component: () => import('pages/afiliados/ViewAfiliado.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios', component: () => import('pages/anuncios/GridAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios/form', component: () => import('pages/anuncios/CreateEditAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
       { path: 'anuncios/form/:id', component: () => import('pages/anuncios/CreateEditAnuncio.vue'), meta: { requireLogin: true, transacao: 'ROLE_ANUNCIANTE' } },
