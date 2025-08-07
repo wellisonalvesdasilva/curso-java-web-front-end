@@ -7,7 +7,7 @@
 
           <router-link class="header-logo-container" to="/admin">
             <q-avatar class="responsive-logo">
-              <img src="../assets/img/logo-mercado-instrumental.jpg" alt="Logo" />
+              <img src="../assets/img/logo-mercado-instrumental.png" alt="Logo" />
             </q-avatar>
             <div style="display: none;">VERSÃO SPRINT 75 - PBI 2195 - 2024-03-07 17:40</div>
           </router-link>
@@ -290,9 +290,9 @@ export default {
 <style>
 .responsive-logo {
   width: 100%;
-  max-width: 200px;
+  max-width: 230px;
   height: auto;
-  border-radius: 8px;
+  border-radius: 0px;
   overflow: hidden;
   display: flex;
   align-items: center;

@@ -33,7 +33,7 @@
                 <q-icon name="star" color="deep-purple" />
               </template>
               <div class="text-subtitle1 text-weight-medium">Instrumentos em destaque</div>
-              <div class="text-caption text-grey-8">Exclusivo para o Plano Destaque.</div>
+              <div class="text-caption text-grey-8">Exclusivo para os planos premium ou avançado.</div>
             </q-banner>
             <div class="row q-col-gutter-md q-mb-lg">
               <div v-for="anuncio in anunciosPagina" :key="`destaque-${anuncio.idAnuncio}`"
@@ -41,8 +41,7 @@
                 <q-card class="card-destaque">
                   <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
                     <div class="q-pa-sm destaque-img-container">
-                      <q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm z-top" rounded
-                        label="Destaque" />
+<q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm badge-destaque" rounded label="Destaque" />
                       <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio"
                         class="destaque-img" />
                     </div>
@@ -305,5 +304,15 @@ q-img {
   width: 728px !important;
   height: 90px !important;
   object-fit: contain;
+}
+
+.badge-destaque {
+  z-index: 10; /* ou outro valor baixo, suficiente para ficar sobre a imagem mas abaixo de modais */
+}
+
+.destaque-img-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 </style>

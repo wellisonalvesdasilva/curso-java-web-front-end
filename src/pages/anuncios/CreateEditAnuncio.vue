@@ -606,10 +606,10 @@
         v-if="tab === 'plano-desejado'"
         :disable="!planoSelecionado"
         type="button"
-        label="Continuar"
+        label="Próxima Etapa"
         no-caps
         icon="chevron_right"
-        class="btn-salvar col-12 col-sm-auto"
+        class="btn-cadastrar col-12 col-sm-auto"
         @click="tab = 'dados-basicos'"
       />
 
@@ -619,7 +619,7 @@
         label="Salvar Rascunho"
         no-caps
         icon="save"
-        class="btn-cadastrar col-12 col-sm-auto"
+        class="btn-salvar col-12 col-sm-auto"
       />
 
       <q-btn

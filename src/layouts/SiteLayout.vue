@@ -13,7 +13,7 @@
               style="position: absolute; left: 50%; transform: translateX(-50%)"
             >
               <img
-                src="../assets/img/logo-mercado-instrumental-site.jpg"
+                src="../assets/img/logo-mercado-instrumental-site.png"
                 alt="Logo"
                 style="max-height: 82px; width: auto; margin-top: -10px; margin-bottom: -10px;"
               />
@@ -33,9 +33,9 @@
         </template>
 
         <template v-else>
-          <router-link @click="limparFiltros()" to="/" class="header-logo-container q-mx-sm" style="margin-right: 32px">
+          <router-link @click="limparFiltros()" to="/" class="header-logo-container" style="margin-right: 32px">
             <q-avatar class="responsive-logo">
-              <img src="../assets/img/logo-mercado-instrumental-site.jpg" alt="Logo" />
+              <img src="../assets/img/logo-mercado-instrumental-site.png" alt="Logo" />
             </q-avatar>
           </router-link>
 
@@ -618,7 +618,7 @@ export default {
   width: 100%;
   max-width: 400px;
   height: auto;
-  border-radius: 8px;
+  border-radius: 0px;
   overflow: hidden;
   display: flex;
   align-items: center;
