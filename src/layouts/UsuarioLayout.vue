@@ -7,7 +7,7 @@
     <q-page-container class="col-12 col-sm-10 col-md-6 col-lg-4 q-mt-lg">
       <q-card class="q-pa-md responsive-card">
           <q-card-section>
-            <q-toolbar-title class="header justify-center">
+            <q-toolbar class="header justify-center">
 <q-avatar
   @click="irParaHome"
   style="height: 100px; width: 220px; border-radius: 0px; cursor: pointer"
@@ -18,7 +18,7 @@
   />
 </q-avatar>
 
-            </q-toolbar-title>
+            </q-toolbar>
             <router-view />
           </q-card-section>
         </q-card>
@@ -27,7 +27,7 @@
     <q-footer elevated class="bg-grey-9 text-white">
       <q-toolbar class="q-pa-sm justify-center items-center">
         <div class="text-caption text-center">
-          <strong>Versão 1.0.0.0 de 04/06/2025</strong>
+          <strong>Versão 1.0.0.1 de 31/08/2025</strong>
         </div>
       </q-toolbar>
     </q-footer>
@@ -58,7 +58,7 @@ export default {
     width: calc(100% - 100px); /* margem lateral total de 32px (16px cada lado) */
     max-width: 100%;
     margin-left: 50px;
-    margin-right: 16px;
+    margin-right: -50px;
   }
 }
 

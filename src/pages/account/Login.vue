@@ -36,11 +36,13 @@
 <script>
 import { usuarioService } from 'src/services/api-service.js'
 import { mapActions } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'LoginPage',
   data () {
     return {
+      route: useRoute(),
       login: {
         email: null,
         senha: null
@@ -76,7 +78,9 @@ export default {
       })
     },
     cadastrar () {
-      this.$router.push('/account/cadastro')
+      const afiliado = this.route.query.afiliado || null
+      const rota = '/account/cadastro' + (afiliado != null ? ('?afiliado=' + afiliado) : '')
+      this.$router.push(rota)
     },
     tratamentoAtivacao () {
       const activate = this.$route.params.active || null

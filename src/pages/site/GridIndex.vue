@@ -19,75 +19,116 @@
             </span>
           </span>
         </div> -->
-          <div>
-              <q-img src="https://assets-portal-cms.olx.com.br/1576x300_3_d91d551874.png" alt="Banner Anuncie aqui" />
-            </div>
+ <picture>
+    <!-- Mobile -->
+    <source srcset="/src/assets/img/index-807x376.jpg" media="(max-width: 768px)" />
+
+    <!-- Tablet -->
+    <source srcset="/src/assets/img/index-1135-350.jpg" media="(max-width: 1200px)" />
+
+    <!-- Desktop (default) -->
+<img
+  @click="irParaAreaAnunciante"
+  src="/src/assets/img/index-1576-300.jpg"
+  alt="Banner Anuncie aqui"
+  style="width: 100%; height: auto; cursor: pointer;"
+/>
+  </picture>
         </div>
     </div>
         <div class="bg">
-      <q-form greedy>
-        <div class="main-container">
-          <div v-if="anunciosPagina?.length > 0">
-            <q-banner class="bg-purple-1 text-primary q-mb-md" rounded>
-              <template v-slot:avatar>
-                <q-icon name="star" color="deep-purple" />
-              </template>
-              <div class="text-subtitle1 text-weight-medium">Instrumentos em destaque</div>
-              <div class="text-caption text-grey-8">Exclusivo para os planos premium ou avançado.</div>
-            </q-banner>
-            <div class="row q-col-gutter-md q-mb-lg">
-              <div v-for="anuncio in anunciosPagina" :key="`destaque-${anuncio.idAnuncio}`"
-                class="col-6 col-sm-2 col-md-2 col-lg-2">
-                <q-card class="card-destaque">
-                  <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
-                    <div class="q-pa-sm destaque-img-container">
-<q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm badge-destaque" rounded label="Destaque" />
-                      <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio"
-                        class="destaque-img" />
-                    </div>
-                  </router-link>
-                  <q-card-section class="q-pa-sm">
-                    <div class="anuncio-content">
-                      <div class="anuncio-title">{{ formatarTitulo(anuncio.titulo) }}</div>
-                      <div class="anuncio-valor">{{ $fmt.fCurrency(anuncio.valor) }}</div>
-                      <div class="anuncio-condicao">
-                        <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
-                          {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
-                        </q-badge>
-                      </div>
-                      <div class="anuncio-info">
-                        <div class="info-line">
-                          <q-icon name="category" size="16px" class="q-mr-xs text-grey-7" />
-                          <span class="text-caption text-grey-8">Marca:</span>
-                         <span class="text-caption text-dark q-ml-xs">
-  {{ formatarMarca(anuncio.marca?.label) }}
-</span>
-                        </div>
-                        <div class="info-line q-mt-xs">
-                          <q-icon name="place" size="16px" class="q-mr-xs text-grey-7" />
-                          <span class="text-caption text-grey-8">Local:</span>
-                          <span class="text-caption text-dark q-ml-xs">
-  {{ formatarLocal(anuncio.municipio, anuncio.uf) }}
-</span>
-                        </div>
-                      </div>
-                    </div>
-                  </q-card-section>
-                </q-card>
-              </div>
-            </div>
-            <div class="q-mt-lg flex justify-center" v-if="anunciosPagina.length > 0">
-              <q-pagination v-model="current" :max="totalPages" direction-links unelevated color="black"
-                active-color="purple" @update:model-value="onPageChange" />
-            </div>
-            <div class="q-mt-md text-center text-caption text-grey-7 q-pa-sm bg-grey-2 rounded-borders"
-              v-if="anunciosPagina.length > 0">
-              Página {{ anuncios.page + 1 }} de {{ anuncios.totalPages }} - Exibindo {{ registrosExibidos }} de {{
-                anuncios.totalRecords }} registros no total
-            </div>
-          </div>
+<q-form greedy>
+  <div class="main-container">
+    <!-- Se houver anúncios -->
+    <div v-if="anunciosPagina?.length > 0">
+
+      <!-- Banner de destaque -->
+      <q-banner class="bg-purple-1 text-primary q-mb-md" rounded>
+        <template v-slot:avatar>
+          <q-icon name="star" color="deep-purple" />
+        </template>
+        <div class="text-subtitle1 text-weight-medium">Instrumentos disponíveis:</div>
+        <div class="text-caption text-grey-8">
+          Apareça em destaque com os planos Premium ou Avançado. Escolha seu plano e garanta visibilidade máxima!
         </div>
-      </q-form>
+      </q-banner>
+
+      <!-- Cards de anúncios -->
+      <div class="row q-col-gutter-md q-mb-lg">
+        <div v-for="anuncio in anunciosPagina" :key="`destaque-${anuncio.idAnuncio}`" class="col-6 col-sm-2 col-md-2 col-lg-2">
+          <q-card class="card-destaque">
+            <!-- Link para detalhe do anúncio -->
+            <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
+              <div class="q-pa-sm destaque-img-container">
+                <q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm" :class="{ 'badge-destaque': anuncio.isDestaque }" rounded label="Destaque" />
+                <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio" class="destaque-img" />
+              </div>
+            </router-link>
+
+            <!-- Informações do anúncio -->
+            <q-card-section class="q-pa-sm">
+              <div class="anuncio-content">
+                <div class="anuncio-title">{{ formatarTitulo(anuncio.titulo) }}</div>
+                <div class="anuncio-valor">{{ $fmt.fCurrency(anuncio.valor) }}</div>
+                <div class="anuncio-condicao q-mt-xs">
+                  <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
+                    {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
+                  </q-badge>
+                </div>
+
+                <!-- Marca e Local -->
+                <div class="anuncio-info q-mt-xs">
+                  <div class="info-line">
+                    <q-icon name="category" size="16px" class="q-mr-xs text-grey-7" />
+                    <span class="text-caption text-grey-8">Marca:</span>
+                    <span class="text-caption text-dark q-ml-xs">{{ formatarMarca(anuncio.marca?.label) }}</span>
+                  </div>
+                  <div class="info-line q-mt-xs">
+                    <q-icon name="place" size="16px" class="q-mr-xs text-grey-7" />
+                    <span class="text-caption text-grey-8">Local:</span>
+                    <span class="text-caption text-dark q-ml-xs">{{ formatarLocal(anuncio.municipio, anuncio.uf) }}</span>
+                  </div>
+                </div>
+              </div>
+            </q-card-section>
+
+          </q-card>
+        </div>
+      </div>
+
+      <!-- Paginação -->
+      <div class="q-mt-lg flex justify-center">
+        <q-pagination
+          v-model="current"
+          :max="totalPages"
+          direction-links
+          unelevated
+          color="black"
+          active-color="purple"
+          @update:model-value="onPageChange"
+        />
+      </div>
+
+      <!-- Informações de registros -->
+      <div class="q-mt-md text-center text-caption text-grey-7 q-pa-sm bg-grey-2 rounded-borders">
+        Página {{ anuncios.page + 1 }} de {{ anuncios.totalPages }} - Exibindo {{ registrosExibidos }} de {{ anuncios.totalRecords }} registros no total
+      </div>
+    </div>
+
+    <!-- Se não houver anúncios -->
+    <div v-else class="row q-col-gutter-md q-mt-md">
+      <div class="col-12">
+        <q-banner class="bg-purple-8 text-center text-white" dense rounded>
+          <template v-slot:avatar>
+            <q-icon name="info" color="#aaaaaa" />
+          </template>
+          Nenhum dado encontrado para os parâmetros informados.
+        </q-banner>
+      </div>
+    </div>
+
+  </div>
+</q-form>
     </div>
   </div>
 
@@ -97,11 +138,13 @@
 import { anuncioSiteService } from 'src/services/api-service.js'
 import { ref } from 'vue'
 import { mapGetters } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'GridIndex',
   data () {
     return {
+      route: useRoute(),
       title: 'Anúncios',
       anuncios: ref({
         data: null,
@@ -153,7 +196,8 @@ export default {
     },
     irParaAreaAnunciante () {
       if (!this.isAuthenticated) {
-        window.location.href = '/account/login'
+        const afiliado = this.route.query.afiliado || null
+        window.location.href = '/account/login' + (afiliado != null ? ('?afiliado=' + afiliado) : '')
       } else {
         window.location.href = '/admin/anuncios/form'
       }

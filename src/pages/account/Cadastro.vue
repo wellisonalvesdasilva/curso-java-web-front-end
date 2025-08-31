@@ -68,11 +68,13 @@
 <script>
 import { usuarioService } from 'src/services/api-service.js'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'LoginPage',
   data () {
     return {
+      route: useRoute(),
       usuario: ref({
         nome: null,
         email: null,
@@ -86,9 +88,12 @@ export default {
     cadastrar () {
       const avancar = this.validacoes()
       if (avancar) {
+        this.usuario.hashAfiliado = this.route.query.afiliado || null
         usuarioService.create(this.usuario).then((retorno) => {
           this.$msg.success('Cadastro realizado! Verifique seu e-mail para ativar e acessar sua conta!')
           this.voltar()
+        }).catch(error => {
+          this.$msg.apiError('Erro ao criar o usuário!', error)
         })
       }
     },

@@ -37,6 +37,11 @@ export const MENU = [
         to: '/admin/anuncios/revisao',
         label: 'Revisão de Anúncios',
         transacao: 'ROLE_ADMINISTRADOR'
+      },
+      {
+        to: '/admin/pagamento-afiliado',
+        label: 'Gerenciamento de Comissões',
+        transacao: 'ROLE_ADMINISTRADOR'
       }
     ]
   }

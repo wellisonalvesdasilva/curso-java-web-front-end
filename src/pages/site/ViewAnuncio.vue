@@ -10,75 +10,44 @@
           </q-breadcrumbs>
         </div>
         <div class="col-auto breadcrumb-container">
-          <q-btn
-            class="link-voltar q-pr-none"
-            icon="chevron_left"
-            label="Voltar"
-            @click="voltar"
-          />
+          <q-btn class="link-voltar q-pr-none" icon="chevron_left" label="Voltar" @click="voltar" />
         </div>
       </div>
       <q-form greedy>
         <div class="main-container q-gutter-md">
           <div class="row q-col-gutter-lg q-mt-xs">
             <!-- Imagens + Descrição -->
-<div class="col-12 col-md-4">
-    <q-card flat bordered class="rounded-borders">
-<q-carousel
-  ref="carousel"
-  swipeable
-  animated
-  arrows
-  control-color="deep-purple-5"
-  v-model="slide"
-  infinite
-  :height="fullscreen ? '100vh' : '280px'"
-  class="rounded-borders"
->
-  <q-carousel-slide
-    v-for="(img, index) in anuncio?.srcsDir"
-    :key="index"
-    :name="index + 1"
-    class="q-pa-none flex flex-center"
-  >
-    <!-- Container com borda branca -->
-    <div
-      style="background: white; padding: 4px; width: 100%; height: 100%; box-sizing: border-box;"
-      class="flex flex-center"
-    >
-      <img
-        :src="img"
-        alt="Imagem do slide"
-        class="fit"
-        style="max-height: 100%; max-width: 100%; object-fit: contain;"
-      />
-    </div>
-  </q-carousel-slide>
+            <div class="col-12 col-md-4">
+              <q-card flat bordered class="rounded-borders">
+                <q-carousel ref="carousel" swipeable animated arrows control-color="deep-purple-5" v-model="slide"
+                  infinite :height="fullscreen ? '100vh' : '280px'" class="rounded-borders">
+                  <q-carousel-slide v-for="(img, index) in anuncio?.srcsDir" :key="index" :name="index + 1"
+                    class="q-pa-none flex flex-center">
+                    <!-- Container com borda branca -->
+                    <div style="background: white; padding: 4px; width: 100%; height: 100%; box-sizing: border-box;"
+                      class="flex flex-center">
+                      <img :src="img" alt="Imagem do slide" class="fit"
+                        style="max-height: 100%; max-width: 100%; object-fit: contain;" />
+                    </div>
+                  </q-carousel-slide>
 
-  <template v-slot:control>
-    <q-carousel-control position="bottom-right" :offset="[18, 18]">
-      <q-btn
-        push
-        round
-        dense
-        color="white"
-        text-color="primary"
-        :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
-        @click="toggleFullscreen"
-      />
-    </q-carousel-control>
-  </template>
-</q-carousel>
+                  <template v-slot:control>
+                    <q-carousel-control position="bottom-right" :offset="[18, 18]">
+                      <q-btn push round dense color="white" text-color="primary"
+                        :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="toggleFullscreen" />
+                    </q-carousel-control>
+                  </template>
+                </q-carousel>
 
-    </q-card>
+              </q-card>
 
-<q-card flat bordered class="q-mt-md q-pa-md rounded-borders description-card" v-if="!fullscreen">
-  <h6 class="description-title">Descrição</h6>
-  <p class="description-text text-justify text-sm">
-    {{ anuncio?.descricao || 'Descrição não disponível.' }}
-  </p>
-</q-card>
-  </div>
+              <q-card flat bordered class="q-mt-md q-pa-md rounded-borders description-card" v-if="!fullscreen">
+                <h6 class="description-title">Descrição</h6>
+                <p class="description-text text-justify text-sm">
+                  {{ anuncio?.descricao || 'Descrição não disponível.' }}
+                </p>
+              </q-card>
+            </div>
 
             <!-- Informações do Anúncio -->
             <div class="col-12 col-md-8">
@@ -88,11 +57,8 @@
                   <p style="font-size: 0.9rem;" class="text-caption text-grey-7">
                     Publicado em {{ this.$fmt.dataToDisplay(anuncio?.dataPublicacao) }}
                   </p>
-                  <q-badge style="font-size: 0.9rem;"
-                    outline
-                    :color="anuncio?.isUsado ? 'deep-purple' : 'purple'"
-                    class="q-mt-xs"
-                  >
+                  <q-badge style="font-size: 0.9rem;" outline :color="anuncio?.isUsado ? 'deep-purple' : 'purple'"
+                    class="q-mt-xs">
                     {{ anuncio?.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
                   </q-badge>
                 </div>
@@ -107,40 +73,26 @@
                 <div class="seller-section rounded-borders q-pa-md q-mb-md">
                   <div class="row">
                     <div class="col-6 text-left">
-    <p class="seller-title q-mb-none">Anunciante:</p>
-  </div>
-  <div class="col-6 text-right">
-    <div class="seller-name">{{ anuncio?.vendedor?.nome || 'Nome do Vendedor' }}</div>
-  </div>
+                      <p class="seller-title q-mb-none">Anunciante:</p>
+                    </div>
+                    <div class="col-6 text-right">
+                      <div class="seller-name">{{ anuncio?.vendedor?.nome || 'Nome do Vendedor' }}</div>
+                    </div>
                   </div>
                   <q-separator class="q-my-md" />
                   <div class="row q-col-gutter-sm q-gutter-y-sm justify-between items-center">
                     <div v-if="anuncio?.vendedor?.numeroWhatsApp" class="col-12 col-sm-auto">
-                      <q-btn
-                        unelevated
-                        color="green-7"
-                        icon="mdi-whatsapp"
-                        label="Enviar WhatsApp"
-                        :href="`https://wa.me/${anuncio.vendedor.numeroWhatsApp}`"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="full-width-sm"
-                      />
+                      <q-btn unelevated color="green-7" icon="mdi-whatsapp" label="Enviar WhatsApp"
+                        :href="`https://wa.me/${anuncio.vendedor.numeroWhatsApp}`" target="_blank"
+                        rel="noopener noreferrer" class="full-width-sm" />
                     </div>
 
                     <div v-if="anuncio?.vendedor?.email" class="col-12 col-sm-auto text-right">
-                      <q-btn
-                        outline
-                        color="primary"
-                        icon="mdi-email"
-                        label="Enviar e-mail"
-                        @click="abrirModalParaEnvioEmail"
-                        class="full-width-sm"
-                      />
+                      <q-btn outline color="primary" icon="mdi-email" label="Enviar e-mail"
+                        @click="abrirModalParaEnvioEmail" class="full-width-sm" />
                     </div>
                   </div>
                 </div>
-
                 <!-- Visitas e Localização -->
                 <div class="visits-card q-mt-md q-pa-md bg-grey-1 rounded-borders">
 
@@ -149,9 +101,7 @@
                       <p class="q-ma-none"><strong>Visitas neste anúncio:</strong> {{ anuncio?.quantidadeAcesso }}</p>
                     </div>
                   </div>
-
                   <q-separator class="q-my-sm" />
-
                   <div class="location-info">
                     <div class="row items-center q-mb-xs">
                       <div class="col-md-10">
@@ -181,118 +131,87 @@
           <!-- Aviso -->
           <q-card flat bordered class="aviso-card q-mt-lg rounded-borders q-mb-lg">
             <div class="row items-start no-wrap q-gutter-sm">
-              <q-icon
-                name="mdi-alert-circle-outline"
-                size="28px"
-                class="aviso-icon"
-              />
+              <q-icon name="mdi-alert-circle-outline" size="28px" class="aviso-icon" />
               <p class="aviso-text">
-                <strong>Aviso:</strong> O Mercado Instrumental é uma plataforma de divulgação de anúncios entre particulares.
+                <strong>Aviso:</strong> O Mercado Instrumental é uma plataforma de divulgação de anúncios entre
+                particulares.
                 Não somos proprietários dos produtos anunciados.
-                A negociação, pagamento e entrega dos itens são de responsabilidade exclusiva entre compradores e vendedores.
+                A negociação, pagamento e entrega dos itens são de responsabilidade exclusiva entre compradores e
+                vendedores.
                 Ao utilizar esta plataforma, o usuário assume integralmente todos os riscos envolvidos.
               </p>
             </div>
           </q-card>
+        <picture class="q-mb-lg">
+          <!-- Mobile -->
+          <source @click="voltar" srcset="/src/assets/img/detail-807x376.jpg" media="(max-width: 768px)" />
+          <!-- Tablet -->
+          <source @click="voltar" srcset="/src/assets/img/detail-1135x350.jpg" media="(max-width: 1200px)" />
+          <!-- Desktop (default) -->
+          <img @click="voltar" src="/src/assets/img/detail-1576x300.jpg" alt="Banner Anuncie aqui"
+            style="width: 100%; height: auto; cursor: pointer;" />
+        </picture>
         </div>
       </q-form>
     </div>
   </div>
 
-<q-dialog v-model="exibirModalEnviarEmail">
+  <q-dialog v-model="exibirModalEnviarEmail">
 
-  <q-card
-    class="q-px-md modal-sm"
-    style="min-width: 60%; max-height: 85vh; display: flex; flex-direction: column;">
-<q-form greedy ref="form" @submit="confirmarDisparoEmail()">
-<q-card-section class="row items-center justify-between">
-  <div class="text-h6 text-weight-bold">Enviar e-mail</div>
-  <q-btn icon="close" flat round dense v-close-popup />
-</q-card-section>
-    <div class="divisor-line"></div>
-    <q-card-section
-      style="font-size: 14px; overflow-y: hidden; flex-grow: 1; padding-top: 0;">
-    <div class="row q-col-gutter-md q-mb-md">
-      <div class="col-xs-12 col-sm-12  q-mt-md">
-        <q-input
-          stack-label
-          dense
-          :rules="[vRequired]"
-          v-model="filtro.nome"
-          label="Seu nome">
-          <template v-slot:label>
-            <span class="input-label">Seu nome</span>
-          </template>
-        </q-input>
-      </div>
-      <div class="col-xs-8 col-sm-9">
-        <q-input
-          stack-label
-          :rules="[vRequired]"
-          dense
-          label="Seu e-mail"
-          v-model="filtro.email">
-          <template v-slot:label>
-            <span class="input-label">Seu e-mail</span>
-          </template>
-        </q-input>
-      </div>
-        <div class="col-xs-4 col-sm-3">
-<q-input
-  stack-label
-  dense
-  label="Whatsapp"
-  :rules="[vRequired]"
-  v-model="filtro.whats"
-  mask="## #####-####"
-  fill-mask
-  unmasked-value
-  required
->
-  <template v-slot:label>
-    <span class="input-label">Whatsapp</span>
-  </template>
-</q-input>
+    <q-card class="q-px-md modal-sm" style="min-width: 60%; max-height: 85vh; display: flex; flex-direction: column;">
+      <q-form greedy ref="form" @submit="confirmarDisparoEmail()">
+        <q-card-section class="row items-center justify-between">
+          <div class="text-h6 text-weight-bold">Enviar e-mail</div>
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+        <div class="divisor-line"></div>
+        <q-card-section style="font-size: 14px; overflow-y: hidden; flex-grow: 1; padding-top: 0;">
+          <div class="row q-col-gutter-md q-mb-md">
+            <div class="col-xs-12 col-sm-12  q-mt-md">
+              <q-input stack-label dense :rules="[vRequired]" v-model="filtro.nome" label="Seu nome">
+                <template v-slot:label>
+                  <span class="input-label">Seu nome</span>
+                </template>
+              </q-input>
+            </div>
+            <div class="col-xs-8 col-sm-9">
+              <q-input stack-label :rules="[vRequired]" dense label="Seu e-mail" v-model="filtro.email">
+                <template v-slot:label>
+                  <span class="input-label">Seu e-mail</span>
+                </template>
+              </q-input>
+            </div>
+            <div class="col-xs-4 col-sm-3">
+              <q-input stack-label dense label="Whatsapp" :rules="[vRequired]" v-model="filtro.whats"
+                mask="## #####-####" fill-mask unmasked-value required>
+                <template v-slot:label>
+                  <span class="input-label">Whatsapp</span>
+                </template>
+              </q-input>
 
+            </div>
+            <div class="col-xs-12 col-sm-12">
+              <q-input :rules="[vRequired]" stack-label dense maxlength="4000" autogrow v-model="filtro.mensagem"
+                label="Mensagem" class="custom-textarea">
+                <template v-slot:label>
+                  <span class="input-label">Mensagem </span>
+                </template>
+              </q-input>
+            </div>
+          </div>
+        </q-card-section>
+        <div class="row q-mt-md">
+          <div class="col-12">
+            <div class="btn-container" style="display: flex; justify-content: flex-end;">
+              <q-btn type="submit" label="Enviar" icon="outgoing_mail" no-caps class="btn-cadastrar"
+                style="min-width: 120px;" />
+            </div>
+          </div>
         </div>
-      <div class="col-xs-12 col-sm-12">
-        <q-input
-          :rules="[vRequired]"
-          stack-label
-          dense maxlength="4000"
-          autogrow
-          v-model="filtro.mensagem"
-          label="Mensagem"
-          class="custom-textarea"
-        >
-          <template v-slot:label>
-                <span class="input-label">Mensagem </span>
-              </template>
-        </q-input>
-      </div>
-    </div>
-    </q-card-section>
-<div class="row q-mt-md">
-  <div class="col-12">
-    <div
-      class="btn-container"
-      style="display: flex; justify-content: flex-end;"
-    >
-      <q-btn
-        type="submit"
-        label="Enviar"
-        icon="outgoing_mail"
-        no-caps
-        class="btn-cadastrar"
-        style="min-width: 120px;"
-      />
-    </div>
-  </div>
-</div>
 
-    </q-form>
-  </q-card>
-</q-dialog>
+      </q-form>
+    </q-card>
+  </q-dialog>
 
 </template>
 
@@ -397,14 +316,17 @@ export default {
 </script>
 
 <style scoped>
-
 @media (max-width: 600px) {
   .btn-container {
-    justify-content: center !important; /* centraliza o botão no mobile, opcional */
+    justify-content: center !important;
+    /* centraliza o botão no mobile, opcional */
   }
-  .btn-container > .btn-cadastrar {
-    width: 100% !important; /* botão ocupa toda largura na tela pequena */
-    min-width: unset !important; /* remove largura mínima para não forçar tamanho */
+
+  .btn-container>.btn-cadastrar {
+    width: 100% !important;
+    /* botão ocupa toda largura na tela pequena */
+    min-width: unset !important;
+    /* remove largura mínima para não forçar tamanho */
   }
 }
 
@@ -450,7 +372,7 @@ export default {
   font-size: 0.875rem;
   color: #555;
   line-height: 1.6;
- text-align: justify;
+  text-align: justify;
 }
 
 /* Seção vendedor */
@@ -566,22 +488,27 @@ export default {
   .main-container .row {
     flex-wrap: wrap;
   }
+
   .col-md-6 {
     flex: 0 0 100% !important;
     max-width: 100% !important;
   }
+
   .location-row div {
     text-align: left !important;
   }
+
   /* Carousel menor em tablet */
   .q-carousel {
     height: 200px !important;
   }
+
   /* Ajuste nos botões para ocupar largura total */
   .seller-section .q-btn {
     width: 100%;
     margin-bottom: 0.5rem;
   }
+
   .seller-section .row.justify-between {
     flex-direction: column;
     align-items: stretch;
@@ -593,25 +520,32 @@ export default {
   .q-carousel {
     height: 160px !important;
   }
+
   .titulo-anuncio {
     font-size: 1.4rem;
   }
+
   .valor-destaque {
     font-size: 1.5rem;
   }
+
   .description-text {
     font-size: 0.9rem;
   }
+
   .seller-title,
   .seller-name {
     font-size: 1rem;
   }
+
   .visits-card {
     padding: 0.5rem !important;
   }
+
   .aviso-text {
     font-size: 0.85rem;
   }
+
   /* Botões de contato ficam full width */
   .full-width-sm {
     width: 100% !important;
@@ -649,5 +583,4 @@ body.fullscreen {
 .q-carousel__control--arrow svg {
   fill: #7e57c2 !important;
 }
-
 </style>

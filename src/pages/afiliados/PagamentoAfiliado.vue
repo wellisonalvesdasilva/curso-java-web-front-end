@@ -8,7 +8,7 @@
             separator=">"
             class="q-mb-none"
             active-color="secondary">
-            <q-breadcrumbs-el label="Indicações e Ganhos" />
+            <q-breadcrumbs-el to="/admin/anuncios" label="Administração" />
             <q-breadcrumbs-el :label="title" class="breadcrumb-last" />
           </q-breadcrumbs>
         </div>
@@ -18,21 +18,6 @@
           <!-- Título principal -->
 <div class="flex justify-between items-center q-mb-sm">
 <h2 class="title-text">{{title}}</h2>
-  <div class="flex flex-col md:flex-row justify-between items-center q-mb-sm gap-sm">
-  <div class="flex items-center gap-sm">
-    <q-btn
-      label="Minha Chave Pix"
-      class="btn-cadastrar"
-      color="purple"
-      text-color="white"
-      icon="account_balance_wallet"
-      dense
-      unelevated
-      style="min-width: 180px; font-weight: bold; text-transform: none;"
-      @click="abrirDialogPix"
-    />
-  </div>
-</div>
 
 </div>
           <div class="divisor-line"></div>
@@ -63,9 +48,26 @@
 </div>
 
           <!-- Subtítulo Indicados -->
-          <div class="flex items-center q-mb-sm">
-            <h3 class="text-h6">👥 Meus Indicados</h3>
-          </div>
+<div class="row items-center q-mb-sm">
+  <!-- Título -->
+  <div class="col-12 col-md-auto">
+    <h3 class="text-h6 q-mb-xs q-mb-md-none">👥 Usuários</h3>
+  </div>
+
+  <q-space class="gt-md" />
+
+  <!-- Toggle -->
+  <div class="col-12 col-md-auto">
+    <q-toggle
+      size="lg"
+      color="secondary"
+      v-model="pagamentoPendente"
+      class="toggle-destaque"
+      label="Exibir somente usuários com comissão pendente?"
+    />
+  </div>
+</div>
+
           <div class="divisor-line q-mb-md"></div>
 
           <!-- Tabela de indicados -->
@@ -82,7 +84,7 @@
             :loading="loading"
             :filter="filter"
             binary-state-sort
-            @request="buscarPessoas"
+            @request="buscarIndicados"
           >
             <template v-slot:header="props">
               <q-tr :props="props">
@@ -93,7 +95,15 @@
               <q-tr :props="props">
                 <q-th v-for="col in props.cols" :key="col.name" :props="props">
                   <q-input
-                    v-if="col.name != 'actions' && col.name != 'dataCadastro'"
+                    v-if="col.name != 'actions' && col.name != 'dataCadastro' && col.name != 'tiposChavePix' && col.name != 'whats'"
+                    :model-value="filters[col.name]"
+                    @change="val => filtroTrocado(col.name, val)"
+                    filled
+                    dense
+                  />
+                  <q-input
+                    v-else-if="col.name === 'whats'"
+                    mask="## #####-####"
                     :model-value="filters[col.name]"
                     @change="val => filtroTrocado(col.name, val)"
                     filled
@@ -110,12 +120,25 @@
                     stack-label
                     @change="val => filtroTrocado(col.name, this.$fmt.dataToApi(val))"
                   />
+                   <q-select
+                    v-else-if="col.name == 'tiposChavePix'"
+                    v-show="!['actions'].includes(col.name)"
+                    :option-value="opt => opt"
+                    v-model="filters[col.name]"
+                    :option-label="label"
+                    :input-style="{ width: '100px' }"
+                    :options="listaCamposFiltrados[col.name]" clearable dense
+                    fill-input filled
+                    hide-dropdown-icon hide-selected input-debounce=500 use-input
+                    @filter="(val, update, abort) => filterSelectResponse(val, update, abort, col.name)" @update:model-value="(val, update, abort) => filtroTrocado(col.name, val)">
+                  </q-select>
                 </q-th>
               </q-tr>
             </template>
             <template v-slot:body-cell-actions="props">
               <q-td :props="props" class="q-gutter-x-sm text-center">
                 <q-btn
+                  :disabled="!props.row.quantidadeIndicacoes > 0"
                   class="btn-action"
                   size="sm"
                   style="margin-right: 5px;"
@@ -124,7 +147,7 @@
                   icon="dynamic_feed"
                   @click="detail(props.row)"
                 >
-                  <q-tooltip>Detalhar Anúncios do Indicado</q-tooltip>
+                  <q-tooltip>Ver Anúncios dos Indicados</q-tooltip>
                 </q-btn>
               </q-td>
             </template>
@@ -132,48 +155,6 @@
         </div>
       </q-form>
     </div>
-<!-- Meu Link de Afiliado -->
-<div class="bg">
-  <q-form greedy>
-    <div class="main-container q-pa-md">
-
-      <!-- Cabeçalho -->
-      <div class="flex items-center q-mb-md">
-        <q-icon name="link" size="lg" class="q-mr-sm text-primary" />
-        <h3 class="text-h5 font-bold">Meu Link de Afiliado</h3>
-      </div>
-
-      <!-- Área para copiar link -->
-      <div class="row items-center q-gutter-sm q-mb-lg">
-        <q-input
-          v-model="meuLinkAfiliado"
-          label="Link do Afiliado"
-          outlined
-          dense
-          readonly
-          class="col"
-          rounded
-          stack-label
-        >
-          <template v-slot:append>
-            <q-btn
-              color="primary"
-              icon="content_copy"
-              @click="copiarLink"
-              rounded
-              glossy
-              dense
-            >
-              <q-tooltip>Copiar link</q-tooltip>
-            </q-btn>
-          </template>
-        </q-input>
-      </div>
-<!-- Box explicativo --> <q-banner class="bg-orange-1 text-orange-10 q-pa-md rounded-borders shadow-2"> <div class="text-h6 q-mb-xs">💡 Como funciona o programa de afiliados</div> <div> Ao compartilhar o seu link exclusivo, toda pessoa que se cadastrar por meio dele será vinculada a você. <br /> Você receberá <strong>20% de comissão</strong> sobre cada anúncio pago publicado pelos seus indicados. Anúncios gratuitos não geram comissão. </div> </q-banner>
-
-    </div>
-  </q-form>
-</div>
 
   </div>
 
@@ -183,7 +164,7 @@
     style="min-width: 90%; max-width: 90vw; max-height: 85vh; display: flex; flex-direction: column;"
   >
       <q-card-section class="row items-center justify-between">
-        <div class="text-h6 text-weight-bold">Detalhar Anúncios do Indicado</div>
+        <div class="text-h6 text-weight-bold">Ver Anúncios dos Indicados</div>
       </q-card-section>
     <div class="divisor-line"></div>
     <hr class="separadorModal" />
@@ -212,6 +193,18 @@
                   icon="travel_explore"
                   @click="abrirAnuncio(props.row)">
                   <q-tooltip>Abrir Anúncio</q-tooltip>
+                </q-btn>
+
+                 <q-btn
+                  v-if="props.row.situacaoAnuncio === 'Comissão a Pagar'"
+                  class="btn-action"
+                  size="sm"
+                  style="margin-right: 5px;"
+                  round
+                  flat
+                  icon="monetization_on"
+                  @click="abrirDialogOcorrencia(props.row)">
+                  <q-tooltip>Indicar Ocorrência de Pagamento</q-tooltip>
                 </q-btn>
               </q-td>
             </template>
@@ -253,69 +246,67 @@
       </q-card>
     </q-dialog>
 
-      <q-dialog v-model="dialogPix" persistent>
+          <q-dialog v-model="dialogOcorrencia" persistent>
 <q-card
     class="q-px-md modal-sm"
     style="min-width: 30%; max-width: 90vw; max-height: 85vh; display: flex; flex-direction: column;"
   >
       <q-card-section class="row items-center justify-between">
-        <div class="text-h6 text-weight-bold">Minha Chave Pix</div>
+        <div class="text-h6 text-weight-bold">Informar Pagamento</div>
       </q-card-section>
     <div class="divisor-line"></div>
     <hr class="separadorModal" />
-        <div class="col-xs-6 col-sm-6 col-md-6">
-      <q-select
-        stack-label
-        dense
-        label="Tipo"
-        v-model="chavePix.tipo"
-        @update:model-value="this.chavePix.numero = null"
-        use-input
-        emit-value
-        map-options
-        input-debounce="500"
-        :options="tiposChavePix"
-        option-label="label"
-        :rules="[vRequired]">
-        <template v-slot:label>
-                    <span class="input-label">Tipo</span>
-                  </template>
-                  <template v-slot:no-option>
-                    <q-item>
-                      <q-item-section class="text-grey">
-                        Nenhum Dado Encontrado
-                      </q-item-section>
-                    </q-item>
-                  </template>
-      </q-select>
-    </div>
-
-    <div class="col-xs-6 col-sm-6 col-md-6">
-      <q-input
-        stack-label dense maxlength="255"
-        v-model="chavePix.numero"
-        label="Título"
-        class="custom-textarea"
-      >
+ <div class="col-xs-12 col-sm-6 col-md-6 q-mb-md">
+    <q-input
+      v-model="pagamento.data"
+      mask="##/##/####"
+      label="Data do Pagamento"
+      stack-label
+      dense
+      class="custom-textarea"
+    >
+      <template v-slot:append>
+        <q-icon name="event" class="cursor-pointer">
+          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+            <q-date v-model="pagamento.data" mask="DD/MM/YYYY" />
+          </q-popup-proxy>
+        </q-icon>
+      </template>
       <template v-slot:label>
-              <span class="input-label">Chave Pix </span>
-            </template>
-      </q-input>
-    </div>
+        <span class="input-label">Data do Pagamento</span>
+      </template>
+    </q-input>
+  </div>
+
+  <!-- Número da Transação -->
+  <div class="col-xs-12 col-sm-6 col-md-6">
+    <q-input
+      v-model="pagamento.numeroTransacao"
+      label="Número da Transação"
+      maxlength="255"
+      stack-label
+      dense
+      class="custom-textarea"
+    >
+      <template v-slot:label>
+        <span class="input-label">Número da Transação</span>
+      </template>
+    </q-input>
+  </div>
   <div class="row q-mt-md">
   <div class="col-12">
     <div class="row justify-center q-gutter-sm">
-  <q-btn :disabled="!chavePix.numero || !chavePix.tipo"
+  <q-btn :disabled="!pagamento.data || !pagamento.numeroTransacao"
     type="button"
     label="Salvar"
     icon="save"
-    @click="salvarChavePix()"
+    @click="salvarPagamento()"
     no-caps
     class="btn-cadastrar col-12 col-sm-auto"
     style="min-width: 120px;"
   />
   <q-btn
-    @click="fecharModalPix"
+    @click="fecharModalPagamento"
     class="btn-cancelar col-12 col-sm-auto"
     label="Fechar"
     dense
@@ -339,31 +330,31 @@ import fmt from 'src/utils/formatadores.js'
 export default {
   name: 'GridAnuncio',
   setup () {
-    const meuLinkAfiliado = ref('https://www.mercadoinstrumental.com.br?afiliado=') // substituir pelo retorno da API
+    const pagamentoPendente = ref(false)
+    const meuLinkAfiliado = ref('https://www.mercadoinstrumental.com.br/afiliado=') // substituir pelo retorno da API
     const resumo = ref({
       valorAReceber: 0,
       valorRecebido: 0,
-      qtdeIndicados: 0,
       qtdeComAnunciosPro: 0,
       hash: null
     })
     const dashboardCards = computed(() => [
       {
-        label: 'A receber',
+        label: 'A pagar',
         value: fmt.fCurrency(resumo.value.valorAReceber),
         icon: 'savings',
         color: 'primary',
         class: 'text-primary'
       },
       {
-        label: 'Já recebido',
+        label: 'Já pago',
         value: fmt.fCurrency(resumo.value.valorRecebido),
         icon: 'check_circle',
         color: 'positive',
         class: 'text-positive'
       },
       {
-        label: 'Indicados',
+        label: 'Total de Usuários',
         value: resumo.value.qtdeIndicados,
         icon: 'groups',
         color: 'secondary',
@@ -394,13 +385,13 @@ export default {
       rowsPerPage: 5,
       perpageOptions: [1, 5, 10, 20]
     })
-    function buscarPessoas (props) {
+    function buscarIndicados (props) {
       loading.value = true
       const { page, rowsPerPage, sortBy, descending } = props === undefined ? pagination.value : props.pagination
       const pageAt = page - 1
       const fetchCount = rowsPerPage
       pagination.value.rowsPerPage = fetchCount
-      const req = { visaoAdmin: false, page: pageAt, size: fetchCount, direction: pagination.value.descending ? 'DESC' : 'ASC', ordenarPor: 'id', listarParaRevisao: route.path.includes('/revisao') }
+      const req = { hasComissaoPendente: pagamentoPendente.value, visaoAdmin: true, page: pageAt, size: fetchCount, direction: pagination.value.descending ? 'DESC' : 'ASC', ordenarPor: 'id', listarParaRevisao: route.path.includes('/revisao') }
       indicacaoService.findAll(prepararFiltros(req)).then(retorno => {
         rows.value.splice(0, rows.value.length, ...retorno.data.data)
         pagination.value.page = retorno.data.page + 1
@@ -421,6 +412,7 @@ export default {
           if (valor.label) {
             request[key] = valor.label
           } else {
+            // fallback: tenta pegar valor direto (caso incomum)
             request[key] = valor.value || ''
           }
         } else {
@@ -440,12 +432,19 @@ export default {
     return {
       chavePixClone: ref({}),
       tiposChavePix: ref([]),
+      pagamentoPendente,
       rowsDialog: ref([]),
       chavePix: ref({
         tipo: null,
         numero: null
       }),
+      pagamento: ref({
+        idAnuncio: null,
+        data: null,
+        numeroTransacao: null
+      }),
       dialogPix: ref(false),
+      dialogOcorrencia: ref(false),
       dialog: ref(false),
       tableRef,
       meuLinkAfiliado,
@@ -457,18 +456,28 @@ export default {
       loading,
       pagination,
       rows,
-      buscarPessoas,
+      buscarIndicados,
       listaCamposFiltrados: ref([]),
       listaCampos: ref([]),
       filters,
       $q,
       route,
-      title: 'Minhas Indicações'
+      title: 'Gerenciamento de Comissões'
     }
   },
   mounted () {
     this.carregarTabela()
     this.buscarIndicadores()
+    this.buscarChavesPix()
+  },
+  watch: {
+    pagamentoPendente: {
+      handler () {
+        this.buscarIndicados()
+      },
+      deep: true,
+      immediate: false
+    }
   },
   computed: { },
   methods: {
@@ -476,24 +485,43 @@ export default {
       this.columns = [
         { name: 'id', align: 'center', label: 'Código', field: 'id', style: 'width: 180px;' },
         { name: 'nome', align: 'left', label: 'Nome', field: 'nome' },
+        { name: 'whats', label: 'Whatsapp', align: 'center', field: val => val.whats ? this.$fmt.telefone(val.whats) : '-', style: 'width: 200px;' },
+        { name: 'chavePix', label: 'Chave Pix', align: 'center', field: val => val.chavePix ? this.formatarValorChavePix(val.tipoChavePix, val.chavePix) : '-', style: 'width: 200px;' },
+        { name: 'tiposChavePix', label: 'Tipo Chave Pix', align: 'center', field: val => val.tipoChavePix?.label || '-', style: 'width: 200px;' },
         { name: 'dataCadastro', label: 'Data de Cadastro', align: 'center', field: val => this.$fmt.dataToDisplay(val.dataCadastro), style: 'width: 200px;' },
+        { name: 'quantidadeIndicacoes', align: 'center', label: 'Total de Indicações', field: 'quantidadeIndicacoes' },
+        { name: 'quantidadeAnunciosPublicados', align: 'center', label: 'Qtde. Anúncios', field: 'quantidadeAnunciosPublicados' },
         { name: 'actions', label: 'Ações', required: true, align: 'center', style: 'width: 120px;' }
       ]
+    },
+    formatarValorChavePix (tipo, chave) {
+      return this.$fmt.formatarValorChavePix({
+        tipoChavePix: tipo,
+        valorChave: chave
+      })
+    },
+    fecharModalPagamento () {
+      this.dialogOcorrencia = false
+      this.pagamento.numeroTransacao = null
+      this.pagamento.data = null
+      this.pagamento.idAnuncio = null
+      this.pagamento.idUsuario = null
     },
     fecharModalPix () {
       this.dialogPix = false
       this.chavePix = Object.assign({}, this.chavePixClone)
     },
+    abrirDialogOcorrencia (row) {
+      this.pagamento.idAnuncio = row.idAnuncio
+      this.dialogOcorrencia = true
+    },
     abrirDialogPix () {
       this.chavePixClone = Object.assign({}, this.chavePix)
-      if (this.tiposChavePix.length === 0) {
-        this.buscarChavesPix()
-      }
       this.dialogPix = true
     },
     buscarChavesPix () {
       enumService.getTiposChavesPix().then(response => {
-        this.tiposChavePix = response.data
+        this.listaCampos.tiposChavePix = response.data
       }).catch(error => {
         this.$msg.apiError('Erro ao buscar os tipos de chave pix!', error)
       })
@@ -505,26 +533,46 @@ export default {
       if (valor === null || valor === '') {
         delete this.filters[campoNome]
       } else {
-        this.filters[campoNome] = valor
+        if (campoNome === 'whats') {
+          this.filters[campoNome] = valor.replace(/\D/g, '')
+        } else this.filters[campoNome] = valor
       }
-      this.buscarPessoas()
+      this.buscarIndicados()
     },
     fecharModal () {
       this.dialog = false
     },
-    salvarChavePix () {
-      indicacaoService.saveChavePix(
-        this.chavePix.numero,
-        typeof this.chavePix.tipo === 'object' ? this.chavePix.tipo?.value : this.chavePix.tipo
+    salvarPagamento () {
+      indicacaoService.savePagamento(
+        this.pagamento.idAnuncio,
+        this.$fmt.dataToApi(this.pagamento.data),
+        this.pagamento.numeroTransacao
       ).then(response => {
-        this.$msg.success('Chave atualizada com sucesso!')
-        this.dialogPix = false
+        this.dialogOcorrencia = false
+        this.atualizarAposSalvarPagamento()
+        this.$msg.success('Comissão registrada como paga com sucesso!')
       }).catch(error => {
         this.$msg.apiError('Erro ao buscar salvar chave pix!', error)
       })
     },
+    atualizarAposSalvarPagamento () {
+      this.buscarIndicados()
+      this.buscarIndicadores()
+      this.buscarPublicacoes(this.pagamento.idUsuario)
+    },
+    filterSelectResponse (val, update, abort, colName) {
+      update(() => {
+        const needle = val.toLowerCase()
+        const options = this.listaCampos[colName] || []
+        let filtrada = []
+        if (colName === 'tiposChavePix') {
+          filtrada = options.filter(it => it.label.toLowerCase().indexOf(needle) > -1)
+        }
+        this.listaCamposFiltrados[colName] = filtrada
+      })
+    },
     buscarIndicadores () {
-      indicacaoService.dash(false).then(response => {
+      indicacaoService.dash(true).then(response => {
         this.resumo = response.data
         this.meuLinkAfiliado = this.meuLinkAfiliado + response.data.hash
         this.chavePix.numero = response.data.chavePix
@@ -534,6 +582,7 @@ export default {
       })
     },
     detail (row) {
+      this.pagamento.idUsuario = row.id
       if (this.columnsIndicado.length === 0) {
         this.columnsIndicado = [
           { name: 'anuncio', align: 'left', label: 'Anúncio', field: 'anuncio' },
@@ -546,14 +595,16 @@ export default {
           { name: 'actions', label: 'Ações', required: true, align: 'center' }
         ]
       }
-      indicacaoService.publicacoes(row.id, false).then(response => {
+      this.buscarPublicacoes(row.id)
+      this.dialog = true
+    },
+    buscarPublicacoes (id) {
+      indicacaoService.publicacoes(id, true).then(response => {
         this.rowsDialog = response.data
         this.dialog = true
       }).catch(error => {
         this.$msg.apiError('Erro ao buscar os indicadores!', error)
       })
-
-      this.dialog = true
     }
   }
 }
@@ -613,5 +664,11 @@ export default {
 .card-neon:hover
   box-shadow: 0 0 25px rgba(243,198,35,0.7)
   transform: translateY(-2px)
+
+.toggle-destaque
+  padding: 6px 12px
+  border-radius: 8px
+  background: rgba(139, 92, 246, 0.1)
+  font-weight: bold
 
 </style>

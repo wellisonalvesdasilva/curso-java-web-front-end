@@ -91,6 +91,10 @@ export class EnumService {
   getSituacoes () {
     return apiMercadoInstrumental.get(this.path + '/status')
   }
+
+  getTiposChavesPix () {
+    return apiMercadoInstrumental.get(this.path + '/tipos-chave-pix')
+  }
 }
 
 export class IbgeService {
@@ -176,6 +180,37 @@ export class AnuncioSiteService {
   }
 }
 
+export class IndicacaoService {
+  path = '/indicacoes'
+
+  findAll (params, config) {
+    const finalConfig = Object.assign({ params }, config)
+    return apiMercadoInstrumental.get(this.path, finalConfig)
+  }
+
+  dash (isGeral) {
+    return apiMercadoInstrumental.get(this.path + '/' + 'dash?isGeral=' + isGeral)
+  }
+
+  publicacoes (idUsuario, isAdmin) {
+    return apiMercadoInstrumental.get(this.path + '/publicacoes/' + idUsuario + '?isAdmin=' + isAdmin)
+  }
+
+  saveChavePix (chavePix, tipoChavePix) {
+    return apiMercadoInstrumental.post(this.path + '/save-chave-pix/' + chavePix + '/' + tipoChavePix)
+  }
+
+  savePagamento (idAnuncio, dataPagamento, numeroTransacao) {
+    const params = new URLSearchParams({
+      dataPagamento,
+      numeroTransacao
+    })
+    return apiMercadoInstrumental.post(
+      `${this.path}/indicacao-pagamento/${idAnuncio}?${params.toString()}`
+    )
+  }
+}
+
 export const anuncioSiteService = new AnuncioSiteService()
 export const anuncioService = new AnuncioService()
 export const artefatoAnuncioService = new ArtefatoAnuncioService()
@@ -183,3 +218,4 @@ export const enumService = new EnumService()
 export const ibgeService = new IbgeService()
 export const usuarioService = new UsuarioService()
 export const usuarioInternoService = new UsuarioInternoService()
+export const indicacaoService = new IndicacaoService()
