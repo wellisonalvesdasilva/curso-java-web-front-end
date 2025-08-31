@@ -47,9 +47,9 @@
         <template v-slot:avatar>
           <q-icon name="star" color="deep-purple" />
         </template>
-        <div class="text-subtitle1 text-weight-medium">Instrumentos disponíveis:</div>
+        <div class="text-subtitle1 text-weight-medium">Instrumentos disponíveis</div>
         <div class="text-caption text-grey-8">
-          Apareça em destaque com os planos Premium ou Avançado. Escolha seu plano e garanta visibilidade máxima!
+          Escolha seu plano e seja visto!
         </div>
       </q-banner>
 

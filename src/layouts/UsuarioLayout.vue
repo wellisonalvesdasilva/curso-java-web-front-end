@@ -10,7 +10,7 @@
             <q-toolbar class="header justify-center">
 <q-avatar
   @click="irParaHome"
-  style="height: 100px; width: 220px; border-radius: 0px; cursor: pointer"
+  style="height: 100px; width: 180px; border-radius: 0px; cursor: pointer"
 >
   <img
     src="../assets/img/logo-mercado-instrumental.png"
