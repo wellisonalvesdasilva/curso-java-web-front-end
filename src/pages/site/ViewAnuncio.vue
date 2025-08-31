@@ -144,11 +144,11 @@
           </q-card>
         <picture class="q-mb-lg">
           <!-- Mobile -->
-          <source @click="voltar" srcset="/src/assets/img/detail-807x376.jpg" media="(max-width: 768px)" />
+          <source @click="voltar" srcset="/src/assets/img/logo-mercado-instrumental-detail-807x376.jpg" media="(max-width: 768px)" />
           <!-- Tablet -->
-          <source @click="voltar" srcset="/src/assets/img/detail-1135x350.jpg" media="(max-width: 1200px)" />
+          <source @click="voltar" srcset="/src/assets/img/logo-mercado-instrumental-detail-1135x350.jpg" media="(max-width: 1200px)" />
           <!-- Desktop (default) -->
-          <img @click="voltar" src="/src/assets/img/detail-1576x300.jpg" alt="Banner Anuncie aqui"
+          <img @click="voltar" src="/src/assets/img/logo-mercado-instrumental-detail-1576x300.jpg" alt="Banner Anuncie aqui"
             style="width: 100%; height: auto; cursor: pointer;" />
         </picture>
         </div>

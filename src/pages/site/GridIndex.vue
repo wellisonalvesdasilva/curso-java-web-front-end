@@ -21,15 +21,15 @@
         </div> -->
  <picture>
     <!-- Mobile -->
-    <source srcset="/src/assets/img/index-807x376.jpg" media="(max-width: 768px)" />
+    <source srcset="/src/assets/img/logo-mercado-instrumental-index-807x376.jpg" media="(max-width: 768px)" />
 
     <!-- Tablet -->
-    <source srcset="/src/assets/img/index-1135-350.jpg" media="(max-width: 1200px)" />
+    <source srcset="/src/assets/img/logo-mercado-instrumental-index-1135-350.jpg" media="(max-width: 1200px)" />
 
     <!-- Desktop (default) -->
 <img
   @click="irParaAreaAnunciante"
-  src="/src/assets/img/index-1576-300.jpg"
+  src="/src/assets/img/logo-mercado-instrumental-index-1576-300.jpg"
   alt="Banner Anuncie aqui"
   style="width: 100%; height: auto; cursor: pointer;"
 />
