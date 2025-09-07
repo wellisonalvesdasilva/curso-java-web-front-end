@@ -16,18 +16,18 @@ export const MENU = [
       }
     ]
   },
-  {
-    label: 'Indicações e Ganhos',
-    transacao: 'ROLE_ANUNCIANTE',
-    icon: 'img:/icons-menu/icon-contratacoes.svg',
-    items: [
-      {
-        to: '/admin/afiliado',
-        label: 'Minhas Comissões',
-        transacao: 'ROLE_ANUNCIANTE'
-      }
-    ]
-  },
+  // {
+  //   label: 'Indicações e Ganhos',
+  //   transacao: 'ROLE_ANUNCIANTE',
+  //   icon: 'img:/icons-menu/icon-contratacoes.svg',
+  //   items: [
+  //     {
+  //       to: '/admin/afiliado',
+  //       label: 'Minhas Comissões',
+  //       transacao: 'ROLE_ANUNCIANTE'
+  //     }
+  //   ]
+  // },
   {
     label: 'Administração',
     transacao: 'ROLE_ADMINISTRADOR',
@@ -35,14 +35,14 @@ export const MENU = [
     items: [
       {
         to: '/admin/anuncios/revisao',
-        label: 'Revisão de Anúncios',
-        transacao: 'ROLE_ADMINISTRADOR'
-      },
-      {
-        to: '/admin/pagamento-afiliado',
-        label: 'Gerenciamento de Comissões',
+        label: 'Revisar Anúncios',
         transacao: 'ROLE_ADMINISTRADOR'
       }
+      // {
+      //   to: '/admin/pagamento-afiliado',
+      //   label: 'Gerenciamento de Comissões',
+      //   transacao: 'ROLE_ADMINISTRADOR'
+      // }
     ]
   }
 ]

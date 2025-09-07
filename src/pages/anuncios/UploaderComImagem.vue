@@ -170,7 +170,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .upload-warning {
   background: #fff9e6;
   color: #8a6d03;                   /* amarelo escuro suave para o texto */

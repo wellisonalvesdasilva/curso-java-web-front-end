@@ -36,9 +36,10 @@
   </picture>
         </div>
     </div>
+        <GoogleAd />
         <div class="bg">
 <q-form greedy>
-  <div class="main-container">
+  <div class="main-container" v-if="anuncios?.data != null">
     <!-- Se houver anúncios -->
     <div v-if="anunciosPagina?.length > 0">
 
@@ -136,6 +137,7 @@
 
 <script>
 import { anuncioSiteService } from 'src/services/api-service.js'
+import GoogleAd from './GoogleAd.vue'
 import { ref } from 'vue'
 import { mapGetters } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -155,6 +157,9 @@ export default {
       }),
       current: 1
     }
+  },
+  components: {
+    GoogleAd
   },
   computed: {
     filtro () {

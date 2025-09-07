@@ -60,7 +60,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .custom-modal {
   max-width: 420px;

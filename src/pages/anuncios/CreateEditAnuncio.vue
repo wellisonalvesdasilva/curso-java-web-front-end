@@ -40,7 +40,7 @@
             indicator-color="primary"
             narrow-indicator
           >
-            <q-tab name="plano-desejado" label="Plano Desejado" />
+            <!-- <q-tab name="plano-desejado" label="Plano Desejado" /> -->
             <q-tab :disable="!planoSelecionado" name="dados-basicos" label="Dados Básicos" />
             <q-tab :disable="!anuncio?.id" name="imagens" label="Imagens" />
           </q-tabs>
@@ -692,7 +692,7 @@ export default {
       $q,
       anuncio,
       title: ref('Cadastrar Anúncio'),
-      tab: ref('plano-desejado'),
+      tab: ref('dados-basicos'),
       valorFormatado: ref(''),
       tiposInstrumentos,
       marcas,
@@ -716,6 +716,7 @@ export default {
     }
   },
   mounted () {
+    this.planoSelecionado = 'GRATIS' // temp
     this.confirmarSeJaTemAnuncioFree()
     this.buscarPessoaParaEdicao()
     this.buscarEstados()

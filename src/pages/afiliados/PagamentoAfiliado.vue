@@ -609,7 +609,7 @@ export default {
   }
 }
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .my-sticky-last-column-table
   /* specifying max-width so the example can
     highlight the sticky column on any browser window */

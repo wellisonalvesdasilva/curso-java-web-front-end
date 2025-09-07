@@ -59,11 +59,11 @@
           </template>
           <template v-slot:body-cell-actions="props">
             <q-td :props="props" class="q-gutter-x-sm text-center">
-              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO')" class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
+              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO' || props.row.status.value === 'CANCELADO')" class="btn-action" size="sm" style="margin-right: 5px;" round flat icon="border_color"
                 @click="editar(props.row)">
                <q-tooltip>{{ isRevisao ? 'Revisar' : 'Editar'}}</q-tooltip>
               </q-btn>
-              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO')" v-if="!isRevisao" class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
+              <q-btn :disable="!isRevisao && (props.row.status.value === 'AGUARDANDO_PUBLICACAO' || props.row.status.value === 'AGUARDANDO_CONFIRMACAO_PAGAMENTO' || props.row.status.value === 'CANCELADO')" v-if="!isRevisao" class="btn-action" size="sm" round flat icon="cancel" @click="confirmarRemocao(props.row)">
                 <!-- <q-tooltip>Excluir</q-tooltip> -->
               </q-btn>
               <q-btn
@@ -82,10 +82,9 @@
               <q-td :props="props">
                 <q-icon v-if="props.value === 'Publicado'" class="icon_gap" color="green" name="circle"
                   size="10px"></q-icon>
-                <q-icon v-if="props.value === 'Expirado'  || props.value === 'Aguardando Confirmação de Pagamento' " class="icon_gap" color="red" name="circle"
+                <q-icon v-if="props.value === 'Cancelado' || props.value === 'Expirado'  || props.value === 'Aguardando Confirmação de Pagamento' " class="icon_gap" color="red" name="circle"
                   size="10px"></q-icon>
-               <q-icon
-                  v-if="props.value === 'Rascunho' || props.value === 'Aguardando Revisão para Publicação'"
+               <q-icon v-if="props.value === 'Rascunho' || props.value === 'Aguardando Revisão para Publicação'"
                   class="icon_gap" color="orange" name="circle" size="10px"></q-icon>
                 {{ props.value }}
               </q-td>
@@ -340,7 +339,7 @@ export default {
         separateButtons: true
       }).onOk(() => {
         anuncioService.delete(row.id).then(() => {
-          this.$q.notify({ message: 'Removido com sucesso!', color: 'positive', textColor: 'white' })
+          this.$q.notify({ message: 'Cancelamento realizado com sucesso!', color: 'positive', textColor: 'white' })
           this.buscarPessoas()
         }).catch(error => {
           console.log(error)
@@ -359,7 +358,7 @@ export default {
   }
 }
 </script>
-<style lang="sass">
+<style lang="sass" scoped>
 .my-sticky-last-column-table
   /* specifying max-width so the example can
     highlight the sticky column on any browser window */
