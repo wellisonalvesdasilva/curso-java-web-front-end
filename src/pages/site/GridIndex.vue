@@ -36,7 +36,7 @@
   </picture>
         </div>
     </div>
-        <GoogleAd />
+        <!-- <GoogleAd /> -->
         <div class="bg">
 <q-form greedy>
   <div class="main-container" v-if="anuncios?.data != null">
@@ -137,7 +137,7 @@
 
 <script>
 import { anuncioSiteService } from 'src/services/api-service.js'
-import GoogleAd from './GoogleAd.vue'
+// import GoogleAd from './GoogleAd.vue'
 import { ref } from 'vue'
 import { mapGetters } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -158,9 +158,9 @@ export default {
       current: 1
     }
   },
-  components: {
-    GoogleAd
-  },
+  // components: {
+  //   GoogleAd
+  // },
   computed: {
     filtro () {
       console.log(this.$store.state.filtros.filtroAnuncios)
