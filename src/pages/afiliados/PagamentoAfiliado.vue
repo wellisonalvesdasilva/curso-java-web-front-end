@@ -354,14 +354,14 @@ export default {
         class: 'text-positive'
       },
       {
-        label: 'Total de Usuários',
+        label: 'Qtde. Usuários',
         value: resumo.value.qtdeIndicados,
         icon: 'groups',
         color: 'secondary',
         class: 'text-secondary'
       },
       {
-        label: 'Com anúncio Pro',
+        label: 'C/ Anúncio Pro',
         value: resumo.value.qtdeComAnunciosPro,
         icon: 'campaign',
         color: 'purple-5',

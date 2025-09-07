@@ -57,43 +57,45 @@
       <!-- Cards de anúncios -->
       <div class="row q-col-gutter-md q-mb-lg">
         <div v-for="anuncio in anunciosPagina" :key="`destaque-${anuncio.idAnuncio}`" class="col-6 col-sm-2 col-md-2 col-lg-2">
-          <q-card class="card-destaque">
-            <!-- Link para detalhe do anúncio -->
-            <router-link :to="`/anuncio/${anuncio.idAnuncio}`">
-              <div class="q-pa-sm destaque-img-container">
-                <q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm" :class="{ 'badge-destaque': anuncio.isDestaque }" rounded label="Destaque" />
-                <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio" class="destaque-img" />
-              </div>
-            </router-link>
+<q-card class="card-destaque">
+  <!-- Link para detalhe do anúncio - IMAGEM -->
+  <router-link :to="`/anuncio/${anuncio.idAnuncio}`" class="no-decoration">
+    <div class="q-pa-sm destaque-img-container">
+      <q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm" :class="{ 'badge-destaque': anuncio.isDestaque }" rounded label="Destaque" />
+      <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio" class="destaque-img" />
+    </div>
+  </router-link>
 
-            <!-- Informações do anúncio -->
-            <q-card-section class="q-pa-sm">
-              <div class="anuncio-content">
-                <div class="anuncio-title">{{ formatarTitulo(anuncio.titulo) }}</div>
-                <div class="anuncio-valor">{{ $fmt.fCurrency(anuncio.valor) }}</div>
-                <div class="anuncio-condicao q-mt-xs">
-                  <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
-                    {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
-                  </q-badge>
-                </div>
+  <!-- Link para detalhe do anúncio - TEXTO -->
+  <router-link :to="`/anuncio/${anuncio.idAnuncio}`" class="no-decoration">
+    <q-card-section class="q-pa-sm">
+      <div class="anuncio-content">
+        <div class="anuncio-title">{{ formatarTitulo(anuncio.titulo) }}</div>
+        <div class="anuncio-valor">{{ $fmt.fCurrency(anuncio.valor) }}</div>
+        <div class="anuncio-condicao q-mt-xs">
+          <q-badge outline :color="anuncio.isUsado ? 'deep-purple' : 'purple'">
+            {{ anuncio.isUsado ? "Instrumento Usado" : "Instrumento Novo" }}
+          </q-badge>
+        </div>
 
-                <!-- Marca e Local -->
-                <div class="anuncio-info q-mt-xs">
-                  <div class="info-line">
-                    <q-icon name="category" size="16px" class="q-mr-xs text-grey-7" />
-                    <span class="text-caption text-grey-8">Marca:</span>
-                    <span class="text-caption text-dark q-ml-xs">{{ formatarMarca(anuncio.marca?.label) }}</span>
-                  </div>
-                  <div class="info-line q-mt-xs">
-                    <q-icon name="place" size="16px" class="q-mr-xs text-grey-7" />
-                    <span class="text-caption text-grey-8">Local:</span>
-                    <span class="text-caption text-dark q-ml-xs">{{ formatarLocal(anuncio.municipio, anuncio.uf) }}</span>
-                  </div>
-                </div>
-              </div>
-            </q-card-section>
+        <!-- Marca e Local -->
+        <div class="anuncio-info q-mt-xs">
+          <div class="info-line">
+            <q-icon name="category" size="16px" class="q-mr-xs text-grey-7" />
+            <span class="text-caption text-grey-8">Marca:</span>
+            <span class="text-caption text-dark q-ml-xs">{{ formatarMarca(anuncio.marca?.label) }}</span>
+          </div>
+          <div class="info-line q-mt-xs">
+            <q-icon name="place" size="16px" class="q-mr-xs text-grey-7" />
+            <span class="text-caption text-grey-8">Local:</span>
+            <span class="text-caption text-dark q-ml-xs">{{ formatarLocal(anuncio.municipio, anuncio.uf) }}</span>
+          </div>
+        </div>
+      </div>
+    </q-card-section>
+  </router-link>
+</q-card>
 
-          </q-card>
         </div>
       </div>
 
