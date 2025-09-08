@@ -62,7 +62,7 @@
   <router-link :to="`/anuncio/${anuncio.idAnuncio}`" class="no-decoration">
     <div class="q-pa-sm destaque-img-container">
       <q-badge color="deep-purple" class="absolute-top-left q-mt-sm q-ml-sm" :class="{ 'badge-destaque': anuncio.isDestaque }" rounded label="Destaque" />
-      <q-img :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio" class="destaque-img" />
+      <q-img :class="destaque-img" :src="anuncio.srcMiniatura" no-native-menu alt="Miniatura do anúncio" class="destaque-img" />
     </div>
   </router-link>
 
@@ -210,7 +210,7 @@ export default {
       }
     },
     carregarAnuncios () {
-      let params = { page: this.current - 1, size: this.anuncios.pageSize, direction: 'ASC', ordenarPor: 'id' }
+      let params = { page: this.current - 1, size: 12, direction: 'ASC', ordenarPor: 'id' }
       params = this.incluirFiltrosBuscaDetalhada(params)
       anuncioSiteService
         .findAll(params)
@@ -333,6 +333,17 @@ q-img {
 .destaque-img {
   transition: transform 0.3s ease;
   border-radius: 8px;
+  width: 200px;     /* largura padrão desktop */
+  height: 150px;    /* altura padrão desktop */
+  object-fit: cover;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 600px) {
+  .destaque-img {
+    width: 100%;     /* ocupa toda a largura do container no celular */
+    height: 120px;   /* ajusta altura no celular */
+  }
 }
 
 .destaque-img-container:hover .destaque-img {
